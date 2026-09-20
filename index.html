@@ -117,8 +117,20 @@
   #prep .pitem .fir{color:#6db36d;font-size:9px;border:1px solid #6db36d;border-radius:3px;padding:0 3px}
   #prep .pitem.done .nm{text-decoration:line-through;color:var(--dim)}
   #prep .pnote{padding:6px 14px;font-size:11px;color:var(--dim)}
+  .mapsum{margin:6px 14px 10px;padding:6px 8px 8px;border:1px solid var(--line);border-radius:6px;background:#00000030}
+  .mapsum .mst{font-size:11px;font-weight:700;color:var(--dim);padding:0 2px 4px}
+  .mapsum .msrow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:5px 8px;margin:0 0 3px;font-size:12px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);color:var(--text);cursor:pointer}
+  .mapsum .msrow:hover{border-color:var(--accent)}
+  .mapsum .msrow.cur{border-color:var(--accent)}
+  .mapsum .msn{font-weight:700}
+  .mapsum .msbest{font-size:10px;color:#1b1b1b;background:var(--accent);border-radius:8px;padding:0 6px}
+  .mapsum .msc{margin-left:auto;color:var(--dim);font-size:11px;white-space:nowrap}
+  .mapsum .msd{margin-top:4px;padding:0 2px;font-size:11px;color:var(--dim);line-height:1.6}
+  .mapsum .msd a{color:var(--accent);text-decoration:underline}
   #prep .pitem .nm.wrap{white-space:normal;overflow:visible;line-height:1.4}
   #prep .pgear{padding-bottom:4px}
+  #prep .pmaps{flex:0 0 auto;max-width:44%;font-size:10px;color:var(--dim);text-align:right;line-height:1.3}
+  #prep .gsub.pmaps{max-width:none;text-align:left;font-size:11px}
   #prep .gsub{padding:0 14px 1px 41px;font-size:11px;color:var(--dim);line-height:1.5;word-break:break-word}
 
   #questlist{flex:1 1 auto;min-height:300px;overflow-y:auto;padding:4px 0}
@@ -352,6 +364,11 @@
       </div>
       <div class="row">
         <button id="ttimport" data-i18n="ttBtn">TarkovTracker取込</button>
+      </div>
+      <div class="row">
+        <button id="bkexport" data-i18n="bkExportBtn">バックアップ書き出し</button>
+        <button id="bkimport" data-i18n="bkImportBtn">バックアップ読込</button>
+        <input type="file" id="bkfile" accept=".json,application/json" class="hidden" />
       </div>
       </div>
     </details>
@@ -657,6 +674,7 @@ const STR = {
 <li><span class="k">✗失敗</span> … 失敗したタスク（TarkovTracker取込で付く）。一覧から隠れ、「今すぐ受注できる」にも出ない。</li>
 <li><b>Lv</b> 欄に自分のレベルを入れると、「<b>▶ 今すぐ受注できる</b>」に、前提タスクを終えていてレベルも足りているタスクが出る。</li>
 <li>フレンドと協力して遊ぶとき、<b>自分で選んだタスク</b>と<b>共有リンクで受け取ったタスク</b>は、完了済みでも隠れず「✓済」の表示で残る。</li>
+<li><b>マップ別まとめ</b>: 選んだタスクの下に、マップごとのタスク数・目標数が出ます。数が多いマップに「おすすめ」が付き、押すとそのマップに切り替わります。「今すぐ受注できるタスクが多いマップ」も出ます（レベルか完了済みタスクを入れたとき）。マップタブの数字は、そのマップにある選んだタスクの目標の数です（座標のない目標も含む）。</li>
 </ul></div></details>
 
 <details><summary>5. 脱出地点の選び方</summary><div>
@@ -666,6 +684,7 @@ const STR = {
 <details><summary>6. レイド前チェック</summary><div>
 <p>左の「レイド前チェック」に、選んだタスクに必要なものが出ます。行のチェックボックスは保存されます（「リセット」で全部外せる）。</p>
 <ul><li>🔑 持ち込む鍵　／　📤 設置・持ち込むアイテム　／　📥 現地で回収するアイテム（FiR＝レイド内で入手が必要）　／　🎯 武器・装備の条件（使う武器・必要なパーツ・着用する装備。候補が多いものは、マウスを乗せると全部出ます）</li></ul>
+<p>見出しの <b>「全マップ」</b> ボタンを押すと、選んだタスク全部の必要なものを、マップをまたいで1か所にまとめて見られます（個数は合計、使うマップ名が付きます）。「このマップ」で元に戻せます。</p>
 <p>マップ上部の<b>レイドタイマー</b>で、そのマップの制限時間が数えられます（残り5分で黄、2分で赤）。</p>
 </div></details>
 
@@ -693,6 +712,7 @@ const STR = {
 </div></details>
 
 <details><summary>10. データ更新・困ったとき</summary><div><ul>
+<li><b>バックアップ</b>: 進捗（選んだタスク・完了・レベル・チェック・カスタムピンなど）は、このブラウザの中にだけ保存されています。ブラウザのデータを消す前や、パソコンを替えるときは、「表示レイヤー・共有」の <b>バックアップ書き出し</b> でファイルに保存し、新しい環境で <b>バックアップ読込</b> を押してください（いまのデータはファイルの内容に置き換わります）。</li>
 <li><b>データ更新</b>: ワイプ後や新タスク追加時に押す。タスク・脱出地点・ボス位置などを最新にする（1日1回は自動で更新）。</li>
 <li>データが読めないとき: ネットを確認して「データ更新」。取得できない場合は同梱のデータで動き、「⚠古い」と表示されます。</li>
 <li>地図が真っ黒: 画像サーバーが混んでいます。少し待って再読み込み。</li>
@@ -733,6 +753,10 @@ const STR = {
     prepHeader:mjp=>`レイド前チェック — ${mjp}`,
     prepEmpty:"このマップで持ち込む鍵・回収アイテムはありません（座標ピンのみ）。",
     prepKeys:"🔑 持ち込む鍵", prepBring:"📤 持ち込み（設置・マーカー用）", prepCollect:"📥 現地で回収",
+    prepHeaderAll:"レイド前チェック — 全マップ合計", prepAllBtn:"全マップ", prepOneBtn:"このマップ", prepAllTip:"選んだタスク全部の必要なものを、マップをまたいでまとめて表示します", prepOneTip:"いま見ているマップだけの表示に戻します",
+    prepAnyMap:"どのマップでも", prepEmptyAll:"選んだタスクに、持ち込む鍵・回収アイテム・装備の条件はありません。",
+    bkExportBtn:"バックアップ書き出し", bkImportBtn:"バックアップ読込", bkExported:n=>`バックアップを書き出しました（${n}項目）`, bkBad:"このファイルはバックアップとして読み込めません。", bkConfirm:n=>`バックアップ（${n}項目）を読み込みます。いまの選択・完了・レベル・チェック・カスタムピンなどは、このファイルの内容に置き換わります。よろしいですか？`, bkReplaced:"読み込みました。画面を再読み込みします。",
+    mapSumTitle:"マップ別まとめ（選んだタスク）", mapSumBest:"おすすめ", mapSumCount:(t,o)=>`${t}タスク・${o}目標`, mapSumDoable:"今すぐ受注できるタスクが多いマップ:",
     prepGear:"🎯 武器・装備の条件", gearWeapons:"使う武器", gearMods:"必要なパーツ", gearWear:"着用", gearNotWear:n=>`指定の装備は着用しない（${n}種）`, gearMore:n=>`ほか${n}`,
     pinPromptAdd:"このピンのメモ（例: スナイパー注意 / 休憩ポイント）",
     pinPromptEdit:"メモを編集",
@@ -879,6 +903,7 @@ const STR = {
 
 <details><summary>4. Task list marks &amp; completion</summary><div><ul>
 <li><span class="k">★</span> … a task required for the Kappa container. "Kappa only ★" filters to them.</li>
+<li><b>Per-map summary</b>: under your selected tasks, each map shows its task and objective counts. The busiest map gets a "Best" tag; click a row to switch to that map. A line also lists the maps with the most tasks you can accept now (once you enter a level or completed tasks). The number on each map tab is the count of your selected tasks' objectives there (objectives without coordinates included).</li>
 <li><span class="k">○ / ✓</span> … click to mark a task complete / undo. Completed tasks hide from the list automatically; "Show completed" brings them back.</li>
 <li><span class="k">⚠</span> … a task with a fail condition (hover, or select the task, to see it). Includes <b>mutually exclusive tasks</b> (completing one fails the other) by name.</li>
 <li><span class="k">✗ locked out</span> … you already completed an exclusive counterpart, so this task can no longer be taken. Hidden from the list and from "Available now".</li>
@@ -894,6 +919,7 @@ const STR = {
 <details><summary>6. Pre-raid check</summary><div>
 <p>The "Pre-raid check" panel lists what your selected tasks need. Row checkboxes are saved ("Reset" clears them).</p>
 <ul><li>🔑 keys to bring / 📤 items to bring or plant / 📥 items to collect in raid (FiR = must be found in raid) / 🎯 weapon &amp; gear requirements (weapons to use, required mods, gear to wear — hover to see the full list when there are many)</li></ul>
+<p>Press <b>"All maps"</b> in the header to see everything your selected tasks need, across every map, in one list (quantities are summed and each item shows its maps). "This map" switches back.</p>
 <p>The <b>raid timer</b> above the map counts down the map's time limit (yellow at 5 min left, red at 2 min).</p>
 </div></details>
 
@@ -921,6 +947,7 @@ const STR = {
 </div></details>
 
 <details><summary>10. Refreshing data &amp; troubleshooting</summary><div><ul>
+<li><b>Backup</b>: your progress (selected tasks, completed tasks, level, checks, custom pins, etc.) is stored only inside this browser. Before clearing browser data, or when moving to another computer, use <b>Export backup</b> under "Layers &amp; sharing" to save it to a file, then press <b>Import backup</b> in the new place (it replaces the current data with the file's contents).</li>
 <li><b>Refresh data</b>: press it after a wipe or when new tasks are added. It updates tasks, extracts, boss spawns, etc. (it also refreshes automatically about once a day).</li>
 <li>If data won't load: check your connection and press "Refresh data". If it can't be fetched, the bundled data is used and "⚠ stale" is shown.</li>
 <li>Map is black: the image server is busy — wait a moment and reload.</li>
@@ -960,6 +987,10 @@ const STR = {
     prepHeader:mjp=>`Pre-raid checklist — ${mjp}`,
     prepEmpty:"No keys or pickup items needed on this map (pins only).",
     prepKeys:"🔑 Keys to bring", prepBring:"📤 To bring (plant/mark)", prepCollect:"📥 Find on site",
+    prepHeaderAll:"Pre-raid checklist — all maps", prepAllBtn:"All maps", prepOneBtn:"This map", prepAllTip:"Show what all your selected tasks need, across every map", prepOneTip:"Back to the map you're viewing",
+    prepAnyMap:"Any map", prepEmptyAll:"Your selected tasks need no keys, pickup items or gear.",
+    bkExportBtn:"Export backup", bkImportBtn:"Import backup", bkExported:n=>`Backup exported (${n} items)`, bkBad:"This file can't be read as a backup.", bkConfirm:n=>`Import a backup (${n} items)? Your current selection, completed tasks, level, checks, custom pins etc. will be replaced by the file's contents.`, bkReplaced:"Imported. Reloading…",
+    mapSumTitle:"Per-map summary (selected tasks)", mapSumBest:"Best", mapSumCount:(t,o)=>`${t} task${t===1?"":"s"} · ${o} objective${o===1?"":"s"}`, mapSumDoable:"Maps with the most tasks you can accept now:",
     prepGear:"🎯 Weapon & gear requirements", gearWeapons:"Weapons", gearMods:"Required mods", gearWear:"Wear", gearNotWear:n=>`Don't wear the specified gear (${n} items)`, gearMore:n=>`+${n} more`,
     pinPromptAdd:"Note for this pin (e.g. sniper danger / rest point)",
     pinPromptEdit:"Edit note",
@@ -1664,6 +1695,7 @@ function prepTasks(rawTasks){
     // マップ名 -> [{pos, obj, kind}]
     const byMap = {};
     const noCoord = {}; // マップ名 -> [説明]  (座標データが無い目標)
+    const noCoordObjs = {}; // マップ名 -> [目標]  (上と同じ順。マップ別の目標数の集計用)
     const keysByMap = {};    // マップ名 -> [item]  持ち込む鍵
     const bringByMap = {};   // マップ名 -> [{item,jp}]  設置・マーカー系
     const collectByMap = {}; // マップ名 -> [{item,fir,count,jp}]  現地で回収
@@ -1725,6 +1757,7 @@ function prepTasks(rawTasks){
         for(const mn of objMaps){
           if(!mn) continue;
           (noCoord[mn] = noCoord[mn] || []).push(line);
+          (noCoordObjs[mn] = noCoordObjs[mn] || []).push(o);
         }
       }
     }
@@ -1734,7 +1767,7 @@ function prepTasks(rawTasks){
       req: (t.taskRequirements || []).filter(r => (r.status || []).includes("complete")).map(r => r.id),
       map: t.map ? canonMap(t.map.normalizedName) : null,
       mapName: (t.map && MAPBY[canonMap(t.map.normalizedName)]) ? MAPBY[canonMap(t.map.normalizedName)].jp : null,
-      byMap, noCoord, keysByMap, bringByMap, collectByMap, gearByMap,
+      byMap, noCoord, noCoordObjs, keysByMap, bringByMap, collectByMap, gearByMap,
       fails: t.failConditions || [],
       storyReq: (STORY && STORY.taskReqs && STORY.taskReqs[t.id]) || [],
       allMaps: [...new Set([...Object.keys(byMap), ...Object.keys(noCoord)])],
@@ -1799,16 +1832,67 @@ const PALETTE = ["#e6564e","#4ea3e6","#7ac74f","#e6b64e","#b76ee6","#4ee6c7","#e
 const colorForSelIndex = i => PALETTE[i % PALETTE.length];
 
 /* ---------- 描画 ---------- */
+/* 選んだタスクを、マップ別に { tasks:タスク数, objs:目標数 } で集計する（達成済みで隠している目標は数えない） */
+function selObjsByMap(){
+  const out = {};
+  for(const id of selected){
+    const t = TASKS.find(x => x.id === id); if(!t) continue;
+    const per = {};   // マップ名 -> 目標id の集合
+    for(const mn of Object.keys(t.byMap)) for(const m of t.byMap[mn]) if(!objHidden(m.obj)) (per[mn] = per[mn] || new Set()).add(m.obj.id);
+    for(const mn of Object.keys(t.noCoordObjs || {})) for(const o of t.noCoordObjs[mn]) if(!objHidden(o)) (per[mn] = per[mn] || new Set()).add(o.id);
+    for(const mn of Object.keys(per)){
+      const e = out[mn] = out[mn] || { tasks:0, objs:0 };
+      e.tasks++; e.objs += per[mn].size;
+    }
+  }
+  return out;
+}
+/* 「今すぐ受注できる」タスクが多いマップ（未選択・未完了・前提とレベルを満たすもの）。上位から最大3つ */
+function doableByMap(){
+  if(!(done.size > 0 || plvl > 1)) return [];
+  const cnt = {};
+  for(const t of TASKS){
+    if(selected.has(t.id) || isDone(t.id) || !isAvailable(t)) continue;
+    for(const mn of (t.allMaps || [])) cnt[mn] = (cnt[mn] || 0) + 1;
+  }
+  return Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
+}
+function gotoMap(mn){
+  document.getElementById("app").classList.remove("sb-open");   // 狭い画面ではメニューを閉じて地図を見せる
+  curMap = mn; localStorage.setItem(MAP_KEY, curMap);
+  loadMap(); renderTabs();
+  if(opts.mapFilter === "__cur__") renderQuestList();
+}
+/* 選んだタスクの一覧の下に出す「マップ別まとめ」。タスク数が多い順で、先頭に「おすすめ」を付ける */
+function mapSummaryEl(){
+  const rows = Object.entries(selObjsByMap()).filter(([mn]) => MAPBY[mn]).sort((a, b) => b[1].tasks - a[1].tasks || b[1].objs - a[1].objs);
+  const dz = doableByMap().filter(([mn]) => MAPBY[mn]);
+  if(!rows.length && !dz.length) return null;
+  const box = document.createElement("div");
+  box.className = "mapsum";
+  let html = "";
+  if(rows.length){
+    html += `<div class="mst">${T("mapSumTitle")}</div>`;
+    rows.forEach(([mn, s], i) => {
+      html += `<button class="msrow${mn === curMap ? " cur" : ""}" data-map="${mn}"><span class="msn">${MAPBY[mn].jp}</span>` +
+              (i === 0 && rows.length >= 2 ? `<span class="msbest">${T("mapSumBest")}</span>` : "") +
+              `<span class="msc">${T("mapSumCount", s.tasks, s.objs)}</span></button>`;
+    });
+  }
+  if(dz.length){
+    html += `<div class="msd">${T("mapSumDoable")} ` + dz.map(([mn, n]) => `<a href="#" data-map="${mn}">${MAPBY[mn].jp} (${n})</a>`).join(" / ") + `</div>`;
+  }
+  box.innerHTML = html;
+  box.querySelectorAll("[data-map]").forEach(el => el.onclick = (e) => { e.preventDefault(); track("use/map-summary"); gotoMap(el.dataset.map); });
+  return box;
+}
+
 function renderTabs(){
   const wrap = document.getElementById("tabs");
   wrap.innerHTML = "";
-  // 選択タスクの座標数をマップ別に集計
+  // 選択タスクの目標数をマップ別に集計（座標のある目標＋座標データの無い目標。同じ目標の複数ピンは1つと数える）
   const counts = {};
-  const selArr = [...selected];
-  selArr.forEach(id => {
-    const t = TASKS.find(x => x.id === id); if(!t) return;
-    for(const mn of Object.keys(t.byMap)) counts[mn] = (counts[mn]||0) + t.byMap[mn].filter(m => !objHidden(m.obj)).length;
-  });
+  for(const [mn, s] of Object.entries(selObjsByMap())) counts[mn] = s.objs;
   for(const md of MAPS){
     const b = document.createElement("button");
     b.textContent = md.jp;
@@ -1960,6 +2044,7 @@ function renderQuestList(){
   if(sel.length){
     header(T("selectedHeader"), sel.length);
     sel.forEach(t => box.appendChild(questRow(t)));
+    const ms = mapSummaryEl(); if(ms) box.appendChild(ms);
   }
 
   // トレーダーもマップも未指定なら促す
@@ -2507,9 +2592,10 @@ function gearGrp(gear, chk){
   let s = `<div class="pgrp"><div class="pgt">${T("prepGear")}</div>`;
   for(const e of gear.values()){
     const g = e.g, x = g.gear;
-    const done = chk(e.id);
+    const done = chk(e);
+    const mp = prepAll ? `<div class="gsub pmaps">📍 ${escH([...e.maps].map(mapJp).join(", "))}</div>` : "";
     s += `<div class="pgear"><label class="pitem${done ? " done" : ""}"><input type="checkbox" data-item="${escH(e.id)}" ${done ? "checked" : ""}>` +
-         `<span class="nm wrap" title="${escH(e.tname + ": " + g.desc)}"><b>${escH(e.tname)}</b> — ${escH(g.desc)}</span></label>`;
+         `<span class="nm wrap" title="${escH(e.tname + ": " + g.desc)}"><b>${escH(e.tname)}</b> — ${escH(g.desc)}</span></label>` + mp;
     const sub = (icon, label, r) => `<div class="gsub" title="${r.full}">${icon} ${label}: ${r.text}</div>`;
     if(x.weapons.length) s += sub("🔫", T("gearWeapons"), gearNames(x.weapons, " / "));
     if(x.mods.length){
@@ -2530,42 +2616,56 @@ function gearGrp(gear, chk){
   return s + `</div>`;
 }
 
+/* 「このマップ」と「全マップ合計」の切り替え（画面を開いている間だけ覚える） */
+let prepAll = false;
+const mapJp = m => m === "*" ? T("prepAnyMap") : (MAPBY[m] ? MAPBY[m].jp : m);
 function renderPrep(){
   const box = document.getElementById("prep");
   const mn = effMapFilter() || curMap;
   const mjp = MAPBY[mn] ? MAPBY[mn].jp : mn;
+  const mapList = prepAll ? MAPS.map(m => m.n) : [mn];
 
-  // 選択タスクから集約（アイテムid重複は除去、由来タスク名を保持）
+  // 選択タスクから集約（アイテムid重複は除去、由来タスク名と使うマップを保持。回収の個数はタスクごとに最大値→タスク間で合計）
   const keys = new Map(), bring = new Map(), collect = new Map(), gear = new Map(), gearSigs = new Set();
-  const addTo = (map, it, from, extra) => {
+  const addTo = (map, it, from, extra, m, tid) => {
     if(!it || !it.id) return;
-    if(!map.has(it.id)) map.set(it.id, Object.assign({ id:it.id, name:it.name, short:it.short, from:[] }, extra||{}));
+    if(!map.has(it.id)) map.set(it.id, Object.assign({ id:it.id, name:it.name, short:it.short, from:[], maps:new Set(), tc:{} }, extra||{}));
     const e = map.get(it.id); if(!e.from.includes(from)) e.from.push(from);
+    e.maps.add(m);
+    if(extra && extra.count){ e.tc[tid] = Math.max(e.tc[tid] || 0, extra.count); e.count = Object.values(e.tc).reduce((a, b) => a + b, 0); }
+  };
+  const addGear = (t, g, m) => {
+    // 同じタスクで条件が同じ目標（頭を撃つ／脚を撃つ など）は1行にまとめる
+    const x = g.gear, sig = t.id + JSON.stringify([x.weapons.map(w => w.id), x.mods.map(a => a.map(m => m.id)), x.wearing.map(a => a.map(m => m.id)), x.notWearing, g.conds, g.desc]);
+    if(gear.has(g.oid)){ gear.get(g.oid).maps.add(m); return; }
+    if(gearSigs.has(sig)) return;
+    gearSigs.add(sig); gear.set(g.oid, { id:"g:" + g.oid, tname:t.name, g, maps:new Set([m]) });
   };
   for(const id of selected){
     const t = TASKS.find(x => x.id === id); if(!t) continue;
-    for(const k of (t.keysByMap[mn] || [])) addTo(keys, k, t.name);
-    for(const b of (t.bringByMap[mn] || [])) addTo(bring, b, t.name, { jp:b.jp });
-    for(const c of (t.collectByMap[mn] || [])) addTo(collect, c, t.name, { fir:c.fir, count:c.count, jp:c.jp });
-    for(const g of (t.gearByMap[mn] || []).concat(t.gearByMap["*"] || [])){
-      // 同じタスクで条件が同じ目標（頭を撃つ／脚を撃つ など）は1行にまとめる
-      const x = g.gear, sig = t.id + JSON.stringify([x.weapons.map(w => w.id), x.mods.map(a => a.map(m => m.id)), x.wearing.map(a => a.map(m => m.id)), x.notWearing, g.conds, g.desc]);
-      if(!gear.has(g.oid) && !gearSigs.has(sig)){ gearSigs.add(sig); gear.set(g.oid, { id:"g:" + g.oid, tname:t.name, g }); }
+    for(const m of mapList){
+      for(const k of (t.keysByMap[m] || [])) addTo(keys, k, t.name, null, m, t.id);
+      for(const b of (t.bringByMap[m] || [])) addTo(bring, b, t.name, { jp:b.jp }, m, t.id);
+      for(const c of (t.collectByMap[m] || [])) addTo(collect, c, t.name, { fir:c.fir, count:c.count, jp:c.jp }, m, t.id);
+      for(const g of (t.gearByMap[m] || [])) addGear(t, g, m);
     }
+    for(const g of (t.gearByMap["*"] || [])) addGear(t, g, "*");   // どのマップでも使う条件
   }
 
   const total = keys.size + bring.size + collect.size + gear.size;
   if(selected.size === 0){ box.style.display = "none"; return; }
   box.style.display = "";
 
-  const cm = checks[mn] || {};
-  const chk = id => !!cm[id];
+  // チェックの保存先: このマップ表示 → そのマップ / 全マップ表示 → その項目が出てくる全マップ（読むときはどれか1つでも付いていれば済み）
+  const keysOf = e => prepAll ? (e.maps.has("*") ? [...MAPS.map(m => m.n), "*"] : [...e.maps]) : [mn];
+  const chk = e => keysOf(e).some(m => checks[m] && checks[m][e.id]);
 
-  let html = `<div class="phead" id="prephead">${T("prepHeader", mjp)} <span style="color:var(--dim);font-weight:400">(${total})</span> ${prepOpen ? "▲" : "▼"}` +
-             `<button id="prepreset" style="float:right;font-size:10px;padding:1px 6px">${T("reset")}</button></div>`;
+  let html = `<div class="phead" id="prephead">${prepAll ? T("prepHeaderAll") : T("prepHeader", mjp)} <span style="color:var(--dim);font-weight:400">(${total})</span> ${prepOpen ? "▲" : "▼"}` +
+             `<button id="prepreset" style="float:right;font-size:10px;padding:1px 6px">${T("reset")}</button>` +
+             `<button id="prepmode" style="float:right;font-size:10px;padding:1px 6px;margin-right:4px" title="${escH(T(prepAll ? "prepOneTip" : "prepAllTip"))}">${T(prepAll ? "prepOneBtn" : "prepAllBtn")}</button></div>`;
   if(prepOpen){
     if(total === 0){
-      html += `<div class="pnote">${T("prepEmpty")}</div>`;
+      html += `<div class="pnote">${prepAll ? T("prepEmptyAll") : T("prepEmpty")}</div>`;
     }else{
       const grp = (title, m, opt) => {
         if(!m.size) return "";
@@ -2574,9 +2674,11 @@ function renderPrep(){
           const icon = opts.icons ? `<img src="${ITEM_ICON(e.id)}" alt="" onerror="this.style.visibility='hidden'">` : "";
           const fir = (opt && opt.fir && e.fir) ? `<span class="fir">FiR</span>` : "";
           const cnt = (opt && opt.count && e.count > 1) ? ` ×${e.count}` : "";
-          s += `<label class="pitem${chk(e.id) ? " done" : ""}">` +
-               `<input type="checkbox" data-item="${e.id}" ${chk(e.id) ? "checked" : ""}>` +
-               icon + `<span class="nm" title="${e.from.join(" / ")}">${e.short || e.name}${cnt}</span>${fir}</label>`;
+          const mp = prepAll ? `<span class="pmaps">${escH([...e.maps].map(mapJp).join(", "))}</span>` : "";
+          const c = chk(e);
+          s += `<label class="pitem${c ? " done" : ""}">` +
+               `<input type="checkbox" data-item="${e.id}" ${c ? "checked" : ""}>` +
+               icon + `<span class="nm" title="${escH(e.from.join(" / "))}">${escH(e.short || e.name)}${cnt}</span>${fir}${mp}</label>`;
         }
         return s + `</div>`;
       };
@@ -2589,13 +2691,19 @@ function renderPrep(){
   box.innerHTML = html;
 
   const head = document.getElementById("prephead");
-  if(head) head.onclick = (e) => { if(e.target.id === "prepreset") return; prepOpen = !prepOpen; renderPrep(); };
+  if(head) head.onclick = (e) => { if(e.target.id === "prepreset" || e.target.id === "prepmode") return; prepOpen = !prepOpen; renderPrep(); };
   const rst = document.getElementById("prepreset");
-  if(rst) rst.onclick = () => { delete checks[mn]; saveChecks(checks); renderPrep(); };
+  if(rst) rst.onclick = () => { if(prepAll) checks = {}; else delete checks[mn]; saveChecks(checks); renderPrep(); };
+  const pm = document.getElementById("prepmode");
+  if(pm) pm.onclick = () => { prepAll = !prepAll; if(prepAll) track("use/prep-all-maps"); prepOpen = true; renderPrep(); };
+  const byId = new Map(); for(const m of [keys, bring, collect, gear]) for(const e of m.values()) byId.set(e.id, e);
   box.querySelectorAll('input[data-item]').forEach(inp => {
     inp.onchange = () => {
-      const cmm = checks[mn] = checks[mn] || {};
-      if(inp.checked) cmm[inp.dataset.item] = 1; else delete cmm[inp.dataset.item];
+      const id = inp.dataset.item, e = byId.get(id);
+      for(const m of (e ? keysOf(e) : [mn])){
+        const cmm = checks[m] = checks[m] || {};
+        if(inp.checked) cmm[id] = 1; else delete cmm[id];
+      }
       saveChecks(checks);
       inp.closest(".pitem").classList.toggle("done", inp.checked);
     };
@@ -3096,6 +3204,43 @@ document.getElementById("sharemake").onclick = shareCreate;
 document.getElementById("shareload").onclick = sharePrompt;
 // TarkovTracker 取込
 document.getElementById("ttimport").onclick = ttOpen;
+
+/* ---------- バックアップ（書き出し／読み込み）: このツールの保存データ(eft_qm_*)を1つのJSONにする。キャッシュは含めない ---------- */
+function bkKeys(){
+  const ks = [];
+  for(let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if(k && /^eft_qm_/.test(k) && !/^eft_qm_cache_/.test(k)) ks.push(k); }
+  return ks;
+}
+function bkExport(){
+  track("use/backup-export");
+  const data = {}; for(const k of bkKeys()) data[k] = localStorage.getItem(k);
+  const obj = { _format:"tarkov-task-map-backup", _version:1, exportedAt:new Date().toISOString(), data };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(obj)], { type:"application/json" }));
+  const d = new Date(), p = n => String(n).padStart(2, "0");
+  a.download = `tarkov-task-map-backup-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}.json`;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast(T("bkExported", Object.keys(data).length));
+}
+function bkImportText(text){
+  let obj = null; try{ obj = JSON.parse(text); }catch(e){}
+  const src = obj && obj._format === "tarkov-task-map-backup" && obj.data && typeof obj.data === "object" ? obj.data : null;
+  const good = src ? Object.keys(src).filter(k => /^eft_qm_/.test(k) && !/^eft_qm_cache_/.test(k) && typeof src[k] === "string") : [];
+  if(!good.length){ alert(T("bkBad")); return; }
+  if(!confirm(T("bkConfirm", good.length))) return;
+  track("use/backup-import");
+  for(const k of bkKeys()) localStorage.removeItem(k);
+  for(const k of good){ try{ localStorage.setItem(k, src[k]); }catch(e){} }
+  toast(T("bkReplaced"));
+  setTimeout(() => { location.href = location.pathname + location.search; }, 600);   // #s= など共有リンクの部分は外して開き直す
+}
+document.getElementById("bkexport").onclick = bkExport;
+document.getElementById("bkimport").onclick = () => { const f = document.getElementById("bkfile"); f.value = ""; f.click(); };
+document.getElementById("bkfile").onchange = (e) => {
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const r = new FileReader(); r.onload = () => bkImportText(String(r.result || "")); r.readAsText(f);
+};
 document.getElementById("ttclose").onclick = () => document.getElementById("ttdlg").close();
 document.getElementById("ttrun").onclick = ttApply;
 document.getElementById("ttundo").onclick = ttUndo;
