@@ -54,7 +54,14 @@
   #app{display:flex;height:100%;width:100%}
 
   /* ---------- サイドバー ---------- */
-  #sidebar{width:340px;min-width:340px;height:100%;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+  #panels{display:flex;height:100%;flex:0 0 auto}
+  #sidebar,#picker{width:340px;min-width:340px;height:100%;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+  #picker{background:#222;border-left:0}
+  #pickhead{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+  #pickhead h2{margin:0;font-size:15px;color:var(--accent2);letter-spacing:.04em}
+  #pkCollapse,#pkReopen{flex:0 0 auto;padding:4px 10px}
+  #pkReopen{display:none;margin:8px 0 8px 8px;color:var(--accent2);border-color:var(--accent);font-weight:700;white-space:nowrap}
+  #picker #questlist{min-height:0}
   details.sect{border-bottom:1px solid var(--line);flex:0 0 auto}
   details.sect>summary{padding:9px 14px;cursor:pointer;font-weight:700;color:var(--accent2);font-size:12px;user-select:none;list-style:none}
   details.sect>summary::-webkit-details-marker{display:none}
@@ -107,8 +114,13 @@
   label.chk{display:flex;gap:6px;align-items:center;font-size:12px;cursor:pointer}
 
   /* レイド前チェック */
-  #prep{border-bottom:1px solid var(--line);background:#1f1f1f;max-height:32%;overflow-y:auto;flex:0 0 auto}
-  #prep .phead{padding:7px 14px;font-size:12px;font-weight:700;color:var(--accent2);cursor:pointer;user-select:none;position:sticky;top:0;background:#1f1f1f}
+  #prep{border-bottom:1px solid var(--line);background:#1f1f1f;max-height:30vh;overflow-y:auto;flex:0 0 auto}
+  #prep .phead{padding:7px 14px;font-size:12px;font-weight:700;color:var(--accent2);cursor:pointer;user-select:none;position:sticky;top:0;background:#1f1f1f;display:flex;align-items:center;gap:6px}
+  #prep .phead .ptitle{flex:1;min-width:0;white-space:nowrap}
+  #prep .phead{flex-wrap:wrap}
+  #prep .phead .pbtns{margin-left:auto}
+  #prep .phead .pbtns{display:flex;gap:4px;flex:0 0 auto}
+  #prep .phead button{font-size:10px;padding:1px 6px;white-space:nowrap}
   #prep .pgrp{padding:2px 0 6px}
   #prep .pgt{padding:3px 14px;font-size:11px;color:var(--dim);font-weight:700}
   #prep .pitem{display:flex;gap:7px;align-items:center;padding:3px 14px;font-size:12px}
@@ -133,7 +145,36 @@
   #prep .gsub.pmaps{max-width:none;text-align:left;font-size:11px}
   #prep .gsub{padding:0 14px 1px 41px;font-size:11px;color:var(--dim);line-height:1.5;word-break:break-word}
 
-  #questlist{flex:1 1 auto;min-height:300px;overflow-y:auto;padding:4px 0}
+  #questlist{flex:1 1 auto;min-height:max(300px,52vh);overflow-y:auto;padding:4px 0}
+  details.sect .grouped{border-top:1px solid var(--line)}
+  details.sect .grouped>details.sect:last-child{border-bottom:0}
+  #settingsSect>.grouped>details.sect>summary{padding-left:24px}
+  #toolbar{padding:6px 14px;border-bottom:1px solid var(--line);flex-wrap:nowrap}
+  #sbCollapse{flex:1;font-weight:700;color:var(--accent2);border-color:var(--accent)}
+  #sbReopen{flex:0 0 auto;padding:6px 10px}
+  #sbReopen{display:none;margin:8px 0 8px 8px}
+  #bknote{padding:8px 14px;border-bottom:1px solid var(--line);background:#2a261c;font-size:11.5px;line-height:1.55;color:var(--text)}
+  #bknote .bkbtns{display:flex;gap:6px;margin-top:6px}
+  #bknote button{font-size:11px;padding:3px 10px}
+  #selbox{border-bottom:1px solid var(--line);background:#20211d;flex:0 0 auto}
+  #selbox .selhint{padding:9px 14px;line-height:1.5}
+  .selchip{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000;font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 2px #000;margin-right:6px;padding:0 2px;vertical-align:middle;box-sizing:content-box}
+  /* 左の列: 選択中 → レイド前チェック → 脱出地点 → ストーリー → 設定 ／ 右の列: 絞り込み → 候補の一覧 */
+  #selbox{max-height:34vh;overflow-y:auto}
+  #selbox .quest{padding-top:4px;padding-bottom:4px;align-items:center}
+  #selbox .quest .meta{display:none}   /* トレーダー・Lv・マップ名は、名前にマウスを乗せると出る（高さの節約） */
+  #modeHint,#modeBar .row>.muted{display:none}
+  #modeBar{padding-bottom:6px}
+  .bar select{min-width:0}
+  .mapsum .mst{cursor:pointer;user-select:none}
+  .mapsum.folded .msrow,.mapsum.folded .msd{display:none}
+  /* パネルを畳む（広い画面のみ）。畳んでいる間は地図の左上の ▶ で開く */
+  @media (min-width:821px){
+    #app.sb-collapsed #panels{display:none}
+    #app.sb-collapsed #sbReopen{display:block}
+    #app.pk-collapsed #picker{display:none}
+    #app.pk-collapsed:not(.sb-collapsed) #pkReopen{display:block}
+  }
   .trader{padding:8px 14px 4px;color:var(--accent2);font-size:12px;font-weight:700;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
   .trader .count{color:var(--dim);font-weight:400}
   .doableWrap{max-height:52vh;min-height:140px;overflow-y:auto;resize:vertical;border-bottom:2px solid var(--accent);background:#20211d}
@@ -219,12 +260,16 @@
   /* ---------- タブレット / 狭い画面 / タッチ操作 ---------- */
   #menuBtn,#sbShade,.narrow-only{display:none}
   @media (max-width:1100px){
-    #sidebar{width:300px;min-width:300px}
+    #sidebar,#picker{width:300px;min-width:300px}
   }
   @media (max-width:820px){
-    /* サイドバーを左からスライドするメニューにして、地図を画面いっぱいに使う */
-    #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:1500;width:min(88vw,380px);min-width:0;transform:translateX(-104%);transition:transform .2s;box-shadow:4px 0 18px #000a}
-    #app.sb-open #sidebar{transform:none}
+    /* 2つの列を縦に並べて、左からスライドするメニューにして、地図を画面いっぱいに使う */
+    #panels{position:fixed;left:0;top:0;bottom:0;z-index:1500;width:min(88vw,380px);flex-direction:column;overflow-y:auto;transform:translateX(-104%);transition:transform .2s;box-shadow:4px 0 18px #000a;background:var(--panel)}
+    #sidebar,#picker{width:100%;min-width:0;height:auto;overflow:visible;flex:0 0 auto;border-right:0}
+    #picker #questlist{min-height:min(52vh,360px)}
+    #picker{border-top:2px solid var(--accent)}
+    .wide-only,#toolbar{display:none}
+    #app.sb-open #panels{transform:none}
     #sbShade{display:block;position:fixed;inset:0;z-index:1400;background:#0008;opacity:0;pointer-events:none;transition:opacity .2s}
     #app.sb-open #sbShade{opacity:1;pointer-events:auto}
     #menuBtn{display:block;position:absolute;right:10px;top:10px;z-index:650;padding:9px 14px;font-size:13px;box-shadow:0 2px 8px #0008}
@@ -292,7 +337,8 @@
 <body>
 <div id="app">
   <div id="sbShade"></div>
-  <!-- ===== サイドバー ===== -->
+  <div id="panels">
+  <!-- ===== 左の列: 選択中・レイド前チェック・脱出地点 ===== -->
   <aside id="sidebar">
     <div id="titlebar">
       <h1 id="appTitle" data-i18n="appTitle">タルコフ タスクマップ</h1>
@@ -303,75 +349,13 @@
       </div>
     </div>
 
-    <div class="bar" id="modeBar">
-      <div class="row">
-        <span class="muted" data-i18n="modeLabel">ゲームモード</span>
-        <div id="modeBtns" role="radiogroup"></div>
-      </div>
-      <div id="modeHint" class="muted"></div>
+    <div id="toolbar" class="row">
+      <button id="sbCollapse" class="wide-only" data-i18n="collapseBtn" data-i18n-title="collapseTip" title="">◀ 地図を広く使う</button>
     </div>
 
-    <div class="bar">
-      <div class="row">
-        <button id="refresh" class="primary" data-i18n="refresh">データ更新</button>
-        <span id="datainfo" class="muted"></span>
-      </div>
-      <div class="row hidden" data-tip>
-        <a href="https://ko-fi.com/tarkovtaskmap" target="_blank" rel="noopener" class="muted" style="text-decoration:underline" data-i18n="supportLink">☕ このツールをKo-fiで応援する</a>
-      </div>
-      <div class="row">
-        <select id="traderSel"><option value="" data-i18n="traderAll">▼ トレーダー（すべて）</option></select>
-        <select id="mapSel"><option value="" data-i18n="mapAll">▼ マップ（すべて）</option></select>
-      </div>
-      <div class="row">
-        <input type="search" id="search" placeholder="タスク名で検索…" data-i18n-placeholder="searchPlaceholder" />
-      </div>
-      <div class="row">
-        <button id="selnone" data-i18n="clearSel">選択解除</button>
-        <label class="chk"><input type="checkbox" id="kappaonly" /> <span data-i18n="kappaOnly">Kappaのみ ★</span></label>
-      </div>
-      <div class="row">
-        <label class="chk"><span data-i18n="lvLabel">Lv</span> <input type="number" id="lvlin" min="1" max="79" value="15" /></label>
-        <label class="chk"><input type="checkbox" id="showdone" /> <span data-i18n="showDone">完了も表示</span></label>
-      </div>
-      <div class="row"><span id="selinfo" class="muted">0 タスク選択中</span></div>
-      <div class="row"><span id="progline"></span></div>
-    </div>
-
-    <details class="sect" id="layersSect">
-      <summary data-i18n="layersSection">表示レイヤー・共有</summary>
-      <div class="inner">
-      <div class="row">
-        <label class="chk"><input type="checkbox" id="opt_transit" /> <span data-i18n="optTransit">トランジット（マップ間移動）</span></label>
-      </div>
-      <div class="row"><span class="muted" data-i18n="hintExitBelow">※脱出地点は下の「脱出地点」欄で選択</span></div>
-      <div class="row">
-        <label class="chk"><input type="checkbox" id="opt_hazard" /> <span class="sq" style="background:#d9534f;border-color:#fff9"></span> <span data-i18n="optHazard">危険地帯</span></label>
-        <label class="chk"><input type="checkbox" id="opt_lock" /> <span data-i18n="optLock">施錠ドア</span></label>
-        <label class="chk"><input type="checkbox" id="opt_switch" /> <span data-i18n="optSwitch">スイッチ</span></label>
-      </div>
-      <div class="row">
-        <label class="chk"><input type="checkbox" id="opt_boss" /> <span class="dot" style="background:#a06cd0"></span> <span data-i18n="optBoss">ボス</span></label>
-        <label class="chk"><input type="checkbox" id="opt_spawn" /> <span data-i18n="optSpawn">スポーン</span></label>
-        <label class="chk"><input type="checkbox" id="opt_icons" checked /> <span data-i18n="optIcons">アイコン</span></label>
-      </div>
-      <div class="row">
-        <label class="chk"><input type="checkbox" id="opt_route" /> <span data-i18n="optRoute">巡回ルート番号（①②③…）</span></label>
-      </div>
-      <div class="row">
-        <button id="sharemake" data-i18n="shareCreateBtn">共有リンク作成</button>
-        <button id="shareload" data-i18n="shareLoadBtn">コード読込</button>
-      </div>
-      <div class="row">
-        <button id="ttimport" data-i18n="ttBtn">TarkovTracker取込</button>
-      </div>
-      <div class="row">
-        <button id="bkexport" data-i18n="bkExportBtn">バックアップ書き出し</button>
-        <button id="bkimport" data-i18n="bkImportBtn">バックアップ読込</button>
-        <input type="file" id="bkfile" accept=".json,application/json" class="hidden" />
-      </div>
-      </div>
-    </details>
+    <div id="bknote" class="hidden"></div>
+    <div id="selbox"></div>
+    <div id="prep"></div>
 
     <details class="sect" id="exitSect" open>
       <summary data-i18n="exitSection">脱出地点</summary>
@@ -398,9 +382,97 @@
       </div>
     </details>
 
-    <div id="prep"></div>
+    <details class="sect" id="settingsSect">
+      <summary data-i18n="settingsSection">設定（レイヤー・共有・バックアップ）</summary>
+      <div class="grouped">
+    <details class="sect" id="layersSect">
+      <summary data-i18n="layersSection">表示レイヤー・共有</summary>
+      <div class="inner">
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="opt_transit" /> <span data-i18n="optTransit">トランジット（マップ間移動）</span></label>
+      </div>
+      <div class="row"><span class="muted" data-i18n="hintExitBelow">※脱出地点は上の「脱出地点」欄で選択</span></div>
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="opt_hazard" /> <span class="sq" style="background:#d9534f;border-color:#fff9"></span> <span data-i18n="optHazard">危険地帯</span></label>
+        <label class="chk"><input type="checkbox" id="opt_lock" /> <span data-i18n="optLock">施錠ドア</span></label>
+        <label class="chk"><input type="checkbox" id="opt_switch" /> <span data-i18n="optSwitch">スイッチ</span></label>
+      </div>
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="opt_boss" /> <span class="dot" style="background:#a06cd0"></span> <span data-i18n="optBoss">ボス</span></label>
+        <label class="chk"><input type="checkbox" id="opt_spawn" /> <span data-i18n="optSpawn">スポーン</span></label>
+        <label class="chk"><input type="checkbox" id="opt_icons" checked /> <span data-i18n="optIcons">アイコン</span></label>
+      </div>
+      <div class="row">
+        <label class="chk"><input type="checkbox" id="opt_route" /> <span data-i18n="optRoute">巡回ルート番号（①②③…）</span></label>
+      </div>
+      <div class="row">
+        <button id="sharemake" data-i18n="shareCreateBtn">共有リンク作成</button>
+        <button id="shareload" data-i18n="shareLoadBtn">コード読込</button>
+      </div>
+      <div class="row">
+        <button id="ttimport" data-i18n="ttBtn">TarkovTracker取込</button>
+      </div>
+      <div class="row"><span class="muted" data-i18n="bkNote">進捗はこのブラウザにだけ自動で保存されています。</span></div>
+      <div class="row">
+        <button id="bkexport" data-i18n="bkExportBtn">バックアップ書き出し</button>
+        <button id="bkimport" data-i18n="bkImportBtn">バックアップ読込</button>
+        <input type="file" id="bkfile" accept=".json,application/json" class="hidden" />
+      </div>
+      </div>
+    </details>
+      </div>
+    </details>
+  </aside>
+
+  <!-- ===== 右の列: タスクを選ぶ（絞り込み・候補の一覧だけ） ===== -->
+  <aside id="picker">
+    <div id="pickhead">
+      <h2 data-i18n="pickTitle">タスクを選ぶ</h2>
+      <button id="pkCollapse" class="wide-only" data-i18n-title="pkCollapseTip" title="">◀</button>
+    </div>
+
+    <details class="sect" id="filtSect" open>
+      <summary data-i18n="filtSection">タスクを選ぶ・絞り込み</summary>
+      <div class="grouped">
+    <div class="bar" id="modeBar">
+      <div class="row">
+        <span class="muted" data-i18n="modeLabel">ゲームモード</span>
+        <div id="modeBtns" role="radiogroup"></div>
+      </div>
+      <div id="modeHint" class="muted"></div>
+    </div>
+
+    <div class="bar">
+      <div class="row">
+        <button id="refresh" class="primary" data-i18n="refresh">データ更新</button>
+        <span id="datainfo" class="muted"></span>
+      </div>
+      <div class="row hidden" data-tip>
+        <a href="https://ko-fi.com/tarkovtaskmap" target="_blank" rel="noopener" class="muted" style="text-decoration:underline" data-i18n="supportLink">☕ このツールをKo-fiで応援する</a>
+      </div>
+      <div class="row" style="flex-wrap:nowrap">
+        <select id="traderSel"><option value="" data-i18n="traderAll">▼ トレーダー（すべて）</option></select>
+        <select id="mapSel"><option value="" data-i18n="mapAll">▼ マップ（すべて）</option></select>
+      </div>
+      <div class="row">
+        <input type="search" id="search" placeholder="タスク名で検索…" data-i18n-placeholder="searchPlaceholder" />
+      </div>
+      <div class="row">
+        <button id="selnone" data-i18n="clearSel">選択解除</button>
+        <label class="chk"><input type="checkbox" id="kappaonly" /> <span data-i18n="kappaOnly">Kappaのみ ★</span></label>
+      </div>
+      <div class="row">
+        <label class="chk"><span data-i18n="lvLabel">Lv</span> <input type="number" id="lvlin" min="1" max="79" value="15" /></label>
+        <label class="chk"><input type="checkbox" id="showdone" /> <span data-i18n="showDone">完了も表示</span></label>
+      </div>
+      <div class="row" style="gap:4px 10px"><span id="selinfo" class="muted">0 タスク選択中</span><span id="progline"></span></div>
+    </div>
+    </div></details>
+
     <div id="questlist"></div>
   </aside>
+  </div>
+
 
   <!-- ===== TarkovTracker 取込ダイアログ ===== -->
   <dialog id="ttdlg">
@@ -434,6 +506,8 @@
   <!-- ===== メイン ===== -->
   <main id="main">
     <div id="tabbar">
+      <button id="sbReopen" type="button" data-i18n-title="reopenTip" title="">▶</button>
+      <button id="pkReopen" type="button" data-i18n="pkReopenBtn" data-i18n-title="pkReopenTip" title="">🗂 タスクを選ぶ</button>
       <div id="tabs"></div>
       <button id="fbLink" type="button" data-i18n="fbLink" data-i18n-title="fbSub">💬 ご意見・要望を送る</button>
     </div>
@@ -473,11 +547,12 @@
         <div class="card">
           <h3 data-i18n="guideTitle">はじめての方へ</h3>
           <ol>
-            <li data-i18n-html="guideStep1">左上の <b>トレーダー</b> か <b>マップ</b> で絞り込み、今回やるタスクにチェック。</li>
-            <li data-i18n-html="guideStep2">上部のタブでマップを切り替え。地図上のピンにマウスを乗せると目標の説明が出ます。</li>
+            <li data-i18n-html="guideStep1">右の列 <b>「タスクを選ぶ」</b> で、トレーダーかマップで絞り込み、今回やるタスクにチェック。左の「選択中」に、地図のピンと同じ A・B・C… の丸付きで並びます。</li>
+            <li data-i18n-html="guideStep2">上部のタブでマップを切り替え。地図上のピンにマウスを乗せると、タスク名が出ます。</li>
             <li data-i18n-html="guideStep3">左の <b>脱出地点</b> 欄で出撃タイプ(PMC/Scav)を選び、今回使う脱出地点にチェック → その地点だけ地図に出ます（緑=PMC / 青=Scav / 橙=共有）。</li>
             <li data-i18n-html="guideStep4">このウィンドウをサブディスプレイへ移動し、<b>F11</b> で全画面にすると見やすいです。</li>
-            <li data-i18n-html="guideStep5">ワイプ後や新タスク追加時は左上の <b>データ更新</b> を押してください。</li>
+            <li data-i18n-html="guideStep5">ワイプ後や新タスク追加時は、右の列の <b>データ更新</b> を押してください。</li>
+            <li data-i18n-html="guideStep6">進捗（選んだタスク・完了・レベルなど）は、<b>このブラウザに自動で保存</b>されます。別のパソコンに移すときや、ブラウザのデータを消す前は、左の「設定」の <b>バックアップ書き出し</b> で保存してください。</li>
           </ol>
           <p class="muted" data-i18n="guideMore">詳しい説明は、サイドバー上部の「使い方」ボタンからいつでも見られます。</p>
           <button id="guideclose" class="primary" data-i18n="guideStart">はじめる</button>
@@ -560,7 +635,7 @@ const STR = {
     supportBtnTitle:"使ってくれてありがとうございます！このツールはこれからもずっと無料です。もし役に立ったら、Ko-fiでの応援が励みになります(任意です、無理のない範囲で)。",
     supportBtnSub:"使ってくれてありがとう(任意です)",
     layersSection:"表示レイヤー・共有", optTransit:"トランジット（マップ間移動）",
-    hintExitBelow:"※脱出地点は下の「脱出地点」欄で選択", optHazard:"危険地帯", optLock:"施錠ドア",
+    hintExitBelow:"※脱出地点は上の「脱出地点」欄で選択", optHazard:"危険地帯", optLock:"施錠ドア",
     optSwitch:"スイッチ", optBoss:"ボス", optSpawn:"スポーン", optIcons:"アイコン",
     optRoute:"巡回ルート番号（①②③…）", shareCreateBtn:"共有リンク作成", shareLoadBtn:"コード読込",
     exitSection:"脱出地点", hintFactionSelect:"今回の出撃タイプを選択", showAll:"全部表示", hideAll:"全部隠す",
@@ -569,11 +644,12 @@ const STR = {
     brightness:"明るさ", brightnessTitle:"マップの明るさ", contrast:"コントラスト", contrastTitle:"マップのコントラスト",
     reset:"リセット", raidStart:"レイド開始",
     guideTitle:"はじめての方へ",
-    guideStep1:"左上の <b>トレーダー</b> か <b>マップ</b> で絞り込み、今回やるタスクにチェック。",
-    guideStep2:"上部のタブでマップを切り替え。地図上のピンにマウスを乗せると目標の説明が出ます。",
+    guideStep1:"右の列 <b>「タスクを選ぶ」</b> で、トレーダーかマップで絞り込み、今回やるタスクにチェック。左の「選択中」に、地図のピンと同じ A・B・C… の丸付きで並びます。",
+    guideStep2:"上部のタブでマップを切り替え。地図上のピンにマウスを乗せると、タスク名が出ます。",
     guideStep3:"左の <b>脱出地点</b> 欄で出撃タイプ(PMC/Scav)を選び、今回使う脱出地点にチェック → その地点だけ地図に出ます（緑=PMC / 青=Scav / 橙=共有）。",
     guideStep4:"このウィンドウをサブディスプレイへ移動し、<b>F11</b> で全画面にすると見やすいです。",
-    guideStep5:"ワイプ後や新タスク追加時は左上の <b>データ更新</b> を押してください。",
+    guideStep5:"ワイプ後や新タスク追加時は、右の列の <b>データ更新</b> を押してください。",
+    guideStep6:"進捗（選んだタスク・完了・レベルなど）は、<b>このブラウザに自動で保存</b>されます。別のパソコンに移すときや、ブラウザのデータを消す前は、左の「設定」の <b>バックアップ書き出し</b> で保存してください。",
     guideStart:"はじめる", loadingInitial:"データを読み込んでいます…",
     multipleOrNone:"複数/なし", doneBadge:"✓済(自分)", markDoneTitle:"完了マーク",
     searchPrefix:mn=>`検索: ${mn}`, searchResults:"検索結果", noMatch:"該当なし", selectedHeader:"選択中",
@@ -674,6 +750,9 @@ const STR = {
 <li><span class="k">✗失敗</span> … 失敗したタスク（TarkovTracker取込で付く）。一覧から隠れ、「今すぐ受注できる」にも出ない。</li>
 <li><b>Lv</b> 欄に自分のレベルを入れると、「<b>▶ 今すぐ受注できる</b>」に、前提タスクを終えていてレベルも足りているタスクが出る。</li>
 <li>フレンドと協力して遊ぶとき、<b>自分で選んだタスク</b>と<b>共有リンクで受け取ったタスク</b>は、完了済みでも隠れず「✓済」の表示で残る。</li>
+<li><b>A・B・C の丸</b>: 左上の「選択中」の各タスクには、地図のピンと同じ色・文字の丸が付きます。どのピンがどのタスクかは、丸を見比べるか、ピンにマウスを乗せる（タスク名が出ます）と分かります。</li>
+<li><b>地図を広く使う</b>: 左上の「◀ 地図を広く使う」を押すと、左のパネル全体が畳まれて、地図が画面いっぱいになります。畳んだ間は、地図の左上の <b>▶</b> で開けます（次に開いたときも覚えています）。</li>
+<li><b>パネルは2列</b>: 左の列は「選択中 → レイド前チェック → 脱出地点 → ストーリー → 設定」、右の列は「タスクを選ぶ（絞り込み・検索 → 候補の一覧）」です。右の列だけを畳むこともできます（畳んだ間は、地図の上の「🗂 タスクを選ぶ」で開けます）。狭い画面では、1列に縦に並びます。</li>
 <li><b>マップ別まとめ</b>: 選んだタスクの下に、マップごとのタスク数・目標数が出ます。数が多いマップに「おすすめ」が付き、押すとそのマップに切り替わります。「今すぐ受注できるタスクが多いマップ」も出ます（レベルか完了済みタスクを入れたとき）。マップタブの数字は、そのマップにある選んだタスクの目標の数です（座標のない目標も含む）。</li>
 </ul></div></details>
 
@@ -712,7 +791,7 @@ const STR = {
 </div></details>
 
 <details><summary>10. データ更新・困ったとき</summary><div><ul>
-<li><b>バックアップ</b>: 進捗（選んだタスク・完了・レベル・チェック・カスタムピンなど）は、このブラウザの中にだけ保存されています。ブラウザのデータを消す前や、パソコンを替えるときは、「表示レイヤー・共有」の <b>バックアップ書き出し</b> でファイルに保存し、新しい環境で <b>バックアップ読込</b> を押してください（いまのデータはファイルの内容に置き換わります）。</li>
+<li><b>バックアップ</b>: 進捗（選んだタスク・完了・レベル・チェック・カスタムピンなど）は、このブラウザの中にだけ保存されています。ブラウザのデータを消す前や、パソコンを替えるときは、「表示レイヤー・共有」の <b>バックアップ書き出し</b> でファイルに保存し、新しい環境で <b>バックアップ読込</b> を押してください（いまのデータはファイルの内容に置き換わります）。進捗があるのに30日以上バックアップを取っていないと、左の列の上に小さなお知らせが出ます（「あとで」で14日間は出ません）。</li>
 <li><b>データ更新</b>: ワイプ後や新タスク追加時に押す。タスク・脱出地点・ボス位置などを最新にする（1日1回は自動で更新）。</li>
 <li>データが読めないとき: ネットを確認して「データ更新」。取得できない場合は同梱のデータで動き、「⚠古い」と表示されます。</li>
 <li>地図が真っ黒: 画像サーバーが混んでいます。少し待って再読み込み。</li>
@@ -753,9 +832,15 @@ const STR = {
     prepHeader:mjp=>`レイド前チェック — ${mjp}`,
     prepEmpty:"このマップで持ち込む鍵・回収アイテムはありません（座標ピンのみ）。",
     prepKeys:"🔑 持ち込む鍵", prepBring:"📤 持ち込み（設置・マーカー用）", prepCollect:"📥 現地で回収",
-    prepHeaderAll:"レイド前チェック — 全マップ合計", prepAllBtn:"全マップ", prepOneBtn:"このマップ", prepAllTip:"選んだタスク全部の必要なものを、マップをまたいでまとめて表示します", prepOneTip:"いま見ているマップだけの表示に戻します",
+    prepHeaderAll:"レイド前 — 全マップ合計", prepAllBtn:"全マップ", prepOneBtn:"このマップ", prepAllTip:"選んだタスク全部の必要なものを、マップをまたいでまとめて表示します", prepOneTip:"いま見ているマップだけの表示に戻します",
     prepAnyMap:"どのマップでも", prepEmptyAll:"選んだタスクに、持ち込む鍵・回収アイテム・装備の条件はありません。",
+    bkNote:"進捗（選んだタスク・完了・レベルなど）は、このブラウザにだけ自動で保存されています。別の端末に移すときや、ブラウザのデータを消す前に、書き出しておくと安心です。",
+    bkRemind:d=>`バックアップを${d}日以上取っていません。進捗を守るために、いま保存しませんか？`, bkRemindNow:"書き出す", bkRemindLater:"あとで",
     bkExportBtn:"バックアップ書き出し", bkImportBtn:"バックアップ読込", bkExported:n=>`バックアップを書き出しました（${n}項目）`, bkBad:"このファイルはバックアップとして読み込めません。", bkConfirm:n=>`バックアップ（${n}項目）を読み込みます。いまの選択・完了・レベル・チェック・カスタムピンなどは、このファイルの内容に置き換わります。よろしいですか？`, bkReplaced:"読み込みました。画面を再読み込みします。",
+    collapseBtn:"◀ 地図を広く使う", collapseTip:"左のパネルを畳んで地図を広く使います（畳んだ間は、地図の左上の ▶ で開けます）", reopenTip:"左のパネルを開く",
+    pickTitle:"タスクを選ぶ", pkCollapseTip:"この列（タスクを選ぶ）だけを畳む", pkReopenBtn:"🗂 タスクを選ぶ", pkReopenTip:"タスクを選ぶ列を開く",
+    filtSection:"絞り込み・検索", settingsSection:"設定（レイヤー・共有・バックアップ）", selEmpty:"選んだタスクが、ここに A・B・C… の丸付きで並びます（右の「タスクを選ぶ」から選べます）。", chipTip:l=>`地図のピン「${l}」`,
+    mapSumFoldTip:"押すと折りたたみ／開く",
     mapSumTitle:"マップ別まとめ（選んだタスク）", mapSumBest:"おすすめ", mapSumCount:(t,o)=>`${t}タスク・${o}目標`, mapSumDoable:"今すぐ受注できるタスクが多いマップ:",
     prepGear:"🎯 武器・装備の条件", gearWeapons:"使う武器", gearMods:"必要なパーツ", gearWear:"着用", gearNotWear:n=>`指定の装備は着用しない（${n}種）`, gearMore:n=>`ほか${n}`,
     pinPromptAdd:"このピンのメモ（例: スナイパー注意 / 休憩ポイント）",
@@ -795,7 +880,7 @@ const STR = {
     supportBtnTitle:"Thanks for using this tool! It'll always stay free. If it's saved you time, a tip on Ko-fi is appreciated — totally optional, no pressure.",
     supportBtnSub:"Thanks for using this! (optional)",
     layersSection:"Display layers / Share", optTransit:"Transit (between maps)",
-    hintExitBelow:"※ Pick extracts in the “Extracts” section below", optHazard:"Hazard areas", optLock:"Locked doors",
+    hintExitBelow:"※ Pick extracts in the “Extracts” section above", optHazard:"Hazard areas", optLock:"Locked doors",
     optSwitch:"Switches", optBoss:"Bosses", optSpawn:"Spawns", optIcons:"Icons",
     optRoute:"Route numbering (①②③…)", shareCreateBtn:"Create share link", shareLoadBtn:"Load code",
     exitSection:"Extracts", hintFactionSelect:"Select this raid's spawn type", showAll:"Show all", hideAll:"Hide all",
@@ -804,11 +889,12 @@ const STR = {
     brightness:"Brightness", brightnessTitle:"Map brightness", contrast:"Contrast", contrastTitle:"Map contrast",
     reset:"Reset", raidStart:"Start raid",
     guideTitle:"New here?",
-    guideStep1:"Filter by <b>Trader</b> or <b>Map</b> at top-left, then check the tasks you're running this raid.",
-    guideStep2:"Switch maps with the tabs above. Hover a pin on the map to see the objective description.",
+    guideStep1:"In the right column <b>“Pick tasks”</b>, filter by Trader or Map and check the tasks you're running this raid. They appear under “Selected” on the left with A / B / C… badges matching the map pins.",
+    guideStep2:"Switch maps with the tabs above. Hover a pin on the map to see the task name.",
     guideStep3:"In the <b>Extracts</b> section on the left, pick your spawn type (PMC/Scav) and check the extracts you'll use → only those show on the map (green=PMC / blue=Scav / orange=shared).",
     guideStep4:"Move this window to your second monitor and press <b>F11</b> for fullscreen — easiest to read that way.",
-    guideStep5:"After a wipe or new tasks, press <b>Refresh data</b> at the top-left.",
+    guideStep5:"After a wipe or new tasks, press <b>Refresh data</b> in the right column.",
+    guideStep6:"Your progress (selected tasks, completed tasks, level, etc.) is <b>saved automatically in this browser</b>. Before moving to another computer or clearing browser data, save it with <b>Export backup</b> under “Settings” on the left.",
     guideStart:"Get started", loadingInitial:"Loading data…",
     multipleOrNone:"Multiple / none", doneBadge:"✓ done (you)", markDoneTitle:"Mark complete",
     searchPrefix:mn=>`Search: ${mn}`, searchResults:"Search results", noMatch:"No matches", selectedHeader:"Selected",
@@ -903,6 +989,9 @@ const STR = {
 
 <details><summary>4. Task list marks &amp; completion</summary><div><ul>
 <li><span class="k">★</span> … a task required for the Kappa container. "Kappa only ★" filters to them.</li>
+<li><b>A / B / C badges</b>: each task under "Selected" at the top left has a badge with the same color and letter as its pins on the map. Match the badges, or hover a pin to see the task name.</li>
+<li><b>Bigger map</b>: press "◀ Bigger map" at the top left to collapse the whole left panel so the map fills the screen. While collapsed, <b>▶</b> at the top-left of the map opens it (remembered next time).</li>
+<li><b>Two columns</b>: the left column is "Selected → Pre-raid checklist → Extracts → Story → Settings"; the right column is "Pick tasks" (Filters &amp; search → Task list). You can collapse just the right column (while collapsed, "🗂 Pick tasks" above the map reopens it). On narrow screens they stack in one column.</li>
 <li><b>Per-map summary</b>: under your selected tasks, each map shows its task and objective counts. The busiest map gets a "Best" tag; click a row to switch to that map. A line also lists the maps with the most tasks you can accept now (once you enter a level or completed tasks). The number on each map tab is the count of your selected tasks' objectives there (objectives without coordinates included).</li>
 <li><span class="k">○ / ✓</span> … click to mark a task complete / undo. Completed tasks hide from the list automatically; "Show completed" brings them back.</li>
 <li><span class="k">⚠</span> … a task with a fail condition (hover, or select the task, to see it). Includes <b>mutually exclusive tasks</b> (completing one fails the other) by name.</li>
@@ -947,7 +1036,7 @@ const STR = {
 </div></details>
 
 <details><summary>10. Refreshing data &amp; troubleshooting</summary><div><ul>
-<li><b>Backup</b>: your progress (selected tasks, completed tasks, level, checks, custom pins, etc.) is stored only inside this browser. Before clearing browser data, or when moving to another computer, use <b>Export backup</b> under "Layers &amp; sharing" to save it to a file, then press <b>Import backup</b> in the new place (it replaces the current data with the file's contents).</li>
+<li><b>Backup</b>: your progress (selected tasks, completed tasks, level, checks, custom pins, etc.) is stored only inside this browser. Before clearing browser data, or when moving to another computer, use <b>Export backup</b> under "Layers &amp; sharing" to save it to a file, then press <b>Import backup</b> in the new place (it replaces the current data with the file's contents). If you have progress but haven't backed up for 30+ days, a small notice appears at the top of the left column ("Later" hides it for 14 days).</li>
 <li><b>Refresh data</b>: press it after a wipe or when new tasks are added. It updates tasks, extracts, boss spawns, etc. (it also refreshes automatically about once a day).</li>
 <li>If data won't load: check your connection and press "Refresh data". If it can't be fetched, the bundled data is used and "⚠ stale" is shown.</li>
 <li>Map is black: the image server is busy — wait a moment and reload.</li>
@@ -989,7 +1078,13 @@ const STR = {
     prepKeys:"🔑 Keys to bring", prepBring:"📤 To bring (plant/mark)", prepCollect:"📥 Find on site",
     prepHeaderAll:"Pre-raid checklist — all maps", prepAllBtn:"All maps", prepOneBtn:"This map", prepAllTip:"Show what all your selected tasks need, across every map", prepOneTip:"Back to the map you're viewing",
     prepAnyMap:"Any map", prepEmptyAll:"Your selected tasks need no keys, pickup items or gear.",
+    bkNote:"Your progress (selected tasks, completed tasks, level, etc.) is saved automatically in this browser only. Export it before moving to another device or clearing browser data.",
+    bkRemind:d=>`You haven't backed up for ${d}+ days. Save your progress now?`, bkRemindNow:"Export", bkRemindLater:"Later",
     bkExportBtn:"Export backup", bkImportBtn:"Import backup", bkExported:n=>`Backup exported (${n} items)`, bkBad:"This file can't be read as a backup.", bkConfirm:n=>`Import a backup (${n} items)? Your current selection, completed tasks, level, checks, custom pins etc. will be replaced by the file's contents.`, bkReplaced:"Imported. Reloading…",
+    collapseBtn:"◀ Bigger map", collapseTip:"Collapse the left panel for a bigger map (while collapsed, ▶ at the top-left of the map opens it)", reopenTip:"Open the left panel",
+    pickTitle:"Pick tasks", pkCollapseTip:"Collapse just this column (Pick tasks)", pkReopenBtn:"🗂 Pick tasks", pkReopenTip:"Open the Pick tasks column",
+    filtSection:"Filters & search", settingsSection:"Settings (layers, sharing, backup)", selEmpty:"Your selected tasks will appear here with A / B / C… badges (pick tasks in the “Pick tasks” column on the right).", chipTip:l=>`Map pin "${l}"`,
+    mapSumFoldTip:"Click to fold / unfold",
     mapSumTitle:"Per-map summary (selected tasks)", mapSumBest:"Best", mapSumCount:(t,o)=>`${t} task${t===1?"":"s"} · ${o} objective${o===1?"":"s"}`, mapSumDoable:"Maps with the most tasks you can accept now:",
     prepGear:"🎯 Weapon & gear requirements", gearWeapons:"Weapons", gearMods:"Required mods", gearWear:"Wear", gearNotWear:n=>`Don't wear the specified gear (${n} items)`, gearMore:n=>`+${n} more`,
     pinPromptAdd:"Note for this pin (e.g. sniper danger / rest point)",
@@ -1074,6 +1169,7 @@ function setMode(m){
   box.innerHTML = MODES.map(k => `<button type="button" role="radio" data-mode="${k}" aria-checked="${k === MODE}" class="${k === MODE ? "on" : ""}">${names[k]}</button>`).join("");
   box.querySelectorAll("button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
   document.getElementById("modeHint").textContent = T(MODE === "pvp" ? "modeHintPvp" : MODE === "pve" ? "modeHintPve" : "modeHintSeasonal");
+  document.getElementById("modeBtns").title = document.getElementById("modeHint").textContent;   // 説明文は表示せず、マウスを乗せたときに出す（左のパネルの高さを節約）
 })();
 
 const NINF = -1e9, PINF = 1e9;
@@ -1871,8 +1967,10 @@ function mapSummaryEl(){
   const box = document.createElement("div");
   box.className = "mapsum";
   let html = "";
+  const folded = lsGet("eft_qm_mapsum_fold_v1") === "1";
+  box.classList.toggle("folded", folded);
   if(rows.length){
-    html += `<div class="mst">${T("mapSumTitle")}</div>`;
+    html += `<div class="mst" title="${escH(T("mapSumFoldTip"))}">${folded ? "▸" : "▾"} ${T("mapSumTitle")}</div>`;
     rows.forEach(([mn, s], i) => {
       html += `<button class="msrow${mn === curMap ? " cur" : ""}" data-map="${mn}"><span class="msn">${MAPBY[mn].jp}</span>` +
               (i === 0 && rows.length >= 2 ? `<span class="msbest">${T("mapSumBest")}</span>` : "") +
@@ -1884,6 +1982,8 @@ function mapSummaryEl(){
   }
   box.innerHTML = html;
   box.querySelectorAll("[data-map]").forEach(el => el.onclick = (e) => { e.preventDefault(); track("use/map-summary"); gotoMap(el.dataset.map); });
+  const mst = box.querySelector(".mst");
+  if(mst) mst.onclick = () => { lsSet("eft_qm_mapsum_fold_v1", box.classList.contains("folded") ? "0" : "1"); renderSelBox(); };   // 見出しを押すと折りたたむ／開く
   return box;
 }
 
@@ -1908,7 +2008,7 @@ function renderTabs(){
   }
 }
 
-function questRow(t){
+function questRow(t, chip){
   const dn = isDone(t.id);
   const row = document.createElement("label");
   row.className = "quest" + (t.kappa ? " kappa":"") + (dn ? " qdone":"");
@@ -1927,7 +2027,10 @@ function questRow(t){
                 (isFailed(t.id) ? ` <span class="qfail">${T("failBadge")}</span>` : (lockedOut(t) ? ` <span class="qfail">${T("lockedBadge")}</span>` : "")) +
                 (failLines(t).length ? ` <span class="qwarn" title="${failLines(t).join(" / ").replace(/"/g, "'")}">⚠</span>` : "") +
                 storyChip(t);
-  info.innerHTML = `<div class="qn">${t.name}${badge}</div><div class="meta">${t.trader} ・ ${T("lvLabel")}${t.lvl||"-"} ・ ${where}</div>` +
+  // 選択中の一覧では、地図のピンと同じ色・文字(A, B, C…)の丸を付けて、どのピンがどのタスクか分かるようにする
+  const chipHtml = chip ? `<span class="selchip" style="background:${chip.color}" title="${T("chipTip", chip.label)}">${chip.label}</span>` : "";
+  row.title = `${t.trader} ・ ${T("lvLabel")}${t.lvl||"-"} ・ ${where}`;
+  info.innerHTML = `<div class="qn">${chipHtml}${t.name}${badge}</div><div class="meta">${t.trader} ・ ${T("lvLabel")}${t.lvl||"-"} ・ ${where}</div>` +
     (selected.has(t.id) ? chainHtml(t) : "");
   const doneBtn = document.createElement("button");
   doneBtn.textContent = dn ? "✓" : "○";
@@ -2004,11 +2107,30 @@ async function focusQuest(t){
 // 現在のマップ絞り込み対象 ("" = すべて, "__cur__" = 表示中のマップに追従)
 function effMapFilter(){ return opts.mapFilter === "__cur__" ? curMap : opts.mapFilter; }
 
+/* 選択中のタスク（A, B, C… の丸付き・選んだ順）とマップ別まとめ。左のパネルの一番上に固定して、検索や絞り込みに関係なく常に見える */
+function renderSelBox(){
+  const box = document.getElementById("selbox");
+  box.innerHTML = "";
+  const rows = [];
+  [...selected].forEach((id, i) => { const t = TASKS.find(x => x.id === id); if(t) rows.push({ t, i }); });   // i = 地図のピンの文字と同じ並び
+  if(!rows.length){
+    const m = document.createElement("div"); m.className = "muted selhint"; m.textContent = T("selEmpty"); box.appendChild(m);
+    return;
+  }
+  const h = document.createElement("div");
+  h.className = "trader";
+  h.innerHTML = `${T("selectedHeader")} <span class="count">(${rows.length})</span>`;
+  box.appendChild(h);
+  rows.forEach(({ t, i }) => box.appendChild(questRow(t, { label:selLabel(i), color:colorForSelIndex(i) })));
+  const ms = mapSummaryEl(); if(ms) box.appendChild(ms);
+}
+
 function renderQuestList(){
   const box = document.getElementById("questlist");
   const q = document.getElementById("search").value.trim().toLowerCase();
   const fmap = effMapFilter();
   box.innerHTML = "";
+  renderSelBox();
 
   const pass = t => {
     if(opts.kappaOnly && !t.kappa) return false;
@@ -2037,14 +2159,6 @@ function renderQuestList(){
     if(!list.length) note(T("noMatch"));
     list.forEach(t => box.appendChild(questRow(t)));
     return;
-  }
-
-  // 選択中のタスクは常に上部に表示（外せるように）
-  const sel = TASKS.filter(t => selected.has(t.id)).sort(byName);
-  if(sel.length){
-    header(T("selectedHeader"), sel.length);
-    sel.forEach(t => box.appendChild(questRow(t)));
-    const ms = mapSummaryEl(); if(ms) box.appendChild(ms);
   }
 
   // トレーダーもマップも未指定なら促す
@@ -2091,6 +2205,7 @@ function renderProgress(){
     (lkAll ? T("progressLK", lkDn, lkAll) : "");
 }
 
+const TIP_OPT = { direction:"top", offset:[0, -10], opacity:0.95 };   // ピンにマウスを乗せたときのタスク名
 function iconQuest(color, label){
   return L.divIcon({ className:"", html:`<div class="qmark" style="width:17px;height:17px;background:${color}">${label||""}</div>`,
     iconSize:[17,17], iconAnchor:[8.5,8.5] });
@@ -2242,7 +2357,7 @@ function renderMarkers(){
         ((m.obj.conditions && m.obj.conditions.length) ? `<br><span style="color:#a06">${T("conditionsLabel")}${m.obj.conditions.join(" / ")}</span>` : "") +
         chainHtml(t) +
         (t.wiki ? `<a href="${t.wiki}" target="_blank" rel="noopener">Wiki ↗</a>` : "");
-      questPts.push({ ll, color, label, popup });
+      questPts.push({ ll, color, label, popup, tip:`[${label}] ${t.name}` });
     }
     for(const line of (t.noCoord[curMap] || [])){
       noCoordLines.push(`<div>• <span style="color:${color}">[${label}] ${t.name}:</span> ${line}</div>`);
@@ -2263,11 +2378,11 @@ function renderMarkers(){
     }
     L.polyline(ordered.map(p => p.ll), { color:"#c7b083", weight:2, opacity:0.8, dashArray:"6 4" }).addTo(markerLayer);
     ordered.forEach((p, i) => {
-      L.marker(p.ll, { icon:iconQuest(p.color, String(i + 1)) }).bindPopup(`<b>${T("routeLabel")} ${i+1}</b><br>` + p.popup).addTo(markerLayer);
+      L.marker(p.ll, { icon:iconQuest(p.color, String(i + 1)) }).bindPopup(`<b>${T("routeLabel")} ${i+1}</b><br>` + p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
     });
   }else{
     for(const p of questPts){
-      L.marker(p.ll, { icon:iconQuest(p.color, p.label) }).bindPopup(p.popup).addTo(markerLayer);
+      L.marker(p.ll, { icon:iconQuest(p.color, p.label) }).bindPopup(p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
     }
   }
 
@@ -2660,9 +2775,9 @@ function renderPrep(){
   const keysOf = e => prepAll ? (e.maps.has("*") ? [...MAPS.map(m => m.n), "*"] : [...e.maps]) : [mn];
   const chk = e => keysOf(e).some(m => checks[m] && checks[m][e.id]);
 
-  let html = `<div class="phead" id="prephead">${prepAll ? T("prepHeaderAll") : T("prepHeader", mjp)} <span style="color:var(--dim);font-weight:400">(${total})</span> ${prepOpen ? "▲" : "▼"}` +
-             `<button id="prepreset" style="float:right;font-size:10px;padding:1px 6px">${T("reset")}</button>` +
-             `<button id="prepmode" style="float:right;font-size:10px;padding:1px 6px;margin-right:4px" title="${escH(T(prepAll ? "prepOneTip" : "prepAllTip"))}">${T(prepAll ? "prepOneBtn" : "prepAllBtn")}</button></div>`;
+  let html = `<div class="phead" id="prephead"><span class="ptitle">${prepAll ? T("prepHeaderAll") : T("prepHeader", mjp)} <span style="color:var(--dim);font-weight:400">(${total})</span> ${prepOpen ? "▲" : "▼"}</span>` +
+             `<span class="pbtns"><button id="prepmode" title="${escH(T(prepAll ? "prepOneTip" : "prepAllTip"))}">${T(prepAll ? "prepOneBtn" : "prepAllBtn")}</button>` +
+             `<button id="prepreset">${T("reset")}</button></span></div>`;
   if(prepOpen){
     if(total === 0){
       html += `<div class="pnote">${prepAll ? T("prepEmptyAll") : T("prepEmpty")}</div>`;
@@ -3173,6 +3288,49 @@ const closeDrawer = () => appEl.classList.remove("sb-open");
 document.getElementById("menuBtn").onclick = () => appEl.classList.add("sb-open");
 document.getElementById("sbShade").onclick = closeDrawer;
 document.getElementById("sbClose").onclick = closeDrawer;
+
+/* 左パネルの畳み込み（地図を広く使う）。次に開いたときも覚えている */
+const lsGet = (k) => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+const lsSet = (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} };
+const resizeMapSoon = () => setTimeout(() => { try{ if(map) map.invalidateSize(); }catch(e){} }, 60);
+function applyCollapsed(on){
+  appEl.classList.toggle("sb-collapsed", on);
+  lsSet("eft_qm_sbcol_v1", on ? "1" : "0");
+  resizeMapSoon();
+}
+document.getElementById("sbCollapse").onclick = () => { track("use/panel-collapse"); applyCollapsed(true); };
+document.getElementById("sbReopen").onclick = () => applyCollapsed(false);
+// 右の列（タスクを選ぶ）だけを畳む／開く
+function applyPickerCollapsed(on){
+  appEl.classList.toggle("pk-collapsed", on);
+  lsSet("eft_qm_pkcol_v1", on ? "1" : "0");
+  resizeMapSoon();
+}
+document.getElementById("pkCollapse").onclick = () => applyPickerCollapsed(true);
+document.getElementById("pkReopen").onclick = () => applyPickerCollapsed(false);
+applyPickerCollapsed(lsGet("eft_qm_pkcol_v1") === "1");
+applyCollapsed(lsGet("eft_qm_sbcol_v1") === "1");
+/* バックアップのお知らせ: 進捗があり、最後のバックアップ（または使い始め）から30日以上たっていたら、左の列の上に控えめに1回出す。「あとで」は14日後にまた出す */
+const BK_LAST = "eft_qm_bk_last_v1", BK_FIRST = "eft_qm_first_v1", BK_SNOOZE = "eft_qm_bk_snooze_v1";
+function checkBackupReminder(){
+  const el = document.getElementById("bknote"), DAY = 864e5, now = Date.now();
+  if(!lsGet(BK_FIRST)) lsSet(BK_FIRST, String(now));
+  const base = Math.max(+lsGet(BK_LAST) || 0, +lsGet(BK_FIRST) || now);
+  const hasData = done.size >= 3 || selected.size >= 1;
+  if(!hasData || now - base < 30 * DAY || now < (+lsGet(BK_SNOOZE) || 0)){ el.classList.add("hidden"); return; }
+  el.innerHTML = `<div>${escH(T("bkRemind", Math.floor((now - base) / DAY)))}</div>` +
+    `<div class="bkbtns"><button id="bkrnow" class="primary">${T("bkRemindNow")}</button><button id="bkrlater">${T("bkRemindLater")}</button></div>`;
+  el.classList.remove("hidden");
+  document.getElementById("bkrnow").onclick = () => { bkExport(); el.classList.add("hidden"); };
+  document.getElementById("bkrlater").onclick = () => { lsSet(BK_SNOOZE, String(Date.now() + 14 * DAY)); el.classList.add("hidden"); };
+}
+checkBackupReminder();
+// 初めは全部開いておく（自分で閉じたら、その状態を覚える）
+for(const [id, key, dflt] of [["filtSect", "eft_qm_filt_open_v1", true], ["settingsSect", "eft_qm_settings_open_v1", true], ["storySect", "eft_qm_story_open_v1", true]]){
+  const s = document.getElementById(id), v = lsGet(key);
+  s.open = v == null ? dflt : v === "1";
+  s.addEventListener("toggle", () => lsSet(key, s.open ? "1" : "0"));
+}
 document.getElementById("guideclose").onclick = () => {
   document.getElementById("guide").classList.add("hidden");
   try{ localStorage.setItem(GUIDE_KEY, "1"); }catch(e){}
@@ -3213,6 +3371,7 @@ function bkKeys(){
 }
 function bkExport(){
   track("use/backup-export");
+  lsSet(BK_LAST, String(Date.now()));   // 最後にバックアップした日時（案内を出す間隔の基準）
   const data = {}; for(const k of bkKeys()) data[k] = localStorage.getItem(k);
   const obj = { _format:"tarkov-task-map-backup", _version:1, exportedAt:new Date().toISOString(), data };
   const a = document.createElement("a");
@@ -3255,7 +3414,7 @@ document.getElementById("ttfile").addEventListener("change", (e) => {
 });
 (() => {
   const sect = document.getElementById("layersSect");
-  try{ if(localStorage.getItem("eft_qm_layers_open_v1") === "1") sect.open = true; }catch(e){}
+  try{ if(localStorage.getItem("eft_qm_layers_open_v1") !== "0") sect.open = true; }catch(e){ sect.open = true; }   // 初めは開いておく（自分で閉じたら、その状態を覚える）
   sect.addEventListener("toggle", () => {
     try{ localStorage.setItem("eft_qm_layers_open_v1", sect.open ? "1" : "0"); }catch(e){}
   });
