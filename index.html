@@ -697,6 +697,17 @@ const STR = {
 <li>欲しい機能・不具合・ご意見は、地図の上（マップ切替タブの右端）の「💬 ご意見・要望を送る」ボタン（またはこのウィンドウ下のボタン）から送れます。</li>
 </ul></div></details>
 
+<details><summary>11. 安全性について（アカウントBANの心配）</summary><div>
+<p>このツールは、<b>ゲームとは完全に別のWebページ</b>です。ブラウザで開いて見るだけの、tarkov.dev などと同じ種類の「外部マップツール」です。</p>
+<ul>
+<li>ゲームのプログラム・メモリ・ファイル・通信には<b>一切触れません</b>（読み取りも、書き換えも、注入もしません）。</li>
+<li>画面の撮影や、ゲームのログの監視もしていません。ゲームから情報を取ることはなく、位置の追跡もしません。</li>
+<li>使っているのは、tarkov.dev の<b>公開データと地図</b>と、あなたが選んだタスクの情報だけです。選んだタスクや進捗は、自分のブラウザの中にだけ保存されます。</li>
+<li>インストールは不要で、ゲームを操作する機能もありません。</li>
+</ul>
+<p>ゲームのデータを読み書きするツール（チートなど）とは、仕組みがまったく違います。ただし、これは<b>非公式のファンツール</b>で、Battlestate Games（BSG）が認めたものではありません。「絶対に大丈夫」とまでは言い切れないため、気になる方は BSG の公式の規約をご確認ください。</p>
+</div></details>
+
 <p class="muted">このツールはゲームに一切アクセスしません（メモリ読取り・注入なし）。tarkov.dev の公開データと地図を使っています（地図: CC BY-NC-SA 4.0）。</p>`,
     ttModeLabel:"取り込むモード:", ttModePvp:"PvP", ttModePve:"PvE", ttModeSeasonal:"Seasonal",
     ttSummary:(lv,c,cKnown,f,o,s)=>`レベル <b>${lv||"-"}</b> ／ 完了タスク <b>${c}</b> 件（このツールで認識 ${cKnown} 件）／ 失敗 <b>${f}</b> 件 ／ 達成済みの目標 <b>${o}</b> 件 ／ ストーリーの目標 <b>${s}</b> 件`,
@@ -911,6 +922,17 @@ const STR = {
 <li><b>Analytics</b>: to guide improvements, we anonymously count only visits, how many times each feature is used, and roughly how long the page stays open (GoatCounter, no cookies). Names of the tasks you select, your progress and anything you type are never sent.</li>
 <li>Feature requests, bugs and feedback can be sent with the "💬 Send feedback / request" button at the right end of the map tabs (or the button at the bottom of this window).</li>
 </ul></div></details>
+
+<details><summary>11. Safety (worried about a ban?)</summary><div>
+<p>This tool is a <b>completely separate web page</b> from the game — an external map tool you simply open in a browser, the same kind of tool as tarkov.dev.</p>
+<ul>
+<li>It <b>never touches</b> the game's program, memory, files or network traffic (no reading, no modifying, no injection).</li>
+<li>It doesn't capture your screen or watch the game's logs. It takes nothing from the game and does not track your position.</li>
+<li>It only uses <b>public data and maps from tarkov.dev</b> plus the tasks you pick. Your selections and progress are stored only in your own browser.</li>
+<li>Nothing to install, and no feature that controls or automates the game.</li>
+</ul>
+<p>It works in a completely different way from tools that read or write game data (cheats). That said, this is an <b>unofficial fan tool</b> and is not endorsed by Battlestate Games (BSG), so we can't promise that nothing could ever happen — if you're concerned, please check BSG's official terms.</p>
+</div></details>
 
 <p class="muted">This tool never touches the game (no memory reading or injection). It uses public tarkov.dev data and maps (maps: CC BY-NC-SA 4.0).</p>`,
     ttModeLabel:"Game mode:", ttModePvp:"PvP", ttModePve:"PvE", ttModeSeasonal:"Seasonal",
