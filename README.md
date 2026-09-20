@@ -4,7 +4,7 @@ A free, single-page **pre-raid companion tool for Escape from Tarkov**. Pick the
 you're running this raid and it pins their objective locations, plus the extracts you
 choose, on an interactive map — meant for a second monitor.
 
-**▶ Live tool:** https://tarkovquestmap.github.io/
+**▶ Live tool:** https://tarkovtaskmap.github.io/
 
 No installation, no login (only anonymous visit / feature-usage counts via GoatCounter, no cookies), no game-memory access — just static data from
 [tarkov.dev](https://tarkov.dev)'s public API. Works in any browser; the language follows your browser (Japanese or English) —
