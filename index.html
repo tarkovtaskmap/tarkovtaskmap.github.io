@@ -38,6 +38,8 @@
 </script>
 <!-- 同梱データ (json.tarkov.dev が全滅した時のフォールバック。「データ更新」で最新化) -->
 <script src="data-snapshot.js" onerror="console.warn('data-snapshot.js なし')"></script>
+<!-- 日本語訳が無いタスク目標の補足訳（無くてもツールは動く） -->
+<script src="ja-supplement.js" onerror="console.warn('ja-supplement.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
@@ -696,6 +698,7 @@ const STR = {
 <li>地図が真っ黒: 画像サーバーが混んでいます。少し待って再読み込み。</li>
 <li>地図の絵が新しいレイアウトと違う（例: Lighthouse）: 地図の絵は tarkov.dev が更新するまで古いままです。地図の上にお知らせが出ます。</li>
 <li>タスク名・アイテム名・マップ名・脱出地点名は、ゲームの表記どおり英語で表示します。</li>
+<li>目標の説明が日本語のとき、末尾に <b>※訳</b> が付いているものは、tarkov.dev に日本語訳が無いため、このツールで補った訳です（誤訳があるかもしれません。おかしい点は「ご意見・要望」から教えてください）。</li>
 <li><b>アクセスの集計</b>: 改善の参考にするため、訪問数と「どの機能が何回使われたか」「何分くらい開かれたか」だけを、匿名で数えています（GoatCounter・Cookieなし）。選んだタスクの名前、進捗、入力した文字は送りません。</li>
 <li>欲しい機能・不具合・ご意見は、地図の上（マップ切替タブの右端）の「💬 ご意見・要望を送る」ボタン（またはこのウィンドウ下のボタン）から送れます。</li>
 </ul></div></details>
@@ -1197,7 +1200,15 @@ const OBJ_TYPE_KEY = {
 };
 const objTypeJa = t => OBJ_TYPE_KEY[t] ? T(OBJ_TYPE_KEY[t]) : t;
 // 目標の説明文: LANG=ja は日本語優先、LANG=en は英語優先（両方 tarkov.dev から取得済み）
-const objDesc = o => LANG === "ja" ? (o.descriptionJa || o.description || "") : (o.description || o.descriptionJa || "");
+// 日本語表示: tarkov.dev の日本語が英語のまま(=訳なし)のときだけ、同梱の補足訳(ja-supplement.js)を使い「※訳」を付ける
+const JA_SUPP = (typeof window !== "undefined" && window.__JA_SUPP__) || {};
+const JA_MARK = " ※訳";
+const objDesc = o => {
+  if(LANG !== "ja") return o.description || o.descriptionJa || "";
+  const d = o.descriptionJa || o.description || "";
+  if(o.descKey && JA_SUPP[o.descKey] && !/[぀-ヿ一-鿿]/.test(o.descriptionJa || "")) return JA_SUPP[o.descKey] + JA_MARK;
+  return d;
+};
 // 脱出地点: 名前に "Co-op" が入っているものだけ「PMC+Scav両方が揃わないと使用不可」の真の共同脱出。
 // それ以外の faction=shared は「PMC/Scavどちらでも単独で使える」という意味なので、今回の出撃タイプ名で表示する。
 const isCoopExtract = name => /co-?op/i.test(name || "");
@@ -1238,7 +1249,7 @@ async function jdFetch(path){
   return r.json();
 }
 
-const CACHE_KEY = "eft_qm_cache_v7_" + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
+const CACHE_KEY = "eft_qm_cache_v8_" + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
 const SEL_KEY   = MK("eft_qm_selected_v1");
 const OPT_KEY   = "eft_qm_opts_v1";
 const MAP_KEY   = "eft_qm_lastmap_v1";
@@ -1392,6 +1403,7 @@ async function fetchData(){
         gear,
         description: tEN(o.description),
         descriptionJa: tJA(o.description),
+        descKey: o.description,
         optional: !!o.optional,
         count: o.count || 0,
         foundInRaid: !!o.foundInRaid,
