@@ -115,6 +115,9 @@
   #prep .pitem .fir{color:#6db36d;font-size:9px;border:1px solid #6db36d;border-radius:3px;padding:0 3px}
   #prep .pitem.done .nm{text-decoration:line-through;color:var(--dim)}
   #prep .pnote{padding:6px 14px;font-size:11px;color:var(--dim)}
+  #prep .pitem .nm.wrap{white-space:normal;overflow:visible;line-height:1.4}
+  #prep .pgear{padding-bottom:4px}
+  #prep .gsub{padding:0 14px 1px 41px;font-size:11px;color:var(--dim);line-height:1.5;word-break:break-word}
 
   #questlist{flex:1 1 auto;min-height:300px;overflow-y:auto;padding:4px 0}
   .trader{padding:8px 14px 4px;color:var(--accent2);font-size:12px;font-weight:700;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
@@ -660,7 +663,7 @@ const STR = {
 
 <details><summary>6. レイド前チェック</summary><div>
 <p>左の「レイド前チェック」に、選んだタスクに必要なものが出ます。行のチェックボックスは保存されます（「リセット」で全部外せる）。</p>
-<ul><li>🔑 持ち込む鍵　／　📤 設置・持ち込むアイテム　／　📥 現地で回収するアイテム（FiR＝レイド内で入手が必要）</li></ul>
+<ul><li>🔑 持ち込む鍵　／　📤 設置・持ち込むアイテム　／　📥 現地で回収するアイテム（FiR＝レイド内で入手が必要）　／　🎯 武器・装備の条件（使う武器・必要なパーツ・着用する装備。候補が多いものは、マウスを乗せると全部出ます）</li></ul>
 <p>マップ上部の<b>レイドタイマー</b>で、そのマップの制限時間が数えられます（残り5分で黄、2分で赤）。</p>
 </div></details>
 
@@ -727,6 +730,7 @@ const STR = {
     prepHeader:mjp=>`レイド前チェック — ${mjp}`,
     prepEmpty:"このマップで持ち込む鍵・回収アイテムはありません（座標ピンのみ）。",
     prepKeys:"🔑 持ち込む鍵", prepBring:"📤 持ち込み（設置・マーカー用）", prepCollect:"📥 現地で回収",
+    prepGear:"🎯 武器・装備の条件", gearWeapons:"使う武器", gearMods:"必要なパーツ", gearWear:"着用", gearNotWear:n=>`指定の装備は着用しない（${n}種）`, gearMore:n=>`ほか${n}`,
     pinPromptAdd:"このピンのメモ（例: スナイパー注意 / 休憩ポイント）",
     pinPromptEdit:"メモを編集",
     pinPopupMemo:"メモ", pinPopupEmpty:"<span style='color:#888'>(なし)</span>",
@@ -886,7 +890,7 @@ const STR = {
 
 <details><summary>6. Pre-raid check</summary><div>
 <p>The "Pre-raid check" panel lists what your selected tasks need. Row checkboxes are saved ("Reset" clears them).</p>
-<ul><li>🔑 keys to bring / 📤 items to bring or plant / 📥 items to collect in raid (FiR = must be found in raid)</li></ul>
+<ul><li>🔑 keys to bring / 📤 items to bring or plant / 📥 items to collect in raid (FiR = must be found in raid) / 🎯 weapon &amp; gear requirements (weapons to use, required mods, gear to wear — hover to see the full list when there are many)</li></ul>
 <p>The <b>raid timer</b> above the map counts down the map's time limit (yellow at 5 min left, red at 2 min).</p>
 </div></details>
 
@@ -953,6 +957,7 @@ const STR = {
     prepHeader:mjp=>`Pre-raid checklist — ${mjp}`,
     prepEmpty:"No keys or pickup items needed on this map (pins only).",
     prepKeys:"🔑 Keys to bring", prepBring:"📤 To bring (plant/mark)", prepCollect:"📥 Find on site",
+    prepGear:"🎯 Weapon & gear requirements", gearWeapons:"Weapons", gearMods:"Required mods", gearWear:"Wear", gearNotWear:n=>`Don't wear the specified gear (${n} items)`, gearMore:n=>`+${n} more`,
     pinPromptAdd:"Note for this pin (e.g. sniper danger / rest point)",
     pinPromptEdit:"Edit note",
     pinPopupMemo:"Note", pinPopupEmpty:"<span style='color:#888'>(none)</span>",
@@ -1233,7 +1238,7 @@ async function jdFetch(path){
   return r.json();
 }
 
-const CACHE_KEY = "eft_qm_cache_v6_" + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
+const CACHE_KEY = "eft_qm_cache_v7_" + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
 const SEL_KEY   = MK("eft_qm_selected_v1");
 const OPT_KEY   = "eft_qm_opts_v1";
 const MAP_KEY   = "eft_qm_lastmap_v1";
@@ -1370,9 +1375,21 @@ async function fetchData(){
           if(v && v.value) cond.push((ATTR_KEY[a] ? T(ATTR_KEY[a]) : a) + " " + (v.compareMethod || "") + v.value);
         }
       }
+      // 装備の条件（射撃目標の武器・パーツ・着用装備 / 武器の組み立て）— レイド前チェックの「🎯 装備の条件」用
+      const gi = x => { const id = (x && typeof x === "object") ? x.id : x; const m = mkItem(id); if(m.name === id && x && x.name){ m.name = m.short = x.name; } return m; };
+      const grp = g => (g || []).map(a => (Array.isArray(a) ? a : [a]).map(gi)).filter(a => a.length);
+      let gear = null;
+      if(o.type === "shoot"){
+        const g = { weapons:(o.usingWeapon || []).map(gi), mods:grp(o.usingWeaponMods), wearing:grp(o.wearing), notWearing:(o.notWearing || []).length };
+        if(g.weapons.length || g.mods.length || g.wearing.length || g.notWearing) gear = g;
+      }else if(o.type === "buildWeapon"){
+        const g = { weapons:(o.items || []).map(gi), mods:[], wearing:[], notWearing:0 };
+        if(cond.length || g.weapons.length) gear = g;
+      }
       return {
         id: o.id,
         type: o.type,
+        gear,
         description: tEN(o.description),
         descriptionJa: tJA(o.description),
         optional: !!o.optional,
@@ -1639,10 +1656,15 @@ function prepTasks(rawTasks){
     for(const nk of (t.neededKeys || [])){
       for(const k of (nk.keys || [])) addUniq(keysByMap, nk.map && nk.map.normalizedName, k);
     }
+    const gearByMap = {};    // マップ名 ("*" = どのマップでも) -> [{oid,desc,gear,conds}]  武器・装備の条件
     for(const o of t.objectives){
       const objMaps = (o.maps||[]).map(m => canonMap(m.normalizedName));
       let placed = false;
       const objSeen = new Set();
+      if(o.gear){
+        const ge = { oid:o.id, desc:objDesc(o), gear:o.gear, conds:(o.type === "buildWeapon" ? o.conditions : []) };
+        for(const mn of (objMaps.length ? objMaps : ["*"])){ if(mn) (gearByMap[mn] = gearByMap[mn] || []).push(ge); }
+      }
       // 目標に必要な鍵 → その目標のマップへ
       for(const k of (o.requiredKeys || [])) for(const mn of objMaps) addUniq(keysByMap, mn, k);
       // 回収 / 設置アイテム
@@ -1691,7 +1713,7 @@ function prepTasks(rawTasks){
       req: (t.taskRequirements || []).filter(r => (r.status || []).includes("complete")).map(r => r.id),
       map: t.map ? canonMap(t.map.normalizedName) : null,
       mapName: (t.map && MAPBY[canonMap(t.map.normalizedName)]) ? MAPBY[canonMap(t.map.normalizedName)].jp : null,
-      byMap, noCoord, keysByMap, bringByMap, collectByMap,
+      byMap, noCoord, keysByMap, bringByMap, collectByMap, gearByMap,
       fails: t.failConditions || [],
       storyReq: (STORY && STORY.taskReqs && STORY.taskReqs[t.id]) || [],
       allMaps: [...new Set([...Object.keys(byMap), ...Object.keys(noCoord)])],
@@ -2451,13 +2473,49 @@ function loadChecks(){ try{ return JSON.parse(localStorage.getItem(CHECK_KEY)) |
 function saveChecks(c){ try{ localStorage.setItem(CHECK_KEY, JSON.stringify(c)); }catch(e){} }
 let checks = loadChecks();
 
+/* 「🎯 装備の条件」欄の1グループ分のHTML。候補が多い項目は先頭だけ見せ、全部はマウスを乗せると出る */
+const GEAR_SHOW = 3;
+function gearNames(list, sep){
+  const nm = x => x.short || x.name;
+  const shown = list.slice(0, GEAR_SHOW).map(nm).join(sep);
+  const more = list.length > GEAR_SHOW ? " " + T("gearMore", list.length - GEAR_SHOW) : "";
+  return { text:escH(shown + more), full:escH(list.map(x => x.name).join(" / ")) };
+}
+function gearGrp(gear, chk){
+  if(!gear.size) return "";
+  let s = `<div class="pgrp"><div class="pgt">${T("prepGear")}</div>`;
+  for(const e of gear.values()){
+    const g = e.g, x = g.gear;
+    const done = chk(e.id);
+    s += `<div class="pgear"><label class="pitem${done ? " done" : ""}"><input type="checkbox" data-item="${escH(e.id)}" ${done ? "checked" : ""}>` +
+         `<span class="nm wrap" title="${escH(e.tname + ": " + g.desc)}"><b>${escH(e.tname)}</b> — ${escH(g.desc)}</span></label>`;
+    const sub = (icon, label, r) => `<div class="gsub" title="${r.full}">${icon} ${label}: ${r.text}</div>`;
+    if(x.weapons.length) s += sub("🔫", T("gearWeapons"), gearNames(x.weapons, " / "));
+    if(x.mods.length){
+      // 外側=どれか1組、内側=同時に必要
+      const sets = x.mods.map(a => a.map(m => m.name).join(" + "));
+      const shown = sets.slice(0, GEAR_SHOW).join(" / ") + (sets.length > GEAR_SHOW ? " " + T("gearMore", sets.length - GEAR_SHOW) : "");
+      s += `<div class="gsub" title="${escH(sets.join(" / "))}">🧩 ${T("gearMods")}: ${escH(shown)}</div>`;
+    }
+    if(x.wearing.length){
+      const sets = x.wearing.map(a => a.map(m => m.name).join(" + "));
+      const shown = sets.slice(0, GEAR_SHOW).join(" / ") + (sets.length > GEAR_SHOW ? " " + T("gearMore", sets.length - GEAR_SHOW) : "");
+      s += `<div class="gsub" title="${escH(sets.join(" / "))}">👕 ${T("gearWear")}: ${escH(shown)}</div>`;
+    }
+    if(x.notWearing) s += `<div class="gsub">🚫 ${T("gearNotWear", x.notWearing)}</div>`;
+    if(g.conds && g.conds.length) s += `<div class="gsub">🔧 ${escH(g.conds.join(" / "))}</div>`;
+    s += `</div>`;
+  }
+  return s + `</div>`;
+}
+
 function renderPrep(){
   const box = document.getElementById("prep");
   const mn = effMapFilter() || curMap;
   const mjp = MAPBY[mn] ? MAPBY[mn].jp : mn;
 
   // 選択タスクから集約（アイテムid重複は除去、由来タスク名を保持）
-  const keys = new Map(), bring = new Map(), collect = new Map();
+  const keys = new Map(), bring = new Map(), collect = new Map(), gear = new Map(), gearSigs = new Set();
   const addTo = (map, it, from, extra) => {
     if(!it || !it.id) return;
     if(!map.has(it.id)) map.set(it.id, Object.assign({ id:it.id, name:it.name, short:it.short, from:[] }, extra||{}));
@@ -2468,9 +2526,14 @@ function renderPrep(){
     for(const k of (t.keysByMap[mn] || [])) addTo(keys, k, t.name);
     for(const b of (t.bringByMap[mn] || [])) addTo(bring, b, t.name, { jp:b.jp });
     for(const c of (t.collectByMap[mn] || [])) addTo(collect, c, t.name, { fir:c.fir, count:c.count, jp:c.jp });
+    for(const g of (t.gearByMap[mn] || []).concat(t.gearByMap["*"] || [])){
+      // 同じタスクで条件が同じ目標（頭を撃つ／脚を撃つ など）は1行にまとめる
+      const x = g.gear, sig = t.id + JSON.stringify([x.weapons.map(w => w.id), x.mods.map(a => a.map(m => m.id)), x.wearing.map(a => a.map(m => m.id)), x.notWearing, g.conds]);
+      if(!gear.has(g.oid) && !gearSigs.has(sig)){ gearSigs.add(sig); gear.set(g.oid, { id:"g:" + g.oid, tname:t.name, g }); }
+    }
   }
 
-  const total = keys.size + bring.size + collect.size;
+  const total = keys.size + bring.size + collect.size + gear.size;
   if(selected.size === 0){ box.style.display = "none"; return; }
   box.style.display = "";
 
@@ -2499,6 +2562,7 @@ function renderPrep(){
       html += grp(T("prepKeys"), keys);
       html += grp(T("prepBring"), bring);
       html += grp(T("prepCollect"), collect, { fir:true, count:true });
+      html += gearGrp(gear, chk);
     }
   }
   box.innerHTML = html;
