@@ -1209,6 +1209,16 @@ const objDesc = o => {
   if(o.descKey && JA_SUPP[o.descKey] && !/[぀-ヿ一-鿿]/.test(o.descriptionJa || "")) return JA_SUPP[o.descKey] + JA_MARK;
   return d;
 };
+// 目標の説明文には「何人倒す／何個集める」の数が入っていないので、2以上のときは「×5」を付ける（説明文に同じ数がすでにあれば付けない）
+const COUNT_TYPES = new Set(["shoot","extract","findItem","giveItem","findQuestItem","giveQuestItem","plantItem","plantQuestItem","useItem","mark","sellItem"]);
+const objDescN = o => {
+  const d = objDesc(o), n = o.count || 0;
+  if(n < 2 || !COUNT_TYPES.has(o.type)) return d;
+  // 英語の説明文が「Eliminate 20 PMCs」のように動詞のすぐ後に数を書いているものは、その数を優先（データの数とずれていることがある）
+  if(/\b(?:Eliminate|Kill|Neutralize|Hand over|Find|Obtain|Collect|Stash|Place|Plant|Install|Mark|Shoot|Survive|Extract)\s+(?:at least\s+)?\d+\b/i.test(o.description || "")) return d;
+  return d.replace(new RegExp(escapeRe(JA_MARK) + "$"), "") + " ×" + n + (d.endsWith(JA_MARK) ? JA_MARK : "");
+};
+const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // 脱出地点: 名前に "Co-op" が入っているものだけ「PMC+Scav両方が揃わないと使用不可」の真の共同脱出。
 // それ以外の faction=shared は「PMC/Scavどちらでも単独で使える」という意味なので、今回の出撃タイプ名で表示する。
 const isCoopExtract = name => /co-?op/i.test(name || "");
@@ -1377,7 +1387,6 @@ async function fetchData(){
         if(o.notWearing && o.notWearing.length) cond.push(T("condNotWearing"));
         if((o.timeFromHour || o.timeUntilHour) && !(o.timeFromHour === 0 && o.timeUntilHour === 0))
           cond.push(T("condTimeRange", o.timeFromHour, o.timeUntilHour));
-        if(o.shotType === "kill" && o.count > 1) cond.unshift(T("condKillCount", o.count));
       }
       if(o.type === "buildWeapon" && o.buildAttributes){
         const ATTR_KEY = { ergonomics:"attrErgo", accuracy:"attrAccuracy", durability:"attrDurability", recoilVertical:"attrRecoilV", recoilHorizontal:"attrRecoilH", weight:"attrWeight", effectiveDistance:"attrEffDist", magazineCapacity:"attrMagCap", muzzleVelocity:"attrMuzzleV" };
@@ -1674,7 +1683,7 @@ function prepTasks(rawTasks){
       let placed = false;
       const objSeen = new Set();
       if(o.gear){
-        const ge = { oid:o.id, desc:objDesc(o), gear:o.gear, conds:(o.type === "buildWeapon" ? o.conditions : []) };
+        const ge = { oid:o.id, desc:objDescN(o), gear:o.gear, conds:(o.type === "buildWeapon" ? o.conditions : []) };
         for(const mn of (objMaps.length ? objMaps : ["*"])){ if(mn) (gearByMap[mn] = gearByMap[mn] || []).push(ge); }
       }
       // 目標に必要な鍵 → その目標のマップへ
@@ -1711,7 +1720,7 @@ function prepTasks(rawTasks){
         }
       }
       if(!placed){
-        const line = objDesc(o) +
+        const line = objDescN(o) +
           ((o.conditions && o.conditions.length) ? `（${T("conditionsLabel")}${o.conditions.join(" / ")}）` : "");
         for(const mn of objMaps){
           if(!mn) continue;
@@ -2144,7 +2153,7 @@ function renderMarkers(){
       const popup =
         `<b>[${label}] ${t.name}</b><br>` +
         `<span style="color:#555">${t.trader} ・ ${objTypeJa(m.obj.type)}${m.obj.optional?T("optionalTag"):""}</span><br>` +
-        `${objDesc(m.obj)}` +
+        `${objDescN(m.obj)}` +
         ((m.obj.conditions && m.obj.conditions.length) ? `<br><span style="color:#a06">${T("conditionsLabel")}${m.obj.conditions.join(" / ")}</span>` : "") +
         chainHtml(t) +
         (t.wiki ? `<a href="${t.wiki}" target="_blank" rel="noopener">Wiki ↗</a>` : "");
@@ -2540,7 +2549,7 @@ function renderPrep(){
     for(const c of (t.collectByMap[mn] || [])) addTo(collect, c, t.name, { fir:c.fir, count:c.count, jp:c.jp });
     for(const g of (t.gearByMap[mn] || []).concat(t.gearByMap["*"] || [])){
       // 同じタスクで条件が同じ目標（頭を撃つ／脚を撃つ など）は1行にまとめる
-      const x = g.gear, sig = t.id + JSON.stringify([x.weapons.map(w => w.id), x.mods.map(a => a.map(m => m.id)), x.wearing.map(a => a.map(m => m.id)), x.notWearing, g.conds]);
+      const x = g.gear, sig = t.id + JSON.stringify([x.weapons.map(w => w.id), x.mods.map(a => a.map(m => m.id)), x.wearing.map(a => a.map(m => m.id)), x.notWearing, g.conds, g.desc]);
       if(!gear.has(g.oid) && !gearSigs.has(sig)){ gearSigs.add(sig); gear.set(g.oid, { id:"g:" + g.oid, tname:t.name, g }); }
     }
   }
