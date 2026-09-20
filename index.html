@@ -40,6 +40,9 @@
 <script src="data-snapshot.js" onerror="console.warn('data-snapshot.js なし')"></script>
 <!-- 日本語訳が無いタスク目標の補足訳（無くてもツールは動く） -->
 <script src="ja-supplement.js" onerror="console.warn('ja-supplement.js なし')"></script>
+<!-- 簡体字中国語・ロシア語の画面文言（無くてもツールは動く。無い文言は英語で表示） -->
+<script src="lang-zh.js" onerror="console.warn('lang-zh.js なし')"></script>
+<script src="lang-ru.js" onerror="console.warn('lang-ru.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
@@ -51,6 +54,7 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;font-family:"Segoe UI",Roboto,"Noto Sans JP",sans-serif;background:var(--bg);color:var(--text)}
+  html:lang(zh),html:lang(zh) body{font-family:"Segoe UI","Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif}
   #app{display:flex;height:100%;width:100%}
 
   /* ---------- サイドバー ---------- */
@@ -70,7 +74,7 @@
   details.sect .inner{padding:0 14px 10px;display:flex;flex-direction:column;gap:8px}
   #titlebar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
   #titlebar h1{font-size:15px;margin:0;padding:0;border:0;color:var(--accent2);letter-spacing:.04em}
-  #langToggle{font-size:11px;padding:3px 9px;flex:0 0 auto}
+  #langSel{font-size:11px;padding:3px 4px;flex:0 0 auto;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:4px}
   #toast{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);z-index:1200;background:#000d;color:var(--text);border:1px solid var(--accent);border-radius:6px;padding:8px 14px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s}
   #toast.show{opacity:1}
   #fbLink{flex:0 0 auto;margin:8px 8px 8px 0;padding:6px 12px;font-size:12px;font-weight:700;white-space:nowrap;color:var(--accent2);background:#2a261c;border:1px solid var(--accent);border-radius:6px}
@@ -345,7 +349,7 @@
       <div class="row" style="flex-wrap:nowrap;gap:6px">
         <button id="helpBtn" class="hbtn" data-i18n="helpBtn">使い方</button>
         <button id="sbClose" class="narrow-only" data-i18n-title="closeMenu" title="閉じる">✕</button>
-        <button id="langToggle" title="Language / 言語">EN</button>
+        <select id="langSel" title="Language / 言語 / 语言 / Язык"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option></select>
       </div>
     </div>
 
@@ -612,10 +616,15 @@
 // 初回の言語: 保存された選択があればそれ、なければブラウザの言語（日本語なら日本語、それ以外は英語）
 let LANG = (function(){
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
-  if(s === "ja" || s === "en") return s;
+  if(s === "ja" || s === "en" || s === "zh" || s === "ru") return s;
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
-  return nl.startsWith("ja") ? "ja" : "en";
+  if(nl.startsWith("ja")) return "ja";
+  if(nl.startsWith("ru")) return "ru";
+  if(nl.startsWith("zh") && !/^zh[-_](tw|hk|mo|hant)/.test(nl)) return "zh";   // 簡体字のみ対応（繁体字の地域は英語）
+  return "en";
 })();
+// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語。ja/en は従来どおり英語表記のまま
+const DL = (LANG === "zh" || LANG === "ru") ? LANG : null;
 /* ゲームモード: PvP / PvE / Seasonal は別キャラ＝進行状況が別。
    PvP は従来のキー名のまま(既存データを引き継ぐ)、他は末尾に _pve / _seasonal を付けて分離する。
    データ元: PvE は json.tarkov.dev/pve/*(タスク・脱出地点・ボス等が別)、
@@ -627,7 +636,7 @@ const MK = base => MODE === "pvp" ? base : base + "_" + MODE;
 const DATA_SRC = MODE === "pve" ? "pve" : "regular";
 const STR = {
   ja: {
-    appTitle:"タルコフ タスクマップ", langToggleLabel:"EN",
+    appTitle:"タルコフ タスクマップ",
     refresh:"データ更新", traderAll:"▼ トレーダー（すべて）", mapAll:"▼ マップ（すべて）",
     followCurrentMap:"【表示中のマップに追従】", searchPlaceholder:"タスク名で検索…",
     clearSel:"選択解除", kappaOnly:"Kappaのみ ★", lvLabel:"Lv", showDone:"完了も表示",
@@ -872,7 +881,7 @@ const STR = {
     objTaskStatus:"他タスクの状態", objDialogue:"会話", objGlobalVariable:"進行フラグ",
   },
   en: {
-    appTitle:"Tarkov Task Map", langToggleLabel:"日本語",
+    appTitle:"Tarkov Task Map",
     refresh:"Refresh data", traderAll:"▼ Trader (all)", mapAll:"▼ Map (all)",
     followCurrentMap:"[Follow current map tab]", searchPlaceholder:"Search task name…",
     clearSel:"Clear selection", kappaOnly:"Kappa only ★", lvLabel:"Lv", showDone:"Show completed",
@@ -1116,8 +1125,10 @@ const STR = {
     objTaskStatus:"Other task status", objDialogue:"Dialogue", objGlobalVariable:"Progress flag",
   },
 };
+STR.zh = (typeof window !== "undefined" && window.__STR_ZH__) || {};
+STR.ru = (typeof window !== "undefined" && window.__STR_RU__) || {};
 function T(key, ...args){
-  const v = (STR[LANG] && STR[LANG][key] !== undefined) ? STR[LANG][key] : STR.ja[key];
+  const v = (STR[LANG] && STR[LANG][key] !== undefined) ? STR[LANG][key] : (STR.en[key] !== undefined ? STR.en[key] : STR.ja[key]);
   return typeof v === "function" ? v(...args) : v;
 }
 function applyStaticI18n(){
@@ -1127,8 +1138,8 @@ function applyStaticI18n(){
   document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = T(el.getAttribute("data-i18n-html")); });
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = T(el.getAttribute("data-i18n-placeholder")); });
   document.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = T(el.getAttribute("data-i18n-title")); });
-  const lt = document.getElementById("langToggle");
-  if(lt) lt.textContent = T("langToggleLabel");
+  const ls = document.getElementById("langSel");
+  if(ls) ls.value = LANG;
 }
 applyStaticI18n();
 // 匿名の利用集計(GoatCounter)。「機能が使われた回数」だけを送る。タスク名・進捗・入力した文字は送らない
@@ -1150,9 +1161,8 @@ track("load/mode/" + MODE); track("load/lang/" + LANG);
   let sec = 0; const marks = { 300:"time/5min", 900:"time/15min", 1800:"time/30min", 3600:"time/60min" };
   setInterval(() => { if(document.hidden) return; sec += 10; if(marks[sec]) track(marks[sec]); }, 10000);
 })();
-document.getElementById("langToggle").onclick = () => {
-  LANG = (LANG === "ja") ? "en" : "ja";
-  try{ localStorage.setItem("eft_qm_lang", LANG); }catch(e){}
+document.getElementById("langSel").onchange = (e) => {
+  try{ localStorage.setItem("eft_qm_lang", e.target.value); }catch(err){}
   location.reload();
 };
 // ゲームモード切替（言語切替と同じくリロード方式。モード別のキーとデータ元が起動時に決まるため）
@@ -1277,6 +1287,7 @@ function showMapNote(mapNN){
   el.classList.remove("hidden");
 }
 const MAPBY = Object.fromEntries(MAPS.map(m => [m.n, m]));
+const mapDisp = m => (DATA && DATA.mapNames && DATA.mapNames[m.n]) || m.jp;   // マップ名の表示（zh/ru はデータの翻訳、他は英語のゲーム表記）
 
 /* ---------- tarkov.dev の座標投影を再現 ---------- */
 function applyRotation(latLng, rotation){
@@ -1331,6 +1342,7 @@ const objTypeJa = t => OBJ_TYPE_KEY[t] ? T(OBJ_TYPE_KEY[t]) : t;
 const JA_SUPP = (typeof window !== "undefined" && window.__JA_SUPP__) || {};
 const JA_MARK = " ※訳";
 const objDesc = o => {
+  if(DL) return o.descriptionL || o.description || "";
   if(LANG !== "ja") return o.description || o.descriptionJa || "";
   const d = o.descriptionJa || o.description || "";
   if(o.descKey && JA_SUPP[o.descKey] && !/[぀-ヿ一-鿿]/.test(o.descriptionJa || "")) return JA_SUPP[o.descKey] + JA_MARK;
@@ -1349,9 +1361,16 @@ const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // 脱出地点: 名前に "Co-op" が入っているものだけ「PMC+Scav両方が揃わないと使用不可」の真の共同脱出。
 // それ以外の faction=shared は「PMC/Scavどちらでも単独で使える」という意味なので、今回の出撃タイプ名で表示する。
 const isCoopExtract = name => /co-?op/i.test(name || "");
+const isCoopExit = e => isCoopExtract(e && (e.key || e.name));   // zh/ru は名前が現地語なので、英語名(key)で判定
 // 別フロアバッジ用の短縮表記("Underground"等の長い名前だとマーカーと重なって見づらいため)
 const FLOOR_SHORT = { Underground:"B1", Bunkers:"B1", Tunnels:"B1", Garage:"B1", Technical:"B1" };
 const floorShort = jp => FLOOR_SHORT[jp] || jp;
+// 階の名前（zh/ru のみ現地語。ja/en は従来どおり）
+const FLOOR_LOC = {
+  zh:{ Underground:"地下", Bunkers:"地下", Tunnels:"地下通道", Garage:"车库", Technical:"技术层", Ground:"地面" },
+  ru:{ Underground:"Подвал", Bunkers:"Бункеры", Tunnels:"Тоннели", Garage:"Гараж", Technical:"Технический", Ground:"Земля" },
+};
+const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
 // 脱出口の実フロア: 座標のY値だけで判定すると、Shorelineのような屋外主体のマップで地形の起伏を
 // 「地下」と誤判定してしまう(実際は建物内の階とは無関係な高低差のため)。そのため既定は「基準階」とし、
 // 実際に基準階と異なると確認できたものだけここに手動で記録する(ユーザー確認ベース)。
@@ -1362,7 +1381,7 @@ const EXTRACT_FLOOR_OVERRIDE = {
 function extractFloorIndex(mapN, md, e){
   if(!md.floors) return -1;
   const baseIdx = md.floors.findIndex(f => f.base);
-  const ov = (EXTRACT_FLOOR_OVERRIDE[mapN] || {})[e.name];
+  const ov = (EXTRACT_FLOOR_OVERRIDE[mapN] || {})[e.key || e.name];
   if(!ov) return baseIdx;
   const fi = md.floors.findIndex(f => f.jp === ov);
   return fi >= 0 ? fi : baseIdx;
@@ -1377,6 +1396,11 @@ const MOB_NAME = {
   bossBirdEye:"The Goons (Birdeye)", bossWedge:"Kaban's Guard", bossWedgeLab:"Blackout guard",
   sectantPriest:"Cultist Priest", sectantWarrior:"Cultist", pmcBot:"Raider",
   exUsec:"Rogue", exUsecFree:"Rogue", arenaFighterEvent:"Arena Fighter",
+};
+// zh/ru はその言語の名前(tarkov.dev の翻訳)があれば使う。英語のままのものは従来の表記
+const mobNameL = (id, loc) => {
+  const v = DL && loc ? (loc[id] || loc[(id || "").charAt(0).toUpperCase() + (id || "").slice(1)]) : null;
+  return (v && v.split("").some(ch => ch.charCodeAt(0) > 127)) ? v : mobName(id);
 };
 const mobName = id => MOB_NAME[id] || (id || "").replace(/^boss/i, "").replace(/^sectant/i, "Cultist ");
 
@@ -1401,28 +1425,32 @@ const CACHE_TTL = 1000*60*60*24; // 24h
 const ITEM_ICON = id => "https://assets.tarkov.dev/" + id + "-icon.webp";
 
 async function fetchData(){
-  const [tasksR, enR, jaR, mapsR, mapsEnR, tradersR, tradersEnR, itemsEnR, overlayR] = await Promise.all([
+  // 名前の言語: ja/en は英語表記(ゲーム表記)、zh/ru はその言語のゲーム内表記（tarkov.dev の翻訳。無いものは英語）
+  const NL = DL || "en";
+  const [tasksR, enR, jaR, mapsR, mapsEnR, tradersR, tradersEnR, itemsEnR, overlayR, mapsBaseR] = await Promise.all([
     jdFetch(DATA_SRC + "/tasks"),
     jdFetch(DATA_SRC + "/tasks_en"),
-    jdFetch(DATA_SRC + "/tasks_ja").catch(() => ({ data:{} })),
+    jdFetch(DATA_SRC + "/tasks_" + (DL || "ja")).catch(() => ({ data:{} })),
     jdFetch(DATA_SRC + "/maps"),
-    jdFetch(DATA_SRC + "/maps_en").catch(() => ({ data:{} })),
+    jdFetch(DATA_SRC + "/maps_" + NL).catch(() => ({ data:{} })),
     jdFetch(DATA_SRC + "/traders"),
-    jdFetch(DATA_SRC + "/traders_en").catch(() => ({ data:{} })),
-    jdFetch(DATA_SRC + "/items_en").catch(() => ({ data:{} })),
+    jdFetch(DATA_SRC + "/traders_" + NL).catch(() => ({ data:{} })),
+    jdFetch(DATA_SRC + "/items_" + NL).catch(() => ({ data:{} })),
     fetch(OVERLAY_URL, { cache:"no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null),   // 取得できなくてもツールは動く(ストーリー欄だけ空)
+    DL ? jdFetch(DATA_SRC + "/maps_en").catch(() => ({ data:{} })) : null,   // 英語の脱出地点名（同じ地点を言語をまたいで識別するため）
   ]);
 
   const en  = (enR && enR.data) || {};
   const ja  = (jaR && jaR.data) || {};
-  const men = (mapsEnR && mapsEnR.data) || {};
+  const men = (mapsEnR && mapsEnR.data) || {};        // 名前の言語の maps 翻訳
+  const menBase = mapsBaseR ? ((mapsBaseR && mapsBaseR.data) || {}) : men;   // 英語の maps 翻訳
   const ten = (tradersEnR && tradersEnR.data) || {};
   const ien = (itemsEnR && itemsEnR.data) || {};
   const has = (o,k) => k != null && o[k] != null && o[k] !== "";
   const tEN = k => has(en,k) ? en[k] : k;            // 英語(ゲーム表記)
   const tJA = k => has(ja,k) ? ja[k] : tEN(k);       // 日本語 → 英語 → キー
   // アイテム(鍵/タスクアイテム)解決。名前は英語(ゲーム表記)のまま。
-  const itemName  = id => has(ien, id + " Name") ? ien[id + " Name"] : (has(en, id + " Name") ? en[id + " Name"] : id);
+  const itemName  = id => has(ien, id + " Name") ? ien[id + " Name"] : (DL && has(ja, id + " Name") ? ja[id + " Name"] : (has(en, id + " Name") ? en[id + " Name"] : id));
   const itemShort = id => has(ien, id + " ShortName") ? ien[id + " ShortName"] : itemName(id);
   const mkItem = id => ({ id, name: itemName(id), short: itemShort(id) });
 
@@ -1439,6 +1467,12 @@ async function fetchData(){
 
   // --- maps: 脱出 / トランジット / 危険地帯 / 施錠ドア / スイッチ ---
   const maps = [];
+  const mapNames = {};   // マップ名（zh/ru のみ。ja/en は従来どおり英語のゲーム表記）
+  if(DL) for(const id of Object.keys(rawMaps).sort((a, b) => (/21/.test(rawMaps[a].normalizedName) ? 1 : 0) - (/21/.test(rawMaps[b].normalizedName) ? 1 : 0))){
+    const mp = rawMaps[id], nm = has(men, mp.name) ? men[mp.name] : null;
+    const cn = canonMap(mp.normalizedName);
+    if(nm && !mapNames[cn]) mapNames[cn] = nm;
+  }
   for(const id in rawMaps){
     const mp = rawMaps[id];
     maps.push({
@@ -1447,6 +1481,7 @@ async function fetchData(){
       players: mp.players || null,
       extracts: (mp.extracts || []).filter(e => e && e.position).map(e => ({
         name: has(men, e.name) ? men[e.name] : e.name,
+        key: has(menBase, e.name) ? menBase[e.name] : e.name,   // 英語名（Co-op 判定・階の手動指定に使う）
         faction: e.faction || "",
         position: e.position,
       })),
@@ -1470,7 +1505,7 @@ async function fetchData(){
       bosses: (mp.bosses || []).map(b => {
         const positions = [];
         for(const loc of (b.spawnLocations || [])) for(const p of (loc.positions || [])) positions.push(p);
-        return { name: mobName(b.mob), chance: b.spawnChance || 0, positions };
+        return { name: mobNameL(b.mob, men), chance: b.spawnChance || 0, positions };
       }).filter(b => b.positions.length),
       spawns: (mp.spawns || []).filter(s => s && s.position).map(s => ({
         position: s.position,
@@ -1484,7 +1519,7 @@ async function fetchData(){
   const qiItem = id => {
     const qi = rawQI[id];
     const nk = qi && qi.name;
-    const nm = has(ien, nk) ? ien[nk] : (has(en, nk) ? en[nk] : (id));
+    const nm = has(ien, nk) ? ien[nk] : (DL && has(ja, nk) ? ja[nk] : (has(en, nk) ? en[nk] : (id)));
     return { id, name: nm, short: (qi && has(ien, qi.shortName) ? ien[qi.shortName] : nm) };
   };
 
@@ -1539,6 +1574,7 @@ async function fetchData(){
         gear,
         description: tEN(o.description),
         descriptionJa: tJA(o.description),
+        descriptionL: DL ? tJA(o.description) : undefined,
         descKey: o.description,
         optional: !!o.optional,
         count: o.count || 0,
@@ -1567,7 +1603,7 @@ async function fetchData(){
         if(c.task && !seenFailTask.has(c.task) && (c.status || []).includes("complete")){ seenFailTask.add(c.task); failConditions.push({ type:"task", id:c.task }); }
       }else{
         const k = c.description;
-        let txt = LANG === "ja" ? (has(ja, k) ? ja[k] : (has(en, k) ? en[k] : "")) : (has(en, k) ? en[k] : "");
+        let txt = (LANG === "ja" || DL) ? (has(ja, k) ? ja[k] : (has(en, k) ? en[k] : "")) : (has(en, k) ? en[k] : "");
         txt = String(txt).trim();
         if(/^[0-9a-f]{24}$/.test(txt)) txt = "";
         failConditions.push({ type:c.type || "other", text:txt });
@@ -1575,7 +1611,8 @@ async function fetchData(){
     }
     tasks.push({
       id: t.id,
-      name: tEN(t.name),
+      name: DL ? tJA(t.name) : tEN(t.name),
+      nameEn: tEN(t.name),
       kappaRequired: !!t.kappaRequired,
       lightkeeperRequired: !!t.lightkeeperRequired,
       minPlayerLevel: t.minPlayerLevel || 0,
@@ -1608,7 +1645,7 @@ async function fetchData(){
     }
     if(chapters.length) story = { chapters, taskReqs };
   }
-  return { maps, tasks, story };
+  return { maps, tasks, story, mapNames: DL ? mapNames : null };
 }
 // 同梱スナップショット(オフライン用)。PvP/Seasonal は data-snapshot.js、PvE は必要になったときだけ data-snapshot-pve.js を読む
 function loadSnapshot(){
@@ -1720,11 +1757,11 @@ function exitGroups(){
   for(const e of exitsForCurrent()){
     const nm = e.name || T("unknownName");
     const raw = (e.faction||"").toLowerCase();
-    const disp = (raw==="pmc"||raw==="scav") ? raw : (isCoopExtract(nm) ? "coop" : exits.fac);
+    const disp = (raw==="pmc"||raw==="scav") ? raw : (isCoopExit(e) ? "coop" : exits.fac);
     if(!m.has(nm)) m.set(nm, { name:nm, faction:disp, items:[] });
     m.get(nm).items.push(e);
   }
-  return [...m.values()].sort((a,b) => a.name.localeCompare(b.name));
+  return [...m.values()].sort((a,b) => a.name.localeCompare(b.name, LANG));
 }
 function exitVisible(name){
   const p = exits.picks[exKey()];
@@ -1858,11 +1895,11 @@ function prepTasks(rawTasks){
       }
     }
     return {
-      id:t.id, name:t.name, trader:(t.trader&&t.trader.name)||"?",
+      id:t.id, name:t.name, nameEn:t.nameEn || t.name, trader:(t.trader&&t.trader.name)||"?",
       kappa:!!t.kappaRequired, lk:!!t.lightkeeperRequired, lvl:t.minPlayerLevel||0, wiki:t.wikiLink,
       req: (t.taskRequirements || []).filter(r => (r.status || []).includes("complete")).map(r => r.id),
       map: t.map ? canonMap(t.map.normalizedName) : null,
-      mapName: (t.map && MAPBY[canonMap(t.map.normalizedName)]) ? MAPBY[canonMap(t.map.normalizedName)].jp : null,
+      mapName: (t.map && MAPBY[canonMap(t.map.normalizedName)]) ? mapDisp(MAPBY[canonMap(t.map.normalizedName)]) : null,
       byMap, noCoord, noCoordObjs, keysByMap, bringByMap, collectByMap, gearByMap,
       fails: t.failConditions || [],
       storyReq: (STORY && STORY.taskReqs && STORY.taskReqs[t.id]) || [],
@@ -1972,13 +2009,13 @@ function mapSummaryEl(){
   if(rows.length){
     html += `<div class="mst" title="${escH(T("mapSumFoldTip"))}">${folded ? "▸" : "▾"} ${T("mapSumTitle")}</div>`;
     rows.forEach(([mn, s], i) => {
-      html += `<button class="msrow${mn === curMap ? " cur" : ""}" data-map="${mn}"><span class="msn">${MAPBY[mn].jp}</span>` +
+      html += `<button class="msrow${mn === curMap ? " cur" : ""}" data-map="${mn}"><span class="msn">${mapDisp(MAPBY[mn])}</span>` +
               (i === 0 && rows.length >= 2 ? `<span class="msbest">${T("mapSumBest")}</span>` : "") +
               `<span class="msc">${T("mapSumCount", s.tasks, s.objs)}</span></button>`;
     });
   }
   if(dz.length){
-    html += `<div class="msd">${T("mapSumDoable")} ` + dz.map(([mn, n]) => `<a href="#" data-map="${mn}">${MAPBY[mn].jp} (${n})</a>`).join(" / ") + `</div>`;
+    html += `<div class="msd">${T("mapSumDoable")} ` + dz.map(([mn, n]) => `<a href="#" data-map="${mn}">${mapDisp(MAPBY[mn])} (${n})</a>`).join(" / ") + `</div>`;
   }
   box.innerHTML = html;
   box.querySelectorAll("[data-map]").forEach(el => el.onclick = (e) => { e.preventDefault(); track("use/map-summary"); gotoMap(el.dataset.map); });
@@ -1995,7 +2032,7 @@ function renderTabs(){
   for(const [mn, s] of Object.entries(selObjsByMap())) counts[mn] = s.objs;
   for(const md of MAPS){
     const b = document.createElement("button");
-    b.textContent = md.jp;
+    b.textContent = mapDisp(md);
     if(md.n === curMap) b.className = "active";
     if(counts[md.n]) b.innerHTML += ` <span class="badge">${counts[md.n]}</span>`;
     b.onclick = () => {
@@ -2022,7 +2059,7 @@ function questRow(t, chip){
   };
   const info = document.createElement("div");
   info.style.flex = "1"; info.style.minWidth = "0";
-  const where = t.mapName ? t.mapName : (t.allMaps.length ? t.allMaps.map(m=>MAPBY[m]?MAPBY[m].jp:m).join(", ") : T("multipleOrNone"));
+  const where = t.mapName ? t.mapName : (t.allMaps.length ? t.allMaps.map(m=>MAPBY[m]?mapDisp(MAPBY[m]):m).join(", ") : T("multipleOrNone"));
   const badge = ((dn && selected.has(t.id)) ? ` <span style="color:#6db36d">${T("doneBadge")}</span>` : "") +
                 (isFailed(t.id) ? ` <span class="qfail">${T("failBadge")}</span>` : (lockedOut(t) ? ` <span class="qfail">${T("lockedBadge")}</span>` : "")) +
                 (failLines(t).length ? ` <span class="qwarn" title="${failLines(t).join(" / ").replace(/"/g, "'")}">⚠</span>` : "") +
@@ -2135,11 +2172,11 @@ function renderQuestList(){
   const pass = t => {
     if(opts.kappaOnly && !t.kappa) return false;
     if(fmap && !t.allMaps.includes(fmap)) return false;
-    if(q && !t.name.toLowerCase().includes(q)) return false;
+    if(q && !t.name.toLowerCase().includes(q) && !(t.nameEn || "").toLowerCase().includes(q)) return false;
     if((isDone(t.id) || isFailed(t.id) || lockedOut(t)) && !showDone && !selected.has(t.id)) return false;  // 完了・失敗は既定で隠す
     return true;
   };
-  const byName = (a,b) => a.name.localeCompare(b.name);
+  const byName = (a,b) => a.name.localeCompare(b.name, LANG);
   const header = (txt, n) => {
     const h = document.createElement("div");
     h.className = "trader";
@@ -2155,7 +2192,7 @@ function renderQuestList(){
   // 検索中は全条件を跨いで名前検索（マップ絞り込みは維持）
   if(q){
     const list = TASKS.filter(pass).sort(byName);
-    header(fmap ? T("searchPrefix", MAPBY[fmap]?MAPBY[fmap].jp:fmap) : T("searchResults"), list.length);
+    header(fmap ? T("searchPrefix", MAPBY[fmap]?mapDisp(MAPBY[fmap]):fmap) : T("searchResults"), list.length);
     if(!list.length) note(T("noMatch"));
     list.forEach(t => box.appendChild(questRow(t)));
     return;
@@ -2182,7 +2219,7 @@ function renderQuestList(){
     list = list.filter(t => !doable.includes(t));
   }
 
-  const label = [opts.trader || null, fmap ? (MAPBY[fmap]?MAPBY[fmap].jp:fmap) : null].filter(Boolean).join(T("labelSep"));
+  const label = [opts.trader || null, fmap ? (MAPBY[fmap]?mapDisp(MAPBY[fmap]):fmap) : null].filter(Boolean).join(T("labelSep"));
   header(label, list.length);
   if(!list.length) note(T("noQuestsToShow"));
   list.forEach(t => box.appendChild(questRow(t)));
@@ -2257,7 +2294,7 @@ function renderMarkers(){
     let color, letter, kind;
     if(raw==="pmc"){ color="var(--ok)"; letter="P"; kind=T("kindPMC"); }
     else if(raw==="scav"){ color="var(--scav)"; letter="S"; kind=T("kindScav"); }
-    else if(isCoopExtract(e.name)){ color="var(--shared)"; letter=T("sharedGlyph"); kind=T("kindCoop"); }
+    else if(isCoopExit(e)){ color="var(--shared)"; letter=T("sharedGlyph"); kind=T("kindCoop"); }
     else if(fac==="scav"){ color="var(--scav)"; letter="S"; kind=T("kindScav"); }
     else { color="var(--ok)"; letter="P"; kind=T("kindPMC"); }
     // 脱出口は階層フィルタの対象外(常に表示)。実フロアが現在表示中の階と違う場合だけバッジ+半透明で示す
@@ -2265,7 +2302,7 @@ function renderMarkers(){
     let floorTag = null, floorFull = null;
     if(md.floors){
       const fi = extractFloorIndex(curMap, md, e);
-      if(fi >= 0 && fi !== curFloor){ floorFull = md.floors[fi].jp; floorTag = floorShort(floorFull); }
+      if(fi >= 0 && fi !== curFloor){ floorFull = floorDisp(md.floors[fi].jp); floorTag = floorShort(md.floors[fi].jp); }
     }
     L.marker(gpos(e.position), { icon:iconExtract(color, letter, { dim: !!floorTag, floorTag }) })
       .bindPopup(T("extractPopup", e.name||"?", kind, fac) + (floorFull ? `<br><span style="color:#a06">${T("floorNote", floorFull)}</span>` : ""))
@@ -2733,11 +2770,11 @@ function gearGrp(gear, chk){
 
 /* 「このマップ」と「全マップ合計」の切り替え（画面を開いている間だけ覚える） */
 let prepAll = false;
-const mapJp = m => m === "*" ? T("prepAnyMap") : (MAPBY[m] ? MAPBY[m].jp : m);
+const mapJp = m => m === "*" ? T("prepAnyMap") : (MAPBY[m] ? mapDisp(MAPBY[m]) : m);
 function renderPrep(){
   const box = document.getElementById("prep");
   const mn = effMapFilter() || curMap;
-  const mjp = MAPBY[mn] ? MAPBY[mn].jp : mn;
+  const mjp = MAPBY[mn] ? mapDisp(MAPBY[mn]) : mn;
   const mapList = prepAll ? MAPS.map(m => m.n) : [mn];
 
   // 選択タスクから集約（アイテムid重複は除去、由来タスク名と使うマップを保持。回収の個数はタスクごとに最大値→タスク間で合計）
@@ -2865,7 +2902,7 @@ function resetRaidTimer(){
 /* ---------- マップ生成 ---------- */
 async function loadMap(){
   const md = MAPBY[curMap];
-  document.getElementById("ovtext").textContent = T("mapLoading", md.jp);
+  document.getElementById("ovtext").textContent = T("mapLoading", mapDisp(md));
   showOverlay(true);
 
   if(map){ map.remove(); map = null; }
@@ -2965,7 +3002,7 @@ function setupFloors(md, keep){
   bar.innerHTML = `<span class="flabel">${T("floorLabel")}</span>`;
   md.floors.forEach((f, i) => {
     const btn = document.createElement("button");
-    btn.innerHTML = f.jp + (counts[i] ? ` <span class="fb">${counts[i]}</span>` : "");
+    btn.innerHTML = floorDisp(f.jp) + (counts[i] ? ` <span class="fb">${counts[i]}</span>` : "");
     btn.onclick = () => showFloor(md, i);
     bar.appendChild(btn);
   });
@@ -3070,7 +3107,7 @@ function applyData(data){
   }
   // トレーダー選択肢を用意（アルファベット順）
   const sel = document.getElementById("traderSel");
-  const traders = [...new Set(TASKS.map(t => t.trader))].sort();
+  const traders = [...new Set(TASKS.map(t => t.trader))].sort((a, b) => a.localeCompare(b, LANG));
   sel.innerHTML = `<option value="">${T("traderAll")}</option>` +
     traders.map(tr => `<option value="${tr}">${tr}</option>`).join("");
   if(opts.trader && traders.includes(opts.trader)) sel.value = opts.trader;
@@ -3080,7 +3117,7 @@ function applyData(data){
   const msel = document.getElementById("mapSel");
   msel.innerHTML = `<option value="">${T("mapAll")}</option>` +
     `<option value="__cur__">${T("followCurrentMap")}</option>` +
-    MAPS.map(m => `<option value="${m.n}">${m.jp}</option>`).join("");
+    MAPS.map(m => `<option value="${m.n}">${mapDisp(m)}</option>`).join("");
   msel.value = opts.mapFilter || "";
 
   buildChain();

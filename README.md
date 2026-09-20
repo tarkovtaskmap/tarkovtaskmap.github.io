@@ -7,8 +7,8 @@ choose, on an interactive map — meant for a second monitor.
 **▶ Live tool:** https://tarkovtaskmap.github.io/
 
 No installation, no login (only anonymous visit / feature-usage counts via GoatCounter, no cookies), no game-memory access — just static data from
-[tarkov.dev](https://tarkov.dev)'s public API. Works in any browser; the language follows your browser (Japanese or English) —
-use the **EN / 日本語** button top-left to switch.
+[tarkov.dev](https://tarkov.dev)'s public API. Works in any browser; the language follows your browser (Japanese, English, Simplified Chinese or Russian) —
+use the language dropdown top-left to switch. In Chinese and Russian, task / item / map / extract names are shown in that language (as in the game).
 
 ## Features
 
