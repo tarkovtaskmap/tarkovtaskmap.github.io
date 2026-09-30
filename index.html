@@ -692,6 +692,10 @@ const STR = {
     legendMarkerLine:'<span class="dot" style="background:#888"></span>丸=タスク目標(記号A/B..)　📌=自分のメモ(右クリックで追加)',
     legendHazardLine:"破線で囲った範囲=危険地帯。範囲内に入ると危険",
     legendColorLine:"地図の色（tarkov.dev提供）: 濃い灰=建物内 / 斜線=階段・スロープ / 水色=水場 / 破線=マップ境界",
+    legendLhTitle:"地図上の記号(re3mr.com提供の絵)",
+    legendLhAiScav:"AIスカブの湧き", legendLhRogues:"ローグの湧き", legendLhGoons:"軍団(グーン)の出現エリア",
+    legendLhPmcSpawn:"PMCスポーン", legendLhCache:"キャッシュ", legendLhRogueCache:"ローグの隠し場所",
+    legendLhBoss:"ボス(Zryachiy)", legendLhBossGuard:"ボスの護衛", legendLhBtrStop:"BTR停車位置",
     prereqLabel:"前提: ", nextLabel:"次: ", andMore:" ほか",
     shareCopiedAlert:"共有リンクをコピーしました。フレンドに送ってください。",
     sharePromptCopy:"この共有リンクをコピーしてフレンドに送ってください:",
@@ -858,6 +862,7 @@ const STR = {
     pinEdit:"編集", pinDelete:"削除",
     mapLoading:jp=>`${jp} を読み込み中…`,
     mapAttribution:'地図: <a href="https://tarkov.dev" target="_blank">tarkov.dev</a> (CC BY-NC-SA)',
+    lighthouseArtCredit:'Lighthouseの地図画像: <a href="https://reemr.se/Lighthouse/" target="_blank">re3mr.com</a> (CC BY-NC-SA 4.0)',
     fetchingFirst:"json.tarkov.dev から最新データを取得中…（初回は少し時間がかかります）",
     fetchingData:"json.tarkov.dev から最新データを取得中…",
     fetchFailed:msg=>`<div class="err">データ取得に失敗しました。<br>${msg}<br><br>ネット接続を確認し「データ更新」を押してください。</div>`,
@@ -937,6 +942,10 @@ const STR = {
     legendMarkerLine:'<span class="dot" style="background:#888"></span>Circle=task objective (letter A/B..)　📌=your note (right-click to add)',
     legendHazardLine:"Dashed outline=hazard area. Entering it is dangerous",
     legendColorLine:"Map colors (from tarkov.dev): dark gray=indoors / hatching=stairs・ramp / light blue=water / dashed=map boundary",
+    legendLhTitle:"Map symbols (art by re3mr.com)",
+    legendLhAiScav:"AI Scav spawn", legendLhRogues:"Rogue spawn", legendLhGoons:"Goon squad roam area",
+    legendLhPmcSpawn:"PMC spawn", legendLhCache:"Cache", legendLhRogueCache:"Rogue Cache",
+    legendLhBoss:"Boss (Zryachiy)", legendLhBossGuard:"Boss guard", legendLhBtrStop:"BTR stop",
     prereqLabel:"Requires: ", nextLabel:"Next: ", andMore:" more",
     shareCopiedAlert:"Share link copied. Send it to your friend.",
     sharePromptCopy:"Copy this share link and send it to your friend:",
@@ -1102,6 +1111,7 @@ const STR = {
     pinEdit:"Edit", pinDelete:"Delete",
     mapLoading:jp=>`Loading ${jp}…`,
     mapAttribution:'Map: <a href="https://tarkov.dev" target="_blank">tarkov.dev</a> (CC BY-NC-SA)',
+    lighthouseArtCredit:'Lighthouse map art: <a href="https://reemr.se/Lighthouse/" target="_blank">re3mr.com</a> (CC BY-NC-SA 4.0)',
     fetchingFirst:"Fetching latest data from json.tarkov.dev… (first load takes a bit)",
     fetchingData:"Fetching latest data from json.tarkov.dev…",
     fetchFailed:msg=>`<div class="err">Failed to fetch data.<br>${msg}<br><br>Check your connection and press “Refresh data”.</div>`,
@@ -1225,8 +1235,9 @@ const MAPS = [
      {jp:"Bunkers", svg:"Bunkers", lo:NINF, hi:-7.27},
      {jp:"Ground", svg:"Ground_Level", lo:-7.27, hi:PINF, base:true},
    ]},
-  {n:"lighthouse", jp:"Lighthouse", t:[0.2,0,0.2,0], r:180, b:[[515,-998],[-545,725]],
-   svg:"https://assets.tarkov.dev/maps/svg/Lighthouse.svg", lyr:"Ground_Level"},
+  {n:"lighthouse", jp:"Lighthouse", t:[1,0,-1,0], r:0,
+   b:[[352.2686767218524,-1057.1666666666667],[-533.1449213456667,763.1958092485548]],
+   img:"lighthouse-map.jpg"},
   {n:"factory", jp:"Factory", t:[1.629,119.9,1.629,139.3], r:90, b:[[77,-64.5],[-65.5,67.4]],
    svg:"https://assets.tarkov.dev/maps/svg/Factory.svg", lyr:"Ground_Floor",
    floors:[
@@ -1270,13 +1281,7 @@ const canonMap = m => m ? (MAP_ALIAS[m] || m) : m;
 
 /* ゲーム側の改修に地図の絵（SVG）がまだ追従していないマップへの案内。
    ピン位置(座標変換)には影響しない。tarkov.dev が新しい絵を公開したらここを消す。 */
-const MAP_ART_NOTE = {
-  lighthouse: {
-    ja: { text: "この地図の絵は 1.1.5.0 ライトハウス改修前のレイアウトです（tarkov.dev 未更新）。タスク座標データ自体は最新。", linkText: "最新レイアウト参考(reemr.se)" },
-    en: { text: "This map's art is still the pre-1.1.5.0 Lighthouse layout (tarkov.dev hasn't updated it yet). Task coordinate data itself is current.", linkText: "Reference layout (reemr.se)" },
-    url: "https://reemr.se/Lighthouse/",
-  },
-};
+const MAP_ART_NOTE = {};
 function showMapNote(mapNN){
   const el = document.getElementById("mapnote");
   if(!el) return;
@@ -1489,7 +1494,9 @@ async function fetchData(){
         description: has(men, x.description) ? men[x.description] : x.description,
         position: x.position,
       })),
-      hazards: (mp.hazards || []).filter(h => h && h.position).map(h => ({
+      // Lighthouse: tarkov.dev の hazards データが 1.1.5.0 改修前のまま
+      // （ユーザー確認: 地雷原・スナイパースカフは廃止済み）。実データが更新されたらこの除外を消す。
+      hazards: (mp.normalizedName === "lighthouse" ? [] : (mp.hazards || [])).filter(h => h && h.position).map(h => ({
         name: has(men, h.name) ? men[h.name] : (h.name || h.hazardType || T("hazardOther")),
         hazardType: h.hazardType || "",
         position: h.position,
@@ -2459,12 +2466,27 @@ function renderLegend(){
   // 凡例トグル
   rows.push(`<div class="li" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><a href="#" id="legtoggle" style="color:var(--accent2)">${T("legendToggle", legendOpen)}</a></div>`);
   if(legendOpen){
+    const lhIcons = curMap !== "lighthouse" ? "" :
+      '<div style="margin-top:5px;padding-top:4px;border-top:1px solid var(--line)">' +
+      `<div style="margin-bottom:2px">${T("legendLhTitle")}</div>` +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
+      `<span>♠ ${T("legendLhRogueCache")}</span>` +
+      `<span>🚩 ${T("legendLhCache")}</span>` +
+      `<span>🚶 ${T("legendLhAiScav")}</span>` +
+      `<span>⚔ ${T("legendLhRogues")}</span>` +
+      `<span>🕷 ${T("legendLhGoons")}</span>` +
+      `<span>⭕ ${T("legendLhPmcSpawn")}</span>` +
+      `<span>👤 ${T("legendLhBoss")}</span>` +
+      `<span>♜ ${T("legendLhBossGuard")}</span>` +
+      `<span>⚙ ${T("legendLhBtrStop")}</span>` +
+      '</div></div>';
     rows.push(
       '<div style="font-size:10px;color:var(--dim);line-height:1.7;margin-top:2px">' +
       `<div>${T("legendExitLine", exits.fac)}</div>` +
       `<div>${T("legendMarkerLine")}</div>` +
       `<div>${T("legendHazardLine")}</div>` +
       `<div style="margin-top:3px">${T("legendColorLine")}</div>` +
+      lhIcons +
       '</div>'
     );
   }
@@ -2913,6 +2935,7 @@ async function loadMap(){
   });
   map.attributionControl.setPrefix("");
   map.attributionControl.addAttribution(T("mapAttribution"));
+  if(md.img) map.attributionControl.addAttribution(T("lighthouseArtCredit"));
 
   const bounds = toBounds(md.b);
   map.setMaxBounds(scaledBounds(md.b, 1.6));
@@ -2941,6 +2964,8 @@ async function loadMap(){
         });
       }
       L.svgOverlay(svgEl, md.sb ? toBounds(md.sb) : bounds, { interactive:false }).addTo(map);
+    }else if(md.img){
+      L.imageOverlay(md.img, md.sb ? toBounds(md.sb) : bounds, { interactive:false }).addTo(map);
     }else if(md.tile && !md.floors){
       L.tileLayer(md.tile, { tileSize:256, bounds, noWrap:true, maxNativeZoom:6 }).addTo(map);
     }
