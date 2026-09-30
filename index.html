@@ -3121,13 +3121,17 @@ function applyData(data){
   for(const m of data.maps){
     const mn = canonMap(m.normalizedName);
     for(const bag of [EXTRACTS, TRANSITS, HAZARDS, LOCKS, SWITCHES, BOSSES, SPAWNS]) if(!bag[mn]) bag[mn] = [];
-    EXTRACTS[mn].push(...(m.extracts||[]));
-    TRANSITS[mn].push(...(m.transits||[]));
-    HAZARDS[mn].push(...(m.hazards||[]));
-    LOCKS[mn].push(...(m.locks||[]));
-    SWITCHES[mn].push(...(m.switches||[]));
-    BOSSES[mn].push(...(m.bosses||[]));
-    SPAWNS[mn].push(...(m.spawns||[]));
+    // m.normalizedName が MAP_ALIAS のキー = 同じ物理マップの別バリアント(night-factory 等)。
+    // 座標データは正規名の側と重複する(faction 情報が欠けていることが多く二重表示の原因になる)ので取り込まない。
+    if(!MAP_ALIAS[m.normalizedName]){
+      EXTRACTS[mn].push(...(m.extracts||[]));
+      TRANSITS[mn].push(...(m.transits||[]));
+      HAZARDS[mn].push(...(m.hazards||[]));
+      LOCKS[mn].push(...(m.locks||[]));
+      SWITCHES[mn].push(...(m.switches||[]));
+      BOSSES[mn].push(...(m.bosses||[]));
+      SPAWNS[mn].push(...(m.spawns||[]));
+    }
     if(!MAPMETA[mn] && (m.raidDuration || m.players)) MAPMETA[mn] = { raidDuration:m.raidDuration, players:m.players };
   }
   // トレーダー選択肢を用意（アルファベット順）
