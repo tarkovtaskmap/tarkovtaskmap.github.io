@@ -3271,7 +3271,7 @@ document.getElementById("brightreset").onclick = () => { view = { bright:1, cont
 })();
 // チップ(Ko-fi)の表示。寄付の受け取りが実装できるまで false（HTML側は data-tip + hidden で隠してある）。
 // 表示するときは true にする。README.md の「Support this project」も戻すこと。
-const SHOW_TIP = false;
+const SHOW_TIP = true;
 if(SHOW_TIP) document.querySelectorAll("[data-tip]").forEach(el => el.classList.remove("hidden"));
 
 // 利用集計: 主なボタンが押された回数だけを数える（押した内容は送らない）

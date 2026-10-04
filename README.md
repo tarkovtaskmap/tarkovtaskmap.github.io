@@ -20,6 +20,11 @@ use the language dropdown top-left to switch. In Chinese and Russian, task / ite
 - Works offline-ish: caches data locally, falls back to a bundled snapshot if
   tarkov.dev's API is down
 
+## Support this project
+
+If this tool saves you time, a tip is appreciated but never required — the tool stays free
+either way. **[☕ Support on Ko-fi](https://ko-fi.com/tarkovtaskmap)**
+
 ## Credits & license
 
 - Task/extract/map data: [tarkov.dev](https://tarkov.dev) / `json.tarkov.dev` (community, free)
