@@ -148,6 +148,9 @@
   #prep .pmaps{flex:0 0 auto;max-width:44%;font-size:10px;color:var(--dim);text-align:right;line-height:1.3}
   #prep .gsub.pmaps{max-width:none;text-align:left;font-size:11px}
   #prep .gsub{padding:0 14px 1px 41px;font-size:11px;color:var(--dim);line-height:1.5;word-break:break-word}
+  #prep .pxhd{padding:3px 14px 1px;font-size:12px;display:flex;gap:6px;align-items:baseline}
+  #prep .pxhd .pmaps{margin-left:auto}
+  #prep .pex .pitem{padding-left:26px}
 
   #questlist{flex:1 1 auto;min-height:max(300px,52vh);overflow-y:auto;padding:4px 0}
   details.sect .grouped{border-top:1px solid var(--line)}
@@ -331,6 +334,12 @@
   .qmark{border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;text-shadow:0 1px 2px #000}
   .xmark{position:relative;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:11px}
   .xmark .xfloor{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:3px;background:#000d;color:#fff;border:1px solid #fff9;border-radius:3px;font-size:8px;line-height:1.3;padding:1px 3px;font-weight:700;white-space:nowrap}
+  /* 条件付きの脱出: マークの左上に種類の印 */
+  .xmark .xcond{position:absolute;right:100%;bottom:100%;margin:0 -8px -8px 0;width:18px;height:18px;border-radius:50%;background:#151515;border:1.5px solid #f0a030;box-shadow:0 0 0 1px #000;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;font-weight:400;color:#fff;overflow:hidden}
+  .xmark .xcond.nobag::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:2px;margin-top:-1px;background:#ff2020;box-shadow:0 0 0 1px #000;transform:rotate(-45deg)}
+  .xcpop{margin-top:3px;font-size:11px;line-height:1.5}
+  .xcpop .xch{color:#f0a030;font-weight:700}
+  #exList .exrow .xcnd{flex:0 0 auto;font-size:9px;padding:0 4px;border-radius:3px;border:1px solid #f0a030;color:#f0c070;white-space:nowrap;cursor:help}
   .minimark{width:13px;height:13px;border-radius:3px;border:1px solid #fff;box-shadow:0 0 0 1px #000;display:flex;align-items:center;justify-content:center;color:#000;font-weight:800;font-size:9px}
   .custcompin{font-size:17px;line-height:1;filter:drop-shadow(0 1px 2px #000);cursor:pointer}
   .leaflet-popup-content{font-size:12px;line-height:1.5}
@@ -696,6 +705,33 @@ const STR = {
     legendLhAiScav:"AIスカブの湧き", legendLhRogues:"ローグの湧き", legendLhGoons:"軍団(グーン)の出現エリア",
     legendLhPmcSpawn:"PMCスポーン", legendLhCache:"キャッシュ", legendLhRogueCache:"ローグの隠し場所",
     legendLhBoss:"ボス(Zryachiy)", legendLhBossGuard:"ボスの護衛", legendLhBtrStop:"BTR停車位置",
+    condClimb:items=>`${items} を持つ（インベントリにあればOK）・ボディアーマーを外す`,
+    condNoBag:"バックパックを外す（大きさに関係なく不可）",
+    condHandIn:item=>`${item} を出口で引き渡す`,
+    condPay:amt=>`${amt} を払う（1人あたり・最大4人・1レイドに1回）`,
+    condFlare:item=>`合図ゾーンで緑フレアを打つ（${item}）`,
+    condD2:"司令部エリアのレバーで電源を入れ、扉のボタンを押す",
+    condBunker:"地上のレバーで発電機を動かし、約4分以内に脱出（警報・Raiderに注意）",
+    condSaferoom:"発電所で電源を入れ、Object #11SR keycard で入って扉を閉める（1回だけ）",
+    condLabElev:a=>`電源パネル（${a}付近）を操作する（Raiderが出ることがある）`,
+    condSewage:"パネルで排水する（約80秒）",
+    condLabGate:a=>`操作パネル（${a}）を使う。動かないレイドもあり、警報が鳴る。TerraGroup Labs keycard (Yellow) で警報を先に止められる（任意）`,
+    condTrainReserve:"レイド後半（残り約20〜10分）に到着し、約7分半だけ停車",
+    condTrain:"時間になると到着し、少しの間だけ停車する列車",
+    condWayUp:"レイド開始から15分後に開く",
+    tcondLabCard:"TerraGroup Labs access keycard が1枚必要（使い捨て）",
+    tcondLabrys:"Labrys access keycard が必要（Resort 西棟地下の扉）",
+    tcondTerminal:"ゲーム内 21:00〜6:00 のみ。ストーリーの進行と入場用キーカード（使うと消費）も必要",
+    tcondSudak:"Sudak-Tudak marine repair kit が1個必要（使い捨て）",
+    transitTo:d=>`トランジット → ${d}`,
+    transitRules:"・レイド開始1分後から使える<br>・使うと他の脱出は使えなくなる<br>・ゾーン内で20秒待つと移動（出ると30秒に戻る）",
+    transitGo:d=>`${d} の地図を開く`,
+    transitUnsupported:"この行き先はツール未対応のマップです",
+    condLbl:k=>({climb:"RR+紐", nobag:"バッグ不可", item:"引き渡し", card:"キーカード", tool:"道具", flare:"フレア", pay:"支払い", power:"電源/操作", timer:"時間"})[k],
+    condNoArmorRow:"ボディアーマーを外す", condNoBagRow:"バックパックを外す", condFlareRow:"合図ゾーンの中で打つ（緑のみ）", condPopupHead:"条件",
+    exitCondNote:"印の脱出は条件あり（マウスで内容表示）。使う脱出だけチェックすると、必要な物が「レイド前チェック」に出ます。",
+    prepExit:"🚪 使う脱出の条件",
+    legendCondLine:"脱出・トランジットのマークの左上の印＝条件あり（クリックで内容）:",
     prereqLabel:"前提: ", nextLabel:"次: ", andMore:" ほか",
     shareCopiedAlert:"共有リンクをコピーしました。フレンドに送ってください。",
     sharePromptCopy:"この共有リンクをコピーしてフレンドに送ってください:",
@@ -771,6 +807,8 @@ const STR = {
 
 <details><summary>5. 脱出地点の選び方</summary><div>
 <p>左の「脱出地点」欄で、まず<b>PMC か Scav</b> を選び、そのあと今回使う脱出地点にチェックを入れると、<b>チェックした地点だけ</b>地図に出ます。「全部表示／全部隠す」ボタンもあります。色は 緑=PMC・青=Scav・橙=共有 です。PvEでは、PvE用の脱出地点が出ます。</p>
+<p><b>条件付きの脱出</b>には、地図のマークの左上と一覧に印が付きます（🧗 Red Rebel ice pick＋Paracord・ボディアーマー不可 / 🎒 バックパック不可 / 📜 アイテムの引き渡し / 💳 キーカード / 🎆 緑フレア / 💰 支払い / ⚡ 電源・操作 / ⏱️ 時間）。マウスを乗せる（スマホはタップ）と内容が出ます。使う脱出だけにチェックを絞ると、必要な物が「レイド前チェック」の「🚪 使う脱出の条件」に出ます。金額と引き渡すアイテムは tarkov.dev のデータ、それ以外は確認できた情報だけを手作業で載せています。</p>
+<p><b>トランジット</b>（紫の T）は最初から表示されます（「表示レイヤー」で消せます）。クリックすると行き先・条件・使い方の要点と「行き先の地図を開く」ボタンが出ます。キーカードや道具が要るものには同じ印（💳 / 🔧 / ⏱️）が付きます。</p>
 </div></details>
 
 <details><summary>6. レイド前チェック</summary><div>
@@ -946,6 +984,33 @@ const STR = {
     legendLhAiScav:"AI Scav spawn", legendLhRogues:"Rogue spawn", legendLhGoons:"Goon squad roam area",
     legendLhPmcSpawn:"PMC spawn", legendLhCache:"Cache", legendLhRogueCache:"Rogue Cache",
     legendLhBoss:"Boss (Zryachiy)", legendLhBossGuard:"Boss guard", legendLhBtrStop:"BTR stop",
+    condClimb:items=>`Carry ${items} (anywhere in your inventory) and take off body armor`,
+    condNoBag:"Take off your backpack (no backpack of any size)",
+    condHandIn:item=>`Hand over ${item} at the exit`,
+    condPay:amt=>`Pay ${amt} (per person, up to 4, once per raid)`,
+    condFlare:item=>`Fire a green flare in the signal zone (${item})`,
+    condD2:"Turn on power with the lever in the command offices, then press the door button",
+    condBunker:"Start the generator with the lever outside, then extract within ~4 min (alarm, Raiders)",
+    condSaferoom:"Restore power at the power station, get in with the Object #11SR keycard and lock the door (one use)",
+    condLabElev:a=>`Use the power panel (near ${a}); Raiders may appear`,
+    condSewage:"Drain the water with the panel (~80 s)",
+    condLabGate:a=>`Use the control panel (${a}). It may not work every raid and sounds an alarm. A TerraGroup Labs keycard (Yellow) can disable the alarm beforehand (optional)`,
+    condTrainReserve:"Arrives late in the raid (about 20–10 min left) and stays about 7.5 min",
+    condTrain:"A train that arrives at a set time and stays only briefly",
+    condWayUp:"Opens 15 minutes after the raid starts",
+    tcondLabCard:"Requires 1 TerraGroup Labs access keycard (single-use)",
+    tcondLabrys:"Requires a Labrys access keycard (door in the Resort west wing basement)",
+    tcondTerminal:"In-game 21:00–6:00 only. Also needs story progress and an entry keycard (used up)",
+    tcondSudak:"Requires 1 Sudak-Tudak marine repair kit (single-use)",
+    transitTo:d=>`Transit → ${d}`,
+    transitRules:"• Usable from 1 min after the raid starts<br>• Using it disables all other extracts<br>• Stay in the zone 20 s to move (leaving resets to 30 s)",
+    transitGo:d=>`Open map: ${d}`,
+    transitUnsupported:"This destination map isn't supported by the tool",
+    condLbl:k=>({climb:"RR+rope", nobag:"No backpack", item:"Hand-in", card:"Keycard", tool:"Tool", flare:"Flare", pay:"Pay", power:"Power/panel", timer:"Timed"})[k],
+    condNoArmorRow:"Take off body armor", condNoBagRow:"Take off your backpack", condFlareRow:"Fire it inside the signal zone (green only)", condPopupHead:"Requirements",
+    exitCondNote:"Marked extracts have requirements (hover to see). Check only the extracts you'll use to list what you need in the pre-raid checklist.",
+    prepExit:"🚪 Requirements for your extracts",
+    legendCondLine:"Badge at the top-left of an extract or transit = has requirements (click for details):",
     prereqLabel:"Requires: ", nextLabel:"Next: ", andMore:" more",
     shareCopiedAlert:"Share link copied. Send it to your friend.",
     sharePromptCopy:"Copy this share link and send it to your friend:",
@@ -1021,6 +1086,8 @@ const STR = {
 
 <details><summary>5. Choosing extracts</summary><div>
 <p>In the "Extracts" section, first pick <b>PMC or Scav</b>, then check the extracts you'll use — <b>only checked ones</b> appear on the map. There are "Show all / Hide all" buttons. Colors: green = PMC, blue = Scav, orange = shared. In PvE mode, the PvE extracts are shown.</p>
+<p><b>Extracts with requirements</b> get a badge at the top-left of the map marker and in the list (🧗 Red Rebel ice pick + Paracord, no body armor / 🎒 no backpack / 📜 hand over an item / 💳 keycard / 🎆 green flare / 💰 payment / ⚡ power or panel / ⏱️ timed). Hover (or tap on a phone) to see the details. If you check only the extracts you'll use, what you need appears under "🚪 Requirements for your extracts" in the pre-raid checklist. Prices and hand-in items come from tarkov.dev's data; everything else is added by hand from verified information only.</p>
+<p><b>Transits</b> (purple T) are shown by default (you can hide them under "Display layers"). Click one to see its destination, requirements, key rules and an "Open map" button. Transits needing a keycard or item get the same badges (💳 / 🔧 / ⏱️).</p>
 </div></details>
 
 <details><summary>6. Pre-raid check</summary><div>
@@ -1235,7 +1302,8 @@ const MAPS = [
      {jp:"Bunkers", svg:"Bunkers", lo:NINF, hi:-7.27},
      {jp:"Ground", svg:"Ground_Level", lo:-7.27, hi:PINF, base:true},
    ]},
-  {n:"lighthouse", jp:"Lighthouse", t:[1,0,-1,0], r:0,
+  // t[0]=-1: 絵(re3mr)は左端が x=352・右端が x=-533 の向き。latLngBounds は角の順序を正規化して向きを失うので、x の符号はここで反転する
+  {n:"lighthouse", jp:"Lighthouse", t:[-1,0,-1,0], r:0,
    b:[[352.2686767218524,-1057.1666666666667],[-533.1449213456667,763.1958092485548]],
    img:"lighthouse-map.jpg"},
   {n:"factory", jp:"Factory", t:[1.629,119.9,1.629,139.3], r:90, b:[[77,-64.5],[-65.5,67.4]],
@@ -1278,6 +1346,75 @@ const MAP_ALIAS = {
   "the-lab-dark":"the-lab",
 };
 const canonMap = m => m ? (MAP_ALIAS[m] || m) : m;
+
+/* 脱出の条件。自動: tarkov.dev の transferItem（Roubles=有料の車 / それ以外=秘密脱出の引き渡し）と名前の「(Flare)」。
+   手動: データに無い条件のうち、2026-10 の裏取り（reports/EFT 脱出地点 特殊条件調査.md）で確定したものだけ。
+   キーは「マップ|英語の脱出名」。同じ名前でもマップごとに条件が違う（Streets の Sewer Manhole は制限なし等）ので必ずマップ付き。 */
+const RUB_ID = "5449016a4bdc2d6f028b456f", EUR_ID = "569668774bdc2da2298b4568";
+const IT_PARACORD = { id:"5c12688486f77426843c7d32", name:"Paracord" };
+const IT_REDREBEL = { id:"5c0126f40db834002a125382", name:"Red Rebel ice pick" };
+const IT_FLARE    = { id:"6217726288ed9f0845317459", name:"RSP-30 reactive signal cartridge (Green)" };
+const IT_11SR     = { id:"5e42c81886f7742a01529f57", name:"Object #11SR keycard" };
+const IT_LABYEL   = { id:"5c1d0d6d86f7744bb2683e1f", name:"TerraGroup Labs keycard (Yellow)" };
+const COND_CLIMB = { k:"climb", items:[IT_PARACORD, IT_REDREBEL], noArmor:true };
+const EXIT_COND = {
+  "reserve|Cliff Descent":           [COND_CLIMB],
+  "lighthouse|Mountain Pass":        [COND_CLIMB],
+  "shoreline|Climber's Trail":       [COND_CLIMB],
+  "reserve|Sewer Manhole":           [{ k:"nobag" }],
+  "the-lab|Ventilation Shaft":       [{ k:"nobag" }],
+  "interchange|Saferoom Exfil":      [{ k:"card", items:[IT_11SR], t:"condSaferoom" }],
+  "reserve|D-2":                     [{ k:"power", t:"condD2" }],
+  "reserve|Bunker Hermetic Door":    [{ k:"power", t:"condBunker" }],
+  "the-lab|Cargo Elevator":          [{ k:"power", t:"condLabElev", a:"G1" }],
+  "the-lab|Main Elevator":           [{ k:"power", t:"condLabElev", a:"R4" }],
+  "the-lab|Medical Block Elevator":  [{ k:"power", t:"condLabElev", a:"G6" }],
+  "the-lab|Sewage Conduit":          [{ k:"power", t:"condSewage" }],
+  "the-lab|Parking Gate":            [{ k:"power", t:"condLabGate", a:"Y21" }],
+  "the-lab|Hangar Gate":             [{ k:"power", t:"condLabGate", a:"B24" }],
+  "reserve|Armored Train":           [{ k:"timer", t:"condTrainReserve" }],
+  "lighthouse|Armored Train":        [{ k:"timer", t:"condTrain" }],
+  "the-labyrinth|The Way Up":        [{ k:"timer", t:"condWayUp" }],
+};
+const COND_ORDER = ["climb", "nobag", "item", "card", "tool", "flare", "pay", "power", "timer"];
+const COND_GLYPH = { climb:"🧗", nobag:"🎒", item:"📜", card:"💳", tool:"🔧", flare:"🎆", pay:"💰", power:"⚡️", timer:"⏱️" };   // FE0F: 文字ではなく絵文字で表示させる
+
+/* トランジットの条件。キーは「出発マップ|行き先マップ」（正規化名）。
+   tarkov.dev の conditions は抜け（Shoreline→Icebreaker）や推測（Labyrinth）があるので、
+   2026-10 の裏取り（公式 1.1.5.0 パッチノート・wikiwiki）で確かめた内容を手で持つ。 */
+const IT_LABSCARD = { id:"5c94bbff86f7747ee735c08f", name:"TerraGroup Labs access keycard" };
+const IT_LABRYS   = { id:"679b9819a2f2dd4da9023512", name:"Labrys access keycard" };
+const IT_SUDAK    = { id:"6a8c4c7999baf8bd5802f7fe", name:"Sudak-Tudak marine repair kit" };
+const TRANSIT_COND = {
+  "factory|the-lab":           [{ k:"card", items:[IT_LABSCARD], t:"tcondLabCard" }],
+  "streets-of-tarkov|the-lab": [{ k:"card", items:[IT_LABSCARD], t:"tcondLabCard" }],
+  "shoreline|the-labyrinth":   [{ k:"card", items:[IT_LABRYS], t:"tcondLabrys" }],
+  "shoreline|terminal":        [{ k:"timer", t:"tcondTerminal" }],
+  "lighthouse|icebreaker":     [{ k:"tool", items:[IT_SUDAK], t:"tcondSudak" }],
+  "shoreline|icebreaker":      [{ k:"tool", items:[IT_SUDAK], t:"tcondSudak" }],
+};
+const transitConds = (mn, tr) => tr.dest ? (TRANSIT_COND[canonMap(mn) + "|" + tr.dest] || []) : [];
+// 行き先のマップへ切り替える（トランジットの吹き出しのボタン）
+function gotoTransit(mn){ if(MAPBY[mn]){ map.closePopup(); gotoMap(mn); } }
+function exitConds(mn, e){
+  const nm = e.key || e.name || "", out = [...(EXIT_COND[canonMap(mn) + "|" + nm] || [])];
+  if(e.req && e.req.id){
+    if(e.req.id === RUB_ID || e.req.id === EUR_ID) out.push({ k:"pay", money:e.req });
+    else out.push({ k:"item", items:[e.req] });
+  }
+  if(/\(flare\)/i.test(nm)) out.push({ k:"flare", items:[IT_FLARE] });
+  return out.sort((a, b) => COND_ORDER.indexOf(a.k) - COND_ORDER.indexOf(b.k));
+}
+const moneyStr = m => m.id === EUR_ID ? "€" + Number(m.count).toLocaleString("en-US") : Number(m.count).toLocaleString("en-US") + "₽";
+function condText(c){
+  if(c.k === "climb") return T("condClimb", c.items.map(i => i.name).join(" + "));
+  if(c.k === "nobag") return T("condNoBag");
+  if(c.k === "item")  return T("condHandIn", c.items[0].name);
+  if(c.k === "pay")   return T("condPay", moneyStr(c.money));
+  if(c.k === "flare") return T("condFlare", c.items[0].name);
+  return T(c.t, c.a);
+}
+const condLabel = c => c.k === "pay" ? moneyStr(c.money) : T("condLbl", c.k);
 
 /* ゲーム側の改修に地図の絵（SVG）がまだ追従していないマップへの案内。
    ピン位置(座標変換)には影響しない。tarkov.dev が新しい絵を公開したらここを消す。 */
@@ -1415,7 +1552,8 @@ async function jdFetch(path){
   return r.json();
 }
 
-const CACHE_KEY = "eft_qm_cache_v8_" + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
+const CACHE_PREFIX = "eft_qm_cache_v10_";
+const CACHE_KEY = CACHE_PREFIX + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v9: 脱出の条件(req)を追加 / v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
 const SEL_KEY   = MK("eft_qm_selected_v1");
 const OPT_KEY   = "eft_qm_opts_v1";
 const MAP_KEY   = "eft_qm_lastmap_v1";
@@ -1489,10 +1627,15 @@ async function fetchData(){
         key: has(menBase, e.name) ? menBase[e.name] : e.name,   // 英語名（Co-op 判定・階の手動指定に使う）
         faction: e.faction || "",
         position: e.position,
+        // 支払い(Roubles)や秘密脱出で引き渡すアイテム。名前は表示言語で解決しておく
+        req: (e.transferItem && e.transferItem.item) ? Object.assign(mkItem(e.transferItem.item), { count: e.transferItem.count || 1 }) : null,
       })),
       transits: (mp.transits || []).filter(x => x && x.position).map(x => ({
         description: has(men, x.description) ? men[x.description] : x.description,
         position: x.position,
+        // 行き先（正規化したマップ名）と表示名。ツール未対応のマップ(Terminal/Icebreaker)は表示名だけ使う
+        dest: x.map && mid2nn[x.map] ? canonMap(mid2nn[x.map]) : "",
+        destName: x.map && rawMaps[x.map] && has(men, rawMaps[x.map].name) ? men[rawMaps[x.map].name] : "",
       })),
       // Lighthouse: tarkov.dev の hazards データが 1.1.5.0 改修前のまま
       // （ユーザー確認: 地雷原・スナイパースカフは廃止済み）。実データが更新されたらこの除外を消す。
@@ -1674,6 +1817,8 @@ function loadCache(){
   return null;
 }
 function saveCache(data){
+  // 旧バージョンのキャッシュ(数MB)が残ると容量不足で保存できなくなるので消す。言語別・PvE別の現行版は残す
+  try{ for(let i = localStorage.length - 1; i >= 0; i--){ const k = localStorage.key(i); if(k && /^eft_qm_cache_v\d+_/.test(k) && !k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k); } }catch(e){}
   try{ localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); }
   catch(e){ console.warn("キャッシュ保存失敗(容量?)", e); }
 }
@@ -1751,13 +1896,14 @@ function loadExits(){
 let exits = loadExits();
 function saveExits(){ try{ localStorage.setItem(EXIT_KEY, JSON.stringify(exits)); }catch(e){} }
 // 現在マップ・現在の出撃タイプで表示対象になりうる脱出（共有は常に含む）
-function exitsForCurrent(){
+function exitsFor(mn){
   const fac = exits.fac;
-  return (EXTRACTS[curMap] || []).filter(e => {
+  return (EXTRACTS[mn] || []).filter(e => {
     const f = (e.faction || "").toLowerCase();
     return f === fac || f === "shared" || f === "";
   });
 }
+function exitsForCurrent(){ return exitsFor(curMap); }
 // 名前でまとめる（同名で複数座標のことがある）
 function exitGroups(){
   const m = new Map();
@@ -1789,13 +1935,19 @@ function renderExits(){
   if(!groups.length){ box.innerHTML = `<div class="exempty">${T("noExitData")}</div>`; return; }
   const tagCol = f => f === "pmc" ? "var(--ok)" : f === "scav" ? "var(--scav)" : "var(--shared)";
   const tagTxt = f => f === "pmc" ? "PMC" : f === "scav" ? "Scav" : T("kindCoop");
-  box.innerHTML = groups.map(g =>
-    `<label class="exrow">
+  let anyCond = false;
+  box.innerHTML = groups.map(g => {
+    const conds = exitConds(curMap, g.items[0]);
+    if(conds.length) anyCond = true;
+    const chips = conds.map(c => `<span class="xcnd" title="${escH(condText(c))}">${COND_GLYPH[c.k]} ${escH(condLabel(c))}</span>`).join("");
+    return `<label class="exrow">
        <input type="checkbox" data-ex="${g.name.replace(/"/g,"&quot;")}" ${exitVisible(g.name) ? "checked" : ""} />
        <span class="xnm">${g.name.replace(/</g,"&lt;")}</span>
-       <span class="xtag" style="color:${tagCol(g.faction)}">${tagTxt(g.faction)}</span>
-     </label>`).join("") +
-    (groups.some(g => g.faction === "coop") ? `<div class="exempty" style="color:var(--shared)">${T("coopListNote")}</div>` : "");
+       ${chips}<span class="xtag" style="color:${tagCol(g.faction)}">${tagTxt(g.faction)}</span>
+     </label>`;
+  }).join("") +
+    (groups.some(g => g.faction === "coop") ? `<div class="exempty" style="color:var(--shared)">${T("coopListNote")}</div>` : "") +
+    (anyCond ? `<div class="exempty" style="color:#f0c070">${T("exitCondNote")}</div>` : "");
   const shown = groups.filter(g => exitVisible(g.name)).length;
   document.getElementById("exHint").textContent = T("exitHint", shown, groups.length);
 }
@@ -1819,9 +1971,14 @@ function saveView(){ try{ localStorage.setItem(VIEW_KEY, JSON.stringify(view)); 
 function loadSel(){ try{ return JSON.parse(localStorage.getItem(SEL_KEY))||[]; }catch(e){ return []; } }
 function saveSel(){ localStorage.setItem(SEL_KEY, JSON.stringify([...selected])); }
 function loadOpts(){
-  const d = { pmc:true, scav:true, shared:true, transit:false, hazard:false, lock:false, switch:false,
+  const d = { pmc:true, scav:true, shared:true, transit:true, hazard:false, lock:false, switch:false,
               boss:false, spawn:false, route:false, icons:true, kappaOnly:false, trader:"", mapFilter:"" };
-  try{ return Object.assign(d, JSON.parse(localStorage.getItem(OPT_KEY))||{}); }catch(e){ return d; }
+  try{
+    const s = JSON.parse(localStorage.getItem(OPT_KEY)) || {};
+    // 2026-10: トランジットを既定 ON に変更。以前の既定 OFF のまま保存された設定は一度だけ ON にする（その後の OFF は尊重）
+    if(!s.transitOn1){ s.transit = true; s.transitOn1 = 1; }
+    return Object.assign(d, s);
+  }catch(e){ return d; }
 }
 function saveOpts(){ localStorage.setItem(OPT_KEY, JSON.stringify(opts)); }
 
@@ -2258,7 +2415,8 @@ function iconExtract(color, letter, opt){
   opt = opt || {};
   const op = opt.dim ? "opacity:.5;" : "";
   const badge = opt.floorTag ? `<span class="xfloor">${opt.floorTag}</span>` : "";
-  return L.divIcon({ className:"", html:`<div class="xmark" style="width:15px;height:15px;background:${color};${op}">${letter||""}${badge}</div>`,
+  const cond = opt.cond ? `<span class="xcond${opt.cond.k === "nobag" ? " nobag" : ""}">${COND_GLYPH[opt.cond.k]}</span>` : "";
+  return L.divIcon({ className:"", html:`<div class="xmark" style="width:15px;height:15px;background:${color};${op}">${letter||""}${badge}${cond}</div>`,
     iconSize:[15,15], iconAnchor:[7,7] });
 }
 function iconMini(color, letter, title){
@@ -2311,15 +2469,30 @@ function renderMarkers(){
       const fi = extractFloorIndex(curMap, md, e);
       if(fi >= 0 && fi !== curFloor){ floorFull = floorDisp(md.floors[fi].jp); floorTag = floorShort(md.floors[fi].jp); }
     }
-    L.marker(gpos(e.position), { icon:iconExtract(color, letter, { dim: !!floorTag, floorTag }) })
-      .bindPopup(T("extractPopup", e.name||"?", kind, fac) + (floorFull ? `<br><span style="color:#a06">${T("floorNote", floorFull)}</span>` : ""))
+    const conds = exitConds(curMap, e);
+    const condHtml = conds.length ? `<div class="xcpop"><span class="xch">${T("condPopupHead")}:</span>` +
+      conds.map(c => `<div>${COND_GLYPH[c.k]} ${escH(condText(c))}</div>`).join("") + `</div>` : "";
+    const mk = L.marker(gpos(e.position), { icon:iconExtract(color, letter, { dim: !!floorTag, floorTag, cond: conds[0] }) })
+      .bindPopup(T("extractPopup", e.name||"?", kind, fac) + (floorFull ? `<br><span style="color:#a06">${T("floorNote", floorFull)}</span>` : "") + condHtml)
       .addTo(extractLayer);
+    if(conds.length) mk.bindTooltip(`<b>${escH(e.name || "?")}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>"), TIP_OPT);
   }
   if(opts.transit){
     for(const tr of (TRANSITS[curMap]||[])){
-      if(!tr.position || !onFloor(tr.position)) continue;
-      L.marker(gpos(tr.position), { icon:iconExtract("#c58ae0","T") })
-        .bindPopup(T("transitPopup", tr.description||"")).addTo(extractLayer);
+      // 脱出口と同じく階層フィルタの対象外（常に表示）。階のある地図(Shoreline 等)で隠れてしまうため
+      if(!tr.position) continue;
+      const conds = transitConds(curMap, tr);
+      const dn = tr.dest ? (MAPBY[tr.dest] ? mapDisp(MAPBY[tr.dest]) : (tr.destName || tr.dest)) : "";
+      const condHtml = conds.map(c => `<div>${COND_GLYPH[c.k]} ${escH(condText(c))}</div>`).join("");
+      const goHtml = !tr.dest ? "" : MAPBY[tr.dest]
+        ? `<button onclick="gotoTransit('${tr.dest}')" style="margin-top:6px">${escH(T("transitGo", dn))}</button>`
+        : `<div style="margin-top:6px;color:var(--dim)">${T("transitUnsupported")}</div>`;
+      const mk = L.marker(gpos(tr.position), { icon:iconExtract("#c58ae0", "T", { cond: conds[0] }) })
+        .bindPopup(dn ? `<b>${escH(T("transitTo", dn))}</b>` + (condHtml ? `<div class="xcpop">${condHtml}</div>` : "") +
+                        `<div style="font-size:11px;color:var(--dim);margin-top:4px">${T("transitRules")}</div>` + goHtml
+                      : T("transitPopup", tr.description||""))
+        .addTo(extractLayer);
+      if(conds.length) mk.bindTooltip(`<b>${escH(T("transitTo", dn))}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>"), TIP_OPT);
     }
   }
   // --- 危険地帯（種類別に色分け）/ 施錠ドア / スイッチ ---
@@ -2466,6 +2639,15 @@ function renderLegend(){
   // 凡例トグル
   rows.push(`<div class="li" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><a href="#" id="legtoggle" style="color:var(--accent2)">${T("legendToggle", legendOpen)}</a></div>`);
   if(legendOpen){
+    // 条件付き脱出の印（いま地図に出ている種類だけ）
+    const ck = new Set();
+    for(const e of exitsForCurrent()){
+      if(!exitVisible(e.name || T("unknownName"))) continue;
+      const c = exitConds(curMap, e)[0]; if(c) ck.add(c.k);
+    }
+    if(opts.transit) for(const tr of (TRANSITS[curMap] || [])){ const c = transitConds(curMap, tr)[0]; if(c) ck.add(c.k); }
+    const condLegend = !ck.size ? "" : `<div style="margin-top:3px">${T("legendCondLine")} ` +
+      COND_ORDER.filter(k => ck.has(k)).map(k => `<span style="white-space:nowrap">${COND_GLYPH[k]} ${T("condLbl", k)}</span>`).join("　") + `</div>`;
     const lhIcons = curMap !== "lighthouse" ? "" :
       '<div style="margin-top:5px;padding-top:4px;border-top:1px solid var(--line)">' +
       `<div style="margin-bottom:2px">${T("legendLhTitle")}</div>` +
@@ -2482,7 +2664,7 @@ function renderLegend(){
       '</div></div>';
     rows.push(
       '<div style="font-size:10px;color:var(--dim);line-height:1.7;margin-top:2px">' +
-      `<div>${T("legendExitLine", exits.fac)}</div>` +
+      `<div>${T("legendExitLine", exits.fac)}</div>` + condLegend +
       `<div>${T("legendMarkerLine")}</div>` +
       `<div>${T("legendHazardLine")}</div>` +
       `<div style="margin-top:3px">${T("legendColorLine")}</div>` +
@@ -2826,8 +3008,38 @@ function renderPrep(){
     for(const g of (t.gearByMap["*"] || [])) addGear(t, g, "*");   // どのマップでも使う条件
   }
 
-  const total = keys.size + bring.size + collect.size + gear.size;
-  if(selected.size === 0){ box.style.display = "none"; return; }
+  // 使う脱出の条件: 脱出地点を絞り込んだマップだけ（全部表示のままなら、使う脱出が決まっていないので出さない）
+  const exitBlocks = [], exitc = new Map();
+  for(const m of mapList){
+    const picks = exits.picks[m + "|" + exits.fac];
+    if(!picks) continue;
+    const seen = new Set();
+    for(const e of exitsFor(m)){
+      const nm = e.name || T("unknownName");
+      if(seen.has(nm) || !picks[nm]) continue;
+      seen.add(nm);
+      const conds = exitConds(m, e);
+      if(!conds.length) continue;
+      const rows = [];
+      const addCheck = (id, text, item) => {
+        if(!exitc.has(id)) exitc.set(id, { id, maps:new Set() });
+        const x = exitc.get(id); x.maps.add(m);
+        rows.push({ id, text, item, maps:x.maps });
+      };
+      for(const c of conds){
+        for(const it of (c.items || [])) addCheck("x:" + it.id, it.name, it.id);
+        if(c.k === "pay") addCheck("x:" + c.money.id, moneyStr(c.money), c.money.id);
+        if(c.noArmor) addCheck("x:noarmor", "🚫 " + T("condNoArmorRow"));
+        if(c.k === "nobag") addCheck("x:nobag", "🚫 " + T("condNoBagRow"));
+        if(c.t || c.k === "flare") rows.push({ info:true, glyph:COND_GLYPH[c.k], text: c.k === "flare" ? T("condFlareRow") : condText(c) });
+      }
+      exitBlocks.push({ m, name:nm, conds, rows });
+    }
+  }
+
+  const taskTotal = keys.size + bring.size + collect.size + gear.size;
+  const total = taskTotal + exitc.size;
+  if(selected.size === 0 && !exitBlocks.length){ box.style.display = "none"; return; }
   box.style.display = "";
 
   // チェックの保存先: このマップ表示 → そのマップ / 全マップ表示 → その項目が出てくる全マップ（読むときはどれか1つでも付いていれば済み）
@@ -2838,9 +3050,10 @@ function renderPrep(){
              `<span class="pbtns"><button id="prepmode" title="${escH(T(prepAll ? "prepOneTip" : "prepAllTip"))}">${T(prepAll ? "prepOneBtn" : "prepAllBtn")}</button>` +
              `<button id="prepreset">${T("reset")}</button></span></div>`;
   if(prepOpen){
-    if(total === 0){
+    if(selected.size && taskTotal === 0){
       html += `<div class="pnote">${prepAll ? T("prepEmptyAll") : T("prepEmpty")}</div>`;
-    }else{
+    }
+    if(taskTotal){
       const grp = (title, m, opt) => {
         if(!m.size) return "";
         let s = `<div class="pgrp"><div class="pgt">${title}</div>`;
@@ -2861,6 +3074,21 @@ function renderPrep(){
       html += grp(T("prepCollect"), collect, { fir:true, count:true });
       html += gearGrp(gear, chk);
     }
+    if(exitBlocks.length){
+      html += `<div class="pgrp"><div class="pgt">${T("prepExit")}</div>`;
+      for(const b of exitBlocks){
+        const mp = prepAll ? `<span class="pmaps">${escH(mapJp(b.m))}</span>` : "";
+        html += `<div class="pgear pex"><div class="pxhd">${COND_GLYPH[b.conds[0].k]} <b>${escH(b.name)}</b>${mp}</div>`;
+        for(const r of b.rows){
+          if(r.info){ html += `<div class="gsub">${r.glyph} ${escH(r.text)}</div>`; continue; }
+          const c = chk(r);
+          const icon = (r.item && opts.icons) ? `<img src="${ITEM_ICON(r.item)}" alt="" onerror="this.style.visibility='hidden'">` : "";
+          html += `<label class="pitem${c ? " done" : ""}"><input type="checkbox" data-item="${escH(r.id)}" ${c ? "checked" : ""}>${icon}<span class="nm" title="${escH(r.text)}">${escH(r.text)}</span></label>`;
+        }
+        html += `</div>`;
+      }
+      html += `</div>`;
+    }
   }
   box.innerHTML = html;
 
@@ -2870,7 +3098,7 @@ function renderPrep(){
   if(rst) rst.onclick = () => { if(prepAll) checks = {}; else delete checks[mn]; saveChecks(checks); renderPrep(); };
   const pm = document.getElementById("prepmode");
   if(pm) pm.onclick = () => { prepAll = !prepAll; if(prepAll) track("use/prep-all-maps"); prepOpen = true; renderPrep(); };
-  const byId = new Map(); for(const m of [keys, bring, collect, gear]) for(const e of m.values()) byId.set(e.id, e);
+  const byId = new Map(); for(const m of [keys, bring, collect, gear, exitc]) for(const e of m.values()) byId.set(e.id, e);
   box.querySelectorAll('input[data-item]').forEach(inp => {
     inp.onchange = () => {
       const id = inp.dataset.item, e = byId.get(id);
@@ -3408,17 +3636,17 @@ for(const [id,key] of [["opt_transit","transit"],
 }
 // 脱出地点: 出撃タイプ切替
 for(const r of document.querySelectorAll('#exFac input[name="exfac"]')){
-  r.onchange = (e) => { if(!e.target.checked) return; exits.fac = e.target.value === "scav" ? "scav" : "pmc"; saveExits(); renderExits(); renderMarkers(); renderLegend(); };
+  r.onchange = (e) => { if(!e.target.checked) return; exits.fac = e.target.value === "scav" ? "scav" : "pmc"; saveExits(); renderExits(); renderMarkers(); renderLegend(); renderPrep(); };
 }
 // 脱出地点: 個別チェック（委譲）
 document.getElementById("exList").addEventListener("change", (e) => {
   const cb = e.target.closest("input[data-ex]");
   if(!cb) return;
   setExitPick(cb.getAttribute("data-ex"), cb.checked);
-  renderExits(); renderMarkers();
+  renderExits(); renderMarkers(); renderPrep(); renderLegend();
 });
-document.getElementById("exAll").onclick = () => { delete exits.picks[exKey()]; saveExits(); renderExits(); renderMarkers(); };
-document.getElementById("exNone").onclick = () => { exits.picks[exKey()] = {}; saveExits(); renderExits(); renderMarkers(); };
+document.getElementById("exAll").onclick = () => { delete exits.picks[exKey()]; saveExits(); renderExits(); renderMarkers(); renderPrep(); renderLegend(); };
+document.getElementById("exNone").onclick = () => { exits.picks[exKey()] = {}; saveExits(); renderExits(); renderMarkers(); renderPrep(); renderLegend(); };
 (() => {
   const s = document.getElementById("exitSect");
   try{ const v = localStorage.getItem("eft_qm_exit_open_v1"); if(v === "0") s.open = false; }catch(e){}

@@ -61,6 +61,33 @@ window.__STR_ZH__ = {
   legendLhAiScav:"AI Scav 刷新点", legendLhRogues:"Rogue 刷新点", legendLhGoons:"军团（Goons）活动区域",
   legendLhPmcSpawn:"PMC 刷新点", legendLhCache:"藏匿点", legendLhRogueCache:"Rogue 藏匿点",
   legendLhBoss:"Boss（Zryachiy）", legendLhBossGuard:"Boss 护卫", legendLhBtrStop:"BTR 停靠点",
+  condClimb:items=>`携带 ${items}（放在物品栏任意位置即可），并脱下防弹衣`,
+  condNoBag:"卸下背包（无论大小都不行）",
+  condHandIn:item=>`在出口交出 ${item}`,
+  condPay:amt=>`支付 ${amt}（每人，最多4人，每局一次）`,
+  condFlare:item=>`在信号区发射绿色信号弹（${item}）`,
+  condD2:"用指挥部区域的拉杆接通电源，然后按门的按钮",
+  condBunker:"用地面的拉杆启动发电机，约4分钟内撤离（注意警报和 Raider）",
+  condSaferoom:"在发电站恢复供电，用 Object #11SR keycard 进入并关上门（仅一次）",
+  condLabElev:a=>`操作电源面板（${a} 附近）（可能出现 Raider）`,
+  condSewage:"用面板排水（约80秒）",
+  condLabGate:a=>`使用控制面板（${a}）。有的对局无法启动，会响警报。可用 TerraGroup Labs keycard (Yellow) 提前关闭警报（可选）`,
+  condTrainReserve:"对局后半段（剩余约20〜10分钟）到达，停靠约7分半",
+  condTrain:"到点才会到达、只停靠一小段时间的列车",
+  condWayUp:"对局开始15分钟后开放",
+  tcondLabCard:"需要 1 张 TerraGroup Labs access keycard（一次性）",
+  tcondLabrys:"需要 Labrys access keycard（Resort 西楼地下的门）",
+  tcondTerminal:"仅限游戏内 21:00–6:00。还需要剧情进度和入场钥匙卡（会消耗）",
+  tcondSudak:"需要 1 个 Sudak-Tudak marine repair kit（一次性）",
+  transitTo:d=>`传送点 → ${d}`,
+  transitRules:"・对局开始 1 分钟后可用<br>・使用后其他撤离点全部失效<br>・在区域内停留 20 秒即转移（离开则重置为 30 秒）",
+  transitGo:d=>`打开 ${d} 地图`,
+  transitUnsupported:"本工具暂不支持该目的地地图",
+  condLbl:k=>({climb:"RR+绳", nobag:"禁背包", item:"交出物品", card:"钥匙卡", tool:"工具", flare:"信号弹", pay:"付费", power:"电源/操作", timer:"限时"})[k],
+  condNoArmorRow:"脱下防弹衣", condNoBagRow:"卸下背包", condFlareRow:"在信号区内发射（仅限绿色）", condPopupHead:"条件",
+  exitCondNote:"带标记的撤离点有使用条件（鼠标悬停查看）。只勾选要用的撤离点，所需物品会出现在「战前清单」中。",
+  prepExit:"🚪 所用撤离点的条件",
+  legendCondLine:"撤离点或传送点标记左上角的符号＝有条件（点击查看）：",
   prereqLabel:"前置任务：", nextLabel:"后续任务：", andMore:" 等",
   shareCopiedAlert:"分享链接已复制。请发给你的朋友。",
   sharePromptCopy:"请复制这个分享链接，发给你的朋友：",
@@ -136,6 +163,8 @@ window.__STR_ZH__ = {
 
 <details><summary>5. 选择撤离点</summary><div>
 <p>在「撤离点」栏中，先选择 <b>PMC 或 Scav</b>，再勾选你要使用的撤离点 —— 地图上<b>只显示勾选的</b>。有「全部显示 / 全部隐藏」按钮。颜色：绿 = PMC，蓝 = Scav，橙 = 通用。PvE 模式下显示 PvE 的撤离点。</p>
+<p><b>有使用条件的撤离点</b>会在地图标记的左上角和列表中显示符号（🧗 Red Rebel ice pick＋Paracord、不能穿防弹衣 / 🎒 禁背包 / 📜 交出物品 / 💳 钥匙卡 / 🎆 绿色信号弹 / 💰 付费 / ⚡ 电源・操作 / ⏱️ 限时）。鼠标悬停（手机上点击）即可查看详情。只勾选要用的撤离点，所需物品会出现在「战前清单」的「🚪 所用撤离点的条件」中。金额和要交出的物品来自 tarkov.dev 的数据，其他条件只手动收录已确认的信息。</p>
+<p><b>传送点</b>（紫色 T）默认显示（可在「显示图层」中关闭）。点击可查看目的地、条件、使用要点，以及「打开目的地地图」按钮。需要钥匙卡或道具的传送点也会显示相同符号（💳 / 🔧 / ⏱️）。</p>
 </div></details>
 
 <details><summary>6. 战前检查</summary><div>

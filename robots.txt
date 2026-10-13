@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tarkovtaskmap.github.io/sitemap.xml
