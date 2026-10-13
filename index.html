@@ -1470,8 +1470,10 @@ function scaledBounds(b, f){
    tarkov.dev 本体サイトが実際に使っているフラットJSON。
    GraphQL API (api.tarkov.dev) が長期障害でも、こちらは稼働している。 */
 const JD_BASE = "https://json.tarkov.dev/";
-// ストーリー章のデータ: TarkovTracker チームが公開している補助データ(MIT)。座標が無いので地図には出さず、チェックリストとして使う
-const OVERLAY_URL = "https://cdn.jsdelivr.net/gh/tarkovtracker-org/tarkov-data-overlay@main/dist/overlay.json";
+// ストーリー章のデータ: TarkovTracker チームの補助データ(MIT)由来。座標が無いので地図には出さず、チェックリストとして使う
+// ストーリー章の元データ（tarkovtracker-org/tarkov-data-overlay）は 2026-10 に非公開になり取得できない(404)。
+// 取得は止め、同梱スナップショットのストーリーを使う。公開の取得先が見つかったらここに URL を入れれば元の動きに戻る。
+const OVERLAY_URL = "";
 
 /* 目標タイプ → 表示ラベル（説明用。ゲーム固有名詞ではないので言語切替対象） */
 const OBJ_TYPE_KEY = {
@@ -1584,7 +1586,7 @@ async function fetchData(){
     jdFetch(DATA_SRC + "/traders"),
     jdFetch(DATA_SRC + "/traders_" + NL).catch(() => ({ data:{} })),
     jdFetch(DATA_SRC + "/items_" + NL).catch(() => ({ data:{} })),
-    fetch(OVERLAY_URL, { cache:"no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null),   // 取得できなくてもツールは動く(ストーリー欄だけ空)
+    OVERLAY_URL ? fetch(OVERLAY_URL, { cache:"no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null) : null,   // 取得できなくてもツールは動く(ストーリーは同梱スナップショット)
     DL ? jdFetch(DATA_SRC + "/maps_en").catch(() => ({ data:{} })) : null,   // 英語の脱出地点名（同じ地点を言語をまたいで識別するため）
   ]);
 
