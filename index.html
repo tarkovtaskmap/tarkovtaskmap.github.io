@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>タルコフ タスクマップ</title>
+<title>タルコフ タスクマップ｜Tarkov Task Map ─ タスク（クエスト）の目標と脱出地点を地図に表示</title>
+<meta name="google-site-verification" content="dRMDDWVpydKFe4Ky8DVFOGZRoY956Th5tZrCiRQCQCc" />
 <meta name="description" content="Escape from Tarkov のタスク目標と脱出地点を地図にピン表示する無料ツール。PvP / PvE / Seasonal 対応。Task (quest) objectives and extracts on the map for Escape from Tarkov (free, PvP / PvE / Seasonal)." />
 <link rel="canonical" href="https://tarkovtaskmap.github.io/" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
@@ -646,6 +647,7 @@ const DATA_SRC = MODE === "pve" ? "pve" : "regular";
 const STR = {
   ja: {
     appTitle:"タルコフ タスクマップ",
+    docTitle:"タルコフ タスクマップ｜Tarkov Task Map ─ タスク（クエスト）の目標と脱出地点を地図に表示",
     refresh:"データ更新", traderAll:"▼ トレーダー（すべて）", mapAll:"▼ マップ（すべて）",
     followCurrentMap:"【表示中のマップに追従】", searchPlaceholder:"タスク名で検索…",
     clearSel:"選択解除", kappaOnly:"Kappaのみ ★", lvLabel:"Lv", showDone:"完了も表示",
@@ -925,6 +927,7 @@ const STR = {
   },
   en: {
     appTitle:"Tarkov Task Map",
+    docTitle:"Tarkov Task Map — Escape from Tarkov task (quest) objectives & extracts on the map",
     refresh:"Refresh data", traderAll:"▼ Trader (all)", mapAll:"▼ Map (all)",
     followCurrentMap:"[Follow current map tab]", searchPlaceholder:"Search task name…",
     clearSel:"Clear selection", kappaOnly:"Kappa only ★", lvLabel:"Lv", showDone:"Show completed",
@@ -1210,7 +1213,7 @@ function T(key, ...args){
 }
 function applyStaticI18n(){
   document.documentElement.lang = LANG;
-  document.title = T("appTitle");
+  document.title = (STR[LANG] && STR[LANG].docTitle) || T("appTitle");   // タブ/検索結果用の長いタイトル（zh/ru は短い名前のまま）
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
   document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = T(el.getAttribute("data-i18n-html")); });
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = T(el.getAttribute("data-i18n-placeholder")); });
@@ -1230,6 +1233,8 @@ function trackFlush(){
   }catch(e){ return false; }
 }
 function track(name){ if(_trackQ.length < 50) _trackQ.push(name); trackFlush(); }
+const _trackOnceSeen = new Set();   // マウスを乗せるたびに増えないよう、1回の訪問で1回だけ数える
+function trackOnce(name){ if(_trackOnceSeen.has(name)) return; _trackOnceSeen.add(name); track(name); }
 (function(){   // 集計スクリプトの読み込み完了を待って、たまった分を送る（広告ブロック等で読めないときは諦める）
   let n = 0; const iv = setInterval(() => { if(trackFlush() || ++n > 40) clearInterval(iv); }, 500);
 })();
@@ -1395,7 +1400,7 @@ const TRANSIT_COND = {
 };
 const transitConds = (mn, tr) => tr.dest ? (TRANSIT_COND[canonMap(mn) + "|" + tr.dest] || []) : [];
 // 行き先のマップへ切り替える（トランジットの吹き出しのボタン）
-function gotoTransit(mn){ if(MAPBY[mn]){ map.closePopup(); gotoMap(mn); } }
+function gotoTransit(mn){ if(MAPBY[mn]){ track("use/transit-goto"); map.closePopup(); gotoMap(mn); } }
 function exitConds(mn, e){
   const nm = e.key || e.name || "", out = [...(EXIT_COND[canonMap(mn) + "|" + nm] || [])];
   if(e.req && e.req.id){
@@ -2475,6 +2480,7 @@ function renderMarkers(){
     const mk = L.marker(gpos(e.position), { icon:iconExtract(color, letter, { dim: !!floorTag, floorTag, cond: conds[0] }) })
       .bindPopup(T("extractPopup", e.name||"?", kind, fac) + (floorFull ? `<br><span style="color:#a06">${T("floorNote", floorFull)}</span>` : "") + condHtml)
       .addTo(extractLayer);
+    if(conds.length) mk.on("tooltipopen", () => trackOnce("use/cond-tooltip"));
     if(conds.length) mk.bindTooltip(`<b>${escH(e.name || "?")}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>"), TIP_OPT);
   }
   if(opts.transit){
@@ -2488,10 +2494,12 @@ function renderMarkers(){
         ? `<button onclick="gotoTransit('${tr.dest}')" style="margin-top:6px">${escH(T("transitGo", dn))}</button>`
         : `<div style="margin-top:6px;color:var(--dim)">${T("transitUnsupported")}</div>`;
       const mk = L.marker(gpos(tr.position), { icon:iconExtract("#c58ae0", "T", { cond: conds[0] }) })
+        .on("popupopen", () => track("use/transit-popup"))
         .bindPopup(dn ? `<b>${escH(T("transitTo", dn))}</b>` + (condHtml ? `<div class="xcpop">${condHtml}</div>` : "") +
                         `<div style="font-size:11px;color:var(--dim);margin-top:4px">${T("transitRules")}</div>` + goHtml
                       : T("transitPopup", tr.description||""))
         .addTo(extractLayer);
+      if(conds.length) mk.on("tooltipopen", () => trackOnce("use/cond-tooltip"));
       if(conds.length) mk.bindTooltip(`<b>${escH(T("transitTo", dn))}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>"), TIP_OPT);
     }
   }
