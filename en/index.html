@@ -746,6 +746,7 @@ const STR = {
     condTrainReserve:"レイド後半（残り約20〜10分）に到着し、約7分半だけ停車",
     condTrain:"時間になると到着し、少しの間だけ停車する列車",
     condWayUp:"レイド開始から15分後に開く",
+    condVexLh:"有料の車脱出（PMC のみ・1 回限り）。料金は確認中。車がいないレイドもある。位置は地図の絵から手で置いたもの",
     tcondLabCard:"TerraGroup Labs access keycard が1枚必要（使い捨て）",
     tcondLabrys:"Labrys access keycard が必要（Resort 西棟地下の扉）",
     tcondTerminal:"ゲーム内 21:00〜6:00 のみ。ストーリーの進行と入場用キーカード（使うと消費）も必要",
@@ -1026,6 +1027,7 @@ const STR = {
     condTrainReserve:"Arrives late in the raid (about 20–10 min left) and stays about 7.5 min",
     condTrain:"A train that arrives at a set time and stays only briefly",
     condWayUp:"Opens 15 minutes after the raid starts",
+    condVexLh:"Paid car extract (PMC only, one use). Fare not yet confirmed. The car isn't there every raid. Placed by hand from the map art",
     tcondLabCard:"Requires 1 TerraGroup Labs access keycard (single-use)",
     tcondLabrys:"Requires a Labrys access keycard (door in the Resort west wing basement)",
     tcondTerminal:"In-game 21:00–6:00 only. Also needs story progress and an entry keycard (used up)",
@@ -1405,6 +1407,13 @@ const EXIT_COND = {
   "reserve|Armored Train":           [{ k:"timer", t:"condTrainReserve" }],
   "lighthouse|Armored Train":        [{ k:"timer", t:"condTrain" }],
   "the-labyrinth|The Way Up":        [{ k:"timer", t:"condWayUp" }],
+  "lighthouse|Road to Military Base V-Ex": [{ k:"pay", t:"condVexLh" }],   // 料金が未確認なので金額なしの支払い
+};
+/* tarkov.dev に位置が無いが、今のゲームにある脱出（手で追加）。
+   Lighthouse の V-Ex: Lightkeeper のタスク「Information Source」の目標に exitName "V-Ex_light" として出てくる（2026-10 確認）。
+   位置は re3mr の地図の絵の印から読み取った。データ側に同じ名前の脱出が入ったら、そちらを優先して自動で使わなくなる */
+const EXTRA_EXTRACTS = {
+  "lighthouse": [{ name:"Road to Military Base V-Ex", key:"Road to Military Base V-Ex", faction:"pmc", position:{ x:-328.1, y:15.3, z:-800.7 } }],
 };
 const COND_ORDER = ["climb", "nobag", "item", "card", "tool", "flare", "pay", "power", "timer"];
 const COND_GLYPH = { climb:"🧗", nobag:"🎒", item:"📜", card:"💳", tool:"🔧", flare:"🎆", pay:"💰", power:"⚡️", timer:"⏱️" };   // FE0F: 文字ではなく絵文字で表示させる
@@ -1441,11 +1450,11 @@ function condText(c){
   if(c.k === "climb") return T("condClimb", c.items.map(i => i.name).join(" + "));
   if(c.k === "nobag") return T("condNoBag");
   if(c.k === "item")  return T("condHandIn", c.items[0].name);
-  if(c.k === "pay")   return T("condPay", moneyStr(c.money));
+  if(c.k === "pay")   return c.money ? T("condPay", moneyStr(c.money)) : T(c.t);
   if(c.k === "flare") return T("condFlare", c.items[0].name);
   return T(c.t, c.a);
 }
-const condLabel = c => c.k === "pay" ? moneyStr(c.money) : T("condLbl", c.k);
+const condLabel = c => c.k === "pay" && c.money ? moneyStr(c.money) : T("condLbl", c.k);
 
 /* ゲーム側の改修に地図の絵（SVG）がまだ追従していないマップへの案内。
    ピン位置(座標変換)には影響しない。tarkov.dev が新しい絵を公開したらここを消す。 */
@@ -3074,7 +3083,7 @@ function renderPrep(){
       };
       for(const c of conds){
         for(const it of (c.items || [])) addCheck("x:" + it.id, it.name, it.id);
-        if(c.k === "pay") addCheck("x:" + c.money.id, moneyStr(c.money), c.money.id);
+        if(c.k === "pay" && c.money) addCheck("x:" + c.money.id, moneyStr(c.money), c.money.id);
         if(c.noArmor) addCheck("x:noarmor", "🚫 " + T("condNoArmorRow"));
         if(c.k === "nobag") addCheck("x:nobag", "🚫 " + T("condNoBagRow"));
         if(c.t || c.k === "flare") rows.push({ info:true, glyph:COND_GLYPH[c.k], text: c.k === "flare" ? T("condFlareRow") : condText(c) });
@@ -3419,6 +3428,7 @@ function applyData(data){
     // 座標データは正規名の側と重複する(faction 情報が欠けていることが多く二重表示の原因になる)ので取り込まない。
     if(!MAP_ALIAS[m.normalizedName]){
       EXTRACTS[mn].push(...(m.extracts||[]));
+      for(const x of (EXTRA_EXTRACTS[mn] || [])) if(!EXTRACTS[mn].some(e => (e.key || e.name) === x.key)) EXTRACTS[mn].push(Object.assign({}, x));
       TRANSITS[mn].push(...(m.transits||[]));
       HAZARDS[mn].push(...(m.hazards||[]));
       LOCKS[mn].push(...(m.locks||[]));
