@@ -212,6 +212,38 @@ add("Stash the Goshan cash register key at the BIZARRO store fitting rooms on In
 add("Stash the blood sample in Sanitar's office in The Lab", "The Lab の Sanitar's office に、blood sample を隠す");
 add("Stash the container by the police station on Streets of Tarkov", "Streets of Tarkov の police station の近くに、container を隠す");
 
+// --- 2026-10 追加分（1.1.5.0 / 1.2.0 の新タスク） ---
+const R1 = "（1 回のレイドの間に）";
+add("Locate the testing area blueprint flash drive in The Lab", "The Lab で、testing area blueprint flash drive を見つける");
+add("Obtain the testing area blueprint flash drive in The Lab", "The Lab で、testing area blueprint flash drive を入手する");
+add("Launch a yellow signal flare at the train depot on Reserve (In one raid)", "Reserve の train depot で、黄色い信号フレアを打ち上げる" + R1);
+add("Eliminate any target at the train depot on Reserve (In one raid)", "Reserve の train depot で、対象を問わず倒す" + R1);
+add("Locate and neutralize Glukhar or his guards on Reserve (In one raid)", "Reserve で、Glukhar またはその護衛を見つけて倒す" + R1);
+add("Bring a yellow signal flare into raid", "黄色い信号フレアをレイドに持ち込む");
+add("Shoot a yellow signal flare at the radar station on Reserve (In one raid)", "Reserve の radar station で、黄色い信号フレアを打ち上げる" + R1);
+add("Eliminate PMC operatives on Woods", "Woods で、PMC オペレーターを倒す");
+add("Eliminate PMC operatives on Streets of Tarkov", "Streets of Tarkov で、PMC オペレーターを倒す");
+add("Eliminate any target inside the ULTRA Mall with an ASh-12 assault rifle on Interchange", "Interchange の ULTRA Mall の中で、ASh-12 assault rifle を使って対象を問わず倒す");
+add("Eliminate Sniper Scavs from over 200 meters away", "200 m を超える距離から、Sniper Scav を倒す");
+add("Bring an MS2000 Marker into raid", "MS2000 Marker をレイドに持ち込む");
+add("Locate and neutralize any Boss or their guards on Streets of Tarkov", "Streets of Tarkov で、いずれかのボスまたはその護衛を見つけて倒す");
+add("Locate the first pharmacy on Primorsky Ave on Streets of Tarkov", "Streets of Tarkov の Primorsky Ave で、1 つ目の薬局を見つける");
+add("Locate the second pharmacy on Primorsky Ave on Streets of Tarkov", "Streets of Tarkov の Primorsky Ave で、2 つ目の薬局を見つける");
+add("Locate the pharmacy near Cardinal apartment complex on Streets of Tarkov", "Streets of Tarkov の Cardinal apartment complex の近くにある薬局を見つける");
+add("Stash any Obdolbos cocktail injector in the med bay at the upper Rogue chalet on Lighthouse", "Lighthouse の上の Rogue chalet にある医務室に、いずれかの Obdolbos cocktail injector を隠す");
+add("Stash any Obdolbos cocktail injector in the guest hall supplies at the upper Rogue chalet on Lighthouse", "Lighthouse の上の Rogue chalet にあるゲストホールの物資置き場に、いずれかの Obdolbos cocktail injector を隠す");
+add("Stash any Obdolbos cocktail injector in the ammo stockpile at the lower Rogue chalet on Lighthouse", "Lighthouse の下の Rogue chalet にある弾薬置き場に、いずれかの Obdolbos cocktail injector を隠す");
+add("Eliminate any target with Thorax or Stomach shots using 7.62x39 caliber weapons on Lighthouse (In one raid)", "Lighthouse で、7.62x39 口径の武器を使い、胸部か腹部への射撃で対象を問わず倒す" + R1);
+add("Eliminate any target with Thorax or Stomach shots using 7.62x51 caliber weapons on Lighthouse (In one raid)", "Lighthouse で、7.62x51 口径の武器を使い、胸部か腹部への射撃で対象を問わず倒す" + R1);
+add("Eliminate Rogues or The Goons with 7.62x54R caliber weapons on Lighthouse", "Lighthouse で、7.62x54R 口径の武器を使って Rogue または The Goons を倒す");
+add("Locate and obtain the cargo package at the Rogue chalets on Lighthouse", "Lighthouse の Rogue chalets で、cargo package を見つけて入手する");
+add("Hand over the package", "荷物を納品する");
+add("Stash the first case in the guard booth near the Woods transit on Reserve", "Reserve の Woods 行きトランジット近くの守衛小屋に、1 つ目のケースを隠す");
+add("Stash the second case in the railcar with the Ural truck at the train platform on Lighthouse", "Lighthouse の駅のホームにある、Ural truck が載った貨車に、2 つ目のケースを隠す");
+add("Locate and obtain the first smuggler case in the ZB-014 bunker on Woods", "Woods の ZB-014 bunker で、1 つ目の密輸ケースを見つけて入手する");
+add("Locate and obtain the second smuggler case behind the shack at the USEC checkpoint on Woods", "Woods の USEC checkpoint にある小屋の裏で、2 つ目の密輸ケースを見つけて入手する");
+add("Extract from Lighthouse or Reserve through the Armored Train", "Lighthouse または Reserve の Armored Train から脱出する");
+
 // --- 規則で訳すもの ---
 function byRule(t) {
   let m;
@@ -227,6 +259,7 @@ function byRule(t) {
   if ((m = t.match(/^Obtain the item: (.+)$/))) return `アイテムを入手する: ${orJa(m[1])}`;
   if ((m = t.match(/^Survive and extract from (.+) with the "Survived" exit status$/))) return `${orJa(m[1])} から生還して脱出する（「Survived」のステータス）`;
   if ((m = t.match(/^Survive and extract from the location$/))) return `その場所から生還して脱出する`;
+  if ((m = t.match(/^Survive and extract from (\S+(?: of Tarkov)?) through (.+?)( \(In one raid\))?$/))) return `${m[1]} の ${m[2]} から生還して脱出する${m[3] ? "（1 回のレイドの間に）" : ""}`;
   if ((m = t.match(/^Survive and extract from (.+)$/))) return `${orJa(m[1])} から生還して脱出する`;
   return null;
 }

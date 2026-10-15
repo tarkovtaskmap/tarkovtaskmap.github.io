@@ -7,6 +7,10 @@
 <meta name="google-site-verification" content="dRMDDWVpydKFe4Ky8DVFOGZRoY956Th5tZrCiRQCQCc" />
 <meta name="description" content="Escape from Tarkov のタスク目標と脱出地点を地図にピン表示する無料ツール。PvP / PvE / Seasonal 対応。Task (quest) objectives and extracts on the map for Escape from Tarkov (free, PvP / PvE / Seasonal)." />
 <link rel="canonical" href="https://tarkovtaskmap.github.io/" />
+<!-- 言語別ページ（/en/ は tools/gen-en.mjs でこのファイルから生成する。直接編集しない） -->
+<link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+<link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+<link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 <!-- SNS / Discord などにリンクを貼ったときのプレビュー -->
 <meta property="og:type" content="website" />
@@ -21,6 +25,24 @@
 <meta name="twitter:title" content="Tarkov Task Map — タスク目標＆脱出地点マップ" />
 <meta name="twitter:description" content="レイド前にタスクを選ぶと、目標と脱出地点が地図に出ます。PvP / PvE / Seasonal 対応・無料・インストール不要。" />
 <meta name="twitter:image" content="https://tarkovtaskmap.github.io/og-image-v2.png" />
+<!-- 検索エンジン向けの構造化データ（無料の Web ツールであることを伝える。画面には出ない） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Tarkov Task Map",
+  "alternateName": "タルコフ タスクマップ",
+  "url": "https://tarkovtaskmap.github.io/",
+  "image": "https://tarkovtaskmap.github.io/og-image-v2.png",
+  "description": "Escape from Tarkov のタスク（クエスト）目標と脱出地点を地図に表示する無料ツール。PvP / PvE / Seasonal 対応。Free map tool showing Escape from Tarkov task (quest) objectives and extracts.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": ["ja", "en", "zh", "ru"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 
 <!-- Leaflet (地図ライブラリ) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -627,6 +649,7 @@
 let LANG = (function(){
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
   if(s === "ja" || s === "en" || s === "zh" || s === "ru") return s;
+  if(window.__PAGE_LANG__) return window.__PAGE_LANG__;   // /en/ ページは、言語を選んだことが無ければ英語で開く
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
   if(nl.startsWith("ja")) return "ja";
   if(nl.startsWith("ru")) return "ru";
@@ -731,8 +754,8 @@ const STR = {
     transitUnsupported:"この行き先はツール未対応のマップです",
     condLbl:k=>({climb:"RR+紐", nobag:"バッグ不可", item:"引き渡し", card:"キーカード", tool:"道具", flare:"フレア", pay:"支払い", power:"電源/操作", timer:"時間"})[k],
     condNoArmorRow:"ボディアーマーを外す", condNoBagRow:"バックパックを外す", condFlareRow:"合図ゾーンの中で打つ（緑のみ）", condPopupHead:"条件",
-    exitCondNote:"印の脱出は条件あり（マウスで内容表示）。使う脱出だけチェックすると、必要な物が「レイド前チェック」に出ます。",
-    prepExit:"🚪 使う脱出の条件",
+    exitCondNote:"印の脱出・トランジットは条件あり（マウスで内容表示）。使うものだけチェックすると、必要な物が「レイド前チェック」に出ます。",
+    prepExit:"🚪 使う脱出・トランジットの条件",
     legendCondLine:"脱出・トランジットのマークの左上の印＝条件あり（クリックで内容）:",
     prereqLabel:"前提: ", nextLabel:"次: ", andMore:" ほか",
     shareCopiedAlert:"共有リンクをコピーしました。フレンドに送ってください。",
@@ -810,7 +833,7 @@ const STR = {
 <details><summary>5. 脱出地点の選び方</summary><div>
 <p>左の「脱出地点」欄で、まず<b>PMC か Scav</b> を選び、そのあと今回使う脱出地点にチェックを入れると、<b>チェックした地点だけ</b>地図に出ます。「全部表示／全部隠す」ボタンもあります。色は 緑=PMC・青=Scav・橙=共有 です。PvEでは、PvE用の脱出地点が出ます。</p>
 <p><b>条件付きの脱出</b>には、地図のマークの左上と一覧に印が付きます（🧗 Red Rebel ice pick＋Paracord・ボディアーマー不可 / 🎒 バックパック不可 / 📜 アイテムの引き渡し / 💳 キーカード / 🎆 緑フレア / 💰 支払い / ⚡ 電源・操作 / ⏱️ 時間）。マウスを乗せる（スマホはタップ）と内容が出ます。使う脱出だけにチェックを絞ると、必要な物が「レイド前チェック」の「🚪 使う脱出の条件」に出ます。金額と引き渡すアイテムは tarkov.dev のデータ、それ以外は確認できた情報だけを手作業で載せています。</p>
-<p><b>トランジット</b>（紫の T）は最初から表示されます（「表示レイヤー」で消せます）。クリックすると行き先・条件・使い方の要点と「行き先の地図を開く」ボタンが出ます。キーカードや道具が要るものには同じ印（💳 / 🔧 / ⏱️）が付きます。</p>
+<p><b>トランジット</b>（紫の T）は最初から表示されます（「表示レイヤー」で消せます）。クリックすると行き先・条件・使い方の要点と「行き先の地図を開く」ボタンが出ます。キーカードや道具が要るものには同じ印（💳 / 🔧 / ⏱️）が付きます。トランジットは「脱出地点」欄の最後にも並び、使うものだけチェックすると、必要なキーカードや道具が「レイド前チェック」に出ます。</p>
 </div></details>
 
 <details><summary>6. レイド前チェック</summary><div>
@@ -1011,8 +1034,8 @@ const STR = {
     transitUnsupported:"This destination map isn't supported by the tool",
     condLbl:k=>({climb:"RR+rope", nobag:"No backpack", item:"Hand-in", card:"Keycard", tool:"Tool", flare:"Flare", pay:"Pay", power:"Power/panel", timer:"Timed"})[k],
     condNoArmorRow:"Take off body armor", condNoBagRow:"Take off your backpack", condFlareRow:"Fire it inside the signal zone (green only)", condPopupHead:"Requirements",
-    exitCondNote:"Marked extracts have requirements (hover to see). Check only the extracts you'll use to list what you need in the pre-raid checklist.",
-    prepExit:"🚪 Requirements for your extracts",
+    exitCondNote:"Marked extracts and transits have requirements (hover to see). Check only the ones you'll use to list what you need in the pre-raid checklist.",
+    prepExit:"🚪 Requirements for your extracts & transits",
     legendCondLine:"Badge at the top-left of an extract or transit = has requirements (click for details):",
     prereqLabel:"Requires: ", nextLabel:"Next: ", andMore:" more",
     shareCopiedAlert:"Share link copied. Send it to your friend.",
@@ -1090,7 +1113,7 @@ const STR = {
 <details><summary>5. Choosing extracts</summary><div>
 <p>In the "Extracts" section, first pick <b>PMC or Scav</b>, then check the extracts you'll use — <b>only checked ones</b> appear on the map. There are "Show all / Hide all" buttons. Colors: green = PMC, blue = Scav, orange = shared. In PvE mode, the PvE extracts are shown.</p>
 <p><b>Extracts with requirements</b> get a badge at the top-left of the map marker and in the list (🧗 Red Rebel ice pick + Paracord, no body armor / 🎒 no backpack / 📜 hand over an item / 💳 keycard / 🎆 green flare / 💰 payment / ⚡ power or panel / ⏱️ timed). Hover (or tap on a phone) to see the details. If you check only the extracts you'll use, what you need appears under "🚪 Requirements for your extracts" in the pre-raid checklist. Prices and hand-in items come from tarkov.dev's data; everything else is added by hand from verified information only.</p>
-<p><b>Transits</b> (purple T) are shown by default (you can hide them under "Display layers"). Click one to see its destination, requirements, key rules and an "Open map" button. Transits needing a keycard or item get the same badges (💳 / 🔧 / ⏱️).</p>
+<p><b>Transits</b> (purple T) are shown by default (you can hide them under "Display layers"). Click one to see its destination, requirements, key rules and an "Open map" button. Transits needing a keycard or item get the same badges (💳 / 🔧 / ⏱️). Transits are also listed at the end of the "Extracts" section — check only the ones you'll use and the keycards or items you need appear in the pre-raid checklist.</p>
 </div></details>
 
 <details><summary>6. Pre-raid check</summary><div>
@@ -1398,6 +1421,7 @@ const TRANSIT_COND = {
   "lighthouse|icebreaker":     [{ k:"tool", items:[IT_SUDAK], t:"tcondSudak" }],
   "shoreline|icebreaker":      [{ k:"tool", items:[IT_SUDAK], t:"tcondSudak" }],
 };
+const transitKey = tr => tr.description ? "⇄" + tr.description : "";   // 「脱出地点」欄のチェックの保存キー
 const transitConds = (mn, tr) => tr.dest ? (TRANSIT_COND[canonMap(mn) + "|" + tr.dest] || []) : [];
 // 行き先のマップへ切り替える（トランジットの吹き出しのボタン）
 function gotoTransit(mn){ if(MAPBY[mn]){ track("use/transit-goto"); map.closePopup(); gotoMap(mn); } }
@@ -1921,16 +1945,25 @@ function exitGroups(){
     if(!m.has(nm)) m.set(nm, { name:nm, faction:disp, items:[] });
     m.get(nm).items.push(e);
   }
-  return [...m.values()].sort((a,b) => a.name.localeCompare(b.name, LANG));
+  const groups = [...m.values()].sort((a,b) => a.name.localeCompare(b.name, LANG));
+  // トランジットも一覧の最後に並べる（PMC/Scav どちらでも使える）。チェックの扱いは脱出と同じ。
+  // 言語によっては脱出と同じ名前になる（ru の Lighthouse 等）ので、チェックの保存キーは transitKey で分ける
+  for(const tr of (TRANSITS[curMap] || [])){
+    const key = transitKey(tr);
+    if(key && !groups.some(g => g.name === key)) groups.push({ name:key, label:tr.description, faction:"transit", transit:true, items:[tr] });
+  }
+  return groups;
 }
 function exitVisible(name){
   const p = exits.picks[exKey()];
+  // トランジット(⇄)は後から一覧に加えたので、絞り込み済みの人でも「未設定」なら表示する（外したものは 0 で残す）
+  if(name.startsWith("⇄")) return !p || p[name] !== 0;
   return !p || !!p[name];   // 未設定なら全部表示
 }
 function setExitPick(name, on){
   let p = exits.picks[exKey()];
   if(!p){ p = {}; exitGroups().forEach(g => p[g.name] = 1); }   // 全表示状態を実体化
-  if(on) p[name] = 1; else delete p[name];
+  if(on) p[name] = 1; else if(name.startsWith("⇄")) p[name] = 0; else delete p[name];
   exits.picks[exKey()] = p;
   saveExits();
 }
@@ -1940,16 +1973,16 @@ function renderExits(){
   { const r = document.querySelector(`#exFac input[value="${exits.fac}"]`); if(r) r.checked = true; }
   const groups = exitGroups();
   if(!groups.length){ box.innerHTML = `<div class="exempty">${T("noExitData")}</div>`; return; }
-  const tagCol = f => f === "pmc" ? "var(--ok)" : f === "scav" ? "var(--scav)" : "var(--shared)";
-  const tagTxt = f => f === "pmc" ? "PMC" : f === "scav" ? "Scav" : T("kindCoop");
+  const tagCol = f => f === "pmc" ? "var(--ok)" : f === "scav" ? "var(--scav)" : f === "transit" ? "#c58ae0" : "var(--shared)";
+  const tagTxt = f => f === "pmc" ? "PMC" : f === "scav" ? "Scav" : f === "transit" ? T("transitLabel") : T("kindCoop");
   let anyCond = false;
   box.innerHTML = groups.map(g => {
-    const conds = exitConds(curMap, g.items[0]);
+    const conds = g.transit ? transitConds(curMap, g.items[0]) : exitConds(curMap, g.items[0]);
     if(conds.length) anyCond = true;
     const chips = conds.map(c => `<span class="xcnd" title="${escH(condText(c))}">${COND_GLYPH[c.k]} ${escH(condLabel(c))}</span>`).join("");
     return `<label class="exrow">
        <input type="checkbox" data-ex="${g.name.replace(/"/g,"&quot;")}" ${exitVisible(g.name) ? "checked" : ""} />
-       <span class="xnm">${g.name.replace(/</g,"&lt;")}</span>
+       <span class="xnm">${(g.label || g.name).replace(/</g,"&lt;")}</span>
        ${chips}<span class="xtag" style="color:${tagCol(g.faction)}">${tagTxt(g.faction)}</span>
      </label>`;
   }).join("") +
@@ -2489,6 +2522,7 @@ function renderMarkers(){
     for(const tr of (TRANSITS[curMap]||[])){
       // 脱出口と同じく階層フィルタの対象外（常に表示）。階のある地図(Shoreline 等)で隠れてしまうため
       if(!tr.position) continue;
+      if(!exitVisible(transitKey(tr))) continue;   // 「脱出地点」欄でチェックを外したトランジットは出さない
       const conds = transitConds(curMap, tr);
       const dn = tr.dest ? (MAPBY[tr.dest] ? mapDisp(MAPBY[tr.dest]) : (tr.destName || tr.dest)) : "";
       const condHtml = conds.map(c => `<div>${COND_GLYPH[c.k]} ${escH(condText(c))}</div>`).join("");
@@ -2655,7 +2689,7 @@ function renderLegend(){
       if(!exitVisible(e.name || T("unknownName"))) continue;
       const c = exitConds(curMap, e)[0]; if(c) ck.add(c.k);
     }
-    if(opts.transit) for(const tr of (TRANSITS[curMap] || [])){ const c = transitConds(curMap, tr)[0]; if(c) ck.add(c.k); }
+    if(opts.transit) for(const tr of (TRANSITS[curMap] || [])){ if(!exitVisible(transitKey(tr))) continue; const c = transitConds(curMap, tr)[0]; if(c) ck.add(c.k); }
     const condLegend = !ck.size ? "" : `<div style="margin-top:3px">${T("legendCondLine")} ` +
       COND_ORDER.filter(k => ck.has(k)).map(k => `<span style="white-space:nowrap">${COND_GLYPH[k]} ${T("condLbl", k)}</span>`).join("　") + `</div>`;
     const lhIcons = curMap !== "lighthouse" ? "" :
@@ -3044,6 +3078,26 @@ function renderPrep(){
         if(c.t || c.k === "flare") rows.push({ info:true, glyph:COND_GLYPH[c.k], text: c.k === "flare" ? T("condFlareRow") : condText(c) });
       }
       exitBlocks.push({ m, name:nm, conds, rows });
+    }
+    // 使うトランジットの条件（キーカード・道具・時間帯）
+    for(const tr of (TRANSITS[m] || [])){
+      const nm = transitKey(tr);
+      if(!nm || seen.has(nm) || picks[nm] !== 1) continue;   // 使うとチェックしたものだけ（未設定=表示のみ は出さない）
+      seen.add(nm);
+      const conds = transitConds(m, tr);
+      if(!conds.length) continue;
+      const rows = [];
+      for(const c of conds){
+        for(const it of (c.items || [])){
+          const id = "x:" + it.id;
+          if(!exitc.has(id)) exitc.set(id, { id, maps:new Set() });
+          const x = exitc.get(id); x.maps.add(m);
+          rows.push({ id, text:it.name, item:it.id, maps:x.maps });
+        }
+        if(c.t && !(c.items || []).length) rows.push({ info:true, glyph:COND_GLYPH[c.k], text:condText(c) });
+      }
+      const dn = tr.dest ? (MAPBY[tr.dest] ? mapDisp(MAPBY[tr.dest]) : (tr.destName || tr.dest)) : nm;
+      exitBlocks.push({ m, name:T("transitTo", dn), conds, rows });
     }
   }
 
@@ -3656,7 +3710,7 @@ document.getElementById("exList").addEventListener("change", (e) => {
   renderExits(); renderMarkers(); renderPrep(); renderLegend();
 });
 document.getElementById("exAll").onclick = () => { delete exits.picks[exKey()]; saveExits(); renderExits(); renderMarkers(); renderPrep(); renderLegend(); };
-document.getElementById("exNone").onclick = () => { exits.picks[exKey()] = {}; saveExits(); renderExits(); renderMarkers(); renderPrep(); renderLegend(); };
+document.getElementById("exNone").onclick = () => { exits.picks[exKey()] = Object.fromEntries(exitGroups().filter(g => g.transit).map(g => [g.name, 0])); saveExits(); renderExits(); renderMarkers(); renderPrep(); renderLegend(); };
 (() => {
   const s = document.getElementById("exitSect");
   try{ const v = localStorage.getItem("eft_qm_exit_open_v1"); if(v === "0") s.open = false; }catch(e){}
