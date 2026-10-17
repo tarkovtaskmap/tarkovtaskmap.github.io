@@ -75,7 +75,7 @@ window.__STR_ZH__ = {
   condTrainReserve:"对局后半段（剩余约20〜10分钟）到达，停靠约7分半",
   condTrain:"到点才会到达、只停靠一小段时间的列车",
   condWayUp:"对局开始15分钟后开放",
-  condVexLh:"付费车辆撤离（仅限 PMC、仅一次）。费用待确认。并非每局都有车。位置根据地图图片手动标注",
+  condVexLh:"费用待确认。并非每局都有车。位置根据地图图片手动标注",
   tcondLabCard:"需要 1 张 TerraGroup Labs access keycard（一次性）",
   tcondLabrys:"需要 Labrys access keycard（Resort 西楼地下的门）",
   tcondTerminal:"仅限游戏内 21:00–6:00。还需要剧情进度和入场钥匙卡（会消耗）",
