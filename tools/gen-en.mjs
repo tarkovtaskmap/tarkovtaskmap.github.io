@@ -29,7 +29,7 @@ rep(/"description": "Escape from Tarkov のタスク[^"]*",/, `"description": "$
 // 初回は英語で開く（言語を選んだことがある人はその言語のまま）
 rep(/(<link rel="alternate" hreflang="x-default"[^>]*>)(\r?\n)/, `$1$2<script>window.__PAGE_LANG__ = "en";</script>$2`);
 // ページが /en/ にあるので、同梱ファイルはサイトの一番上から読む
-for (const f of ["data-snapshot.js", "data-snapshot-pve.js", "ja-supplement.js", "lang-zh.js", "lang-ru.js", "lighthouse-map.jpg"]) {
+for (const f of ["data-snapshot.js", "data-snapshot-pve.js", "ja-supplement.js", "lang-zh.js", "lang-ru.js", "lang-pl.js", "lang-pt.js", "lighthouse-map.jpg"]) {
   rep(new RegExp(`(["'])${f.replace(".", "\\.")}\\1`, "g"), `$1/${f}$1`);
 }
 s = s.replace("<!DOCTYPE html>", "<!DOCTYPE html>\n<!-- 自動生成: tools/gen-en.mjs が index.html から作る。このファイルは直接編集しない -->");

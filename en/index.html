@@ -40,7 +40,7 @@
   "applicationCategory": "GameApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
-  "inLanguage": ["ja", "en", "zh", "ru"],
+  "inLanguage": ["ja", "en", "zh", "ru", "pl", "pt"],
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
@@ -68,6 +68,8 @@
 <!-- 簡体字中国語・ロシア語の画面文言（無くてもツールは動く。無い文言は英語で表示） -->
 <script src="/lang-zh.js" onerror="console.warn('lang-zh.js なし')"></script>
 <script src="/lang-ru.js" onerror="console.warn('lang-ru.js なし')"></script>
+<script src="/lang-pl.js" onerror="console.warn('lang-pl.js なし')"></script>
+<script src="/lang-pt.js" onerror="console.warn('lang-pt.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
@@ -290,7 +292,7 @@
   .quest .qstory{font-size:11px;cursor:help;margin-left:4px}
 
   /* ---------- タブレット / 狭い画面 / タッチ操作 ---------- */
-  #menuBtn,#sbShade,.narrow-only{display:none}
+  #menuBtn,#sbShade,.narrow-only,.narrow-block{display:none}
   @media (max-width:1100px){
     #sidebar,#picker{width:300px;min-width:300px}
   }
@@ -306,7 +308,12 @@
     #app.sb-open #sbShade{opacity:1;pointer-events:auto}
     #menuBtn{display:block;position:absolute;right:10px;top:10px;z-index:650;padding:9px 14px;font-size:13px;box-shadow:0 2px 8px #0008}
     .narrow-only{display:inline-block}
+    .narrow-block{display:block}
     #supportBtn{display:none}
+    /* 意見ボタンはアイコンだけにして、マップのタブを広く見せる */
+    #fbLink{font-size:0;padding:4px 10px;margin-left:4px}
+    #fbLink::before{content:"💬";font-size:16px}
+    #legend .legpick{margin:4px 0 2px;padding:6px 12px;font-size:13px}
     #tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
     #tabs button{flex:0 0 auto}
     #raidtimer{left:54px}
@@ -383,7 +390,7 @@
       <div class="row" style="flex-wrap:nowrap;gap:6px">
         <button id="helpBtn" class="hbtn" data-i18n="helpBtn">使い方</button>
         <button id="sbClose" class="narrow-only" data-i18n-title="closeMenu" title="閉じる">✕</button>
-        <select id="langSel" title="Language / 言語 / 语言 / Язык"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option></select>
+        <select id="langSel" title="Language / 言語 / 语言 / Язык / Język / Idioma"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option><option value="pl">Polski</option><option value="pt">Português</option></select>
       </div>
     </div>
 
@@ -488,6 +495,9 @@
       <div class="row hidden" data-tip>
         <a href="https://ko-fi.com/tarkovtaskmap" target="_blank" rel="noopener" class="muted" style="text-decoration:underline" data-i18n="supportLink">☕ このツールをKo-fiで応援する</a>
       </div>
+      <div class="row">
+        <a id="taskListLink" href="/tasks/" target="_blank" rel="noopener" class="muted" style="text-decoration:underline" data-i18n="taskListLink">📋 全タスク一覧</a>
+      </div>
       <div class="row" style="flex-wrap:nowrap">
         <select id="traderSel"><option value="" data-i18n="traderAll">▼ トレーダー（すべて）</option></select>
         <select id="mapSel"><option value="" data-i18n="mapAll">▼ マップ（すべて）</option></select>
@@ -584,7 +594,13 @@
       <div id="guide" class="hidden">
         <div class="card">
           <h3 data-i18n="guideTitle">はじめての方へ</h3>
-          <ol>
+          <ol class="narrow-block">
+            <li data-i18n-html="guideM1"></li>
+            <li data-i18n-html="guideM2"></li>
+            <li data-i18n-html="guideM3"></li>
+            <li data-i18n-html="guideM4"></li>
+          </ol>
+          <ol class="wide-only">
             <li data-i18n-html="guideStep1">右の列 <b>「タスクを選ぶ」</b> で、トレーダーかマップで絞り込み、今回やるタスクにチェック。左の「選択中」に、地図のピンと同じ A・B・C… の丸付きで並びます。</li>
             <li data-i18n-html="guideStep2">上部のタブでマップを切り替え。地図上のピンにマウスを乗せると、タスク名が出ます。</li>
             <li data-i18n-html="guideStep3">左の <b>脱出地点</b> 欄で出撃タイプ(PMC/Scav)を選び、今回使う脱出地点にチェック → その地点だけ地図に出ます（緑=PMC / 青=Scav / 橙=共有）。</li>
@@ -592,7 +608,8 @@
             <li data-i18n-html="guideStep5">ワイプ後や新タスク追加時は、右の列の <b>データ更新</b> を押してください。</li>
             <li data-i18n-html="guideStep6">進捗（選んだタスク・完了・レベルなど）は、<b>このブラウザに自動で保存</b>されます。別のパソコンに移すときや、ブラウザのデータを消す前は、左の「設定」の <b>バックアップ書き出し</b> で保存してください。</li>
           </ol>
-          <p class="muted" data-i18n="guideMore">詳しい説明は、サイドバー上部の「使い方」ボタンからいつでも見られます。</p>
+          <p class="muted wide-only" data-i18n="guideMore">詳しい説明は、サイドバー上部の「使い方」ボタンからいつでも見られます。</p>
+          <button id="guidePick" class="primary narrow-only" data-i18n="pkReopenBtn">🗂 タスクを選ぶ</button>
           <button id="guideclose" class="primary" data-i18n="guideStart">はじめる</button>
         </div>
       </div>
@@ -650,16 +667,18 @@
 // 初回の言語: 保存された選択があればそれ、なければブラウザの言語（日本語なら日本語、それ以外は英語）
 let LANG = (function(){
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
-  if(s === "ja" || s === "en" || s === "zh" || s === "ru") return s;
+  if(["ja", "en", "zh", "ru", "pl", "pt"].includes(s)) return s;
   if(window.__PAGE_LANG__) return window.__PAGE_LANG__;   // /en/ ページは、言語を選んだことが無ければ英語で開く
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
   if(nl.startsWith("ja")) return "ja";
   if(nl.startsWith("ru")) return "ru";
+  if(nl.startsWith("pl")) return "pl";
+  if(nl.startsWith("pt")) return "pt";
   if(nl.startsWith("zh") && !/^zh[-_](tw|hk|mo|hant)/.test(nl)) return "zh";   // 簡体字のみ対応（繁体字の地域は英語）
   return "en";
 })();
-// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語。ja/en は従来どおり英語表記のまま
-const DL = (LANG === "zh" || LANG === "ru") ? LANG : null;
+// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語(zh/ru/pl/pt)。ja/en は従来どおり英語表記のまま
+const DL = ["zh", "ru", "pl", "pt"].includes(LANG) ? LANG : null;
 /* ゲームモード: PvP / PvE / Seasonal は別キャラ＝進行状況が別。
    PvP は従来のキー名のまま(既存データを引き継ぐ)、他は末尾に _pve / _seasonal を付けて分離する。
    データ元: PvE は json.tarkov.dev/pve/*(タスク・脱出地点・ボス等が別)、
@@ -695,6 +714,11 @@ const STR = {
     guideStep4:"このウィンドウをサブディスプレイへ移動し、<b>F11</b> で全画面にすると見やすいです。",
     guideStep5:"ワイプ後や新タスク追加時は、右の列の <b>データ更新</b> を押してください。",
     guideStep6:"進捗（選んだタスク・完了・レベルなど）は、<b>このブラウザに自動で保存</b>されます。別のパソコンに移すときや、ブラウザのデータを消す前は、左の「設定」の <b>バックアップ書き出し</b> で保存してください。",
+    guideM1:"右上の <b>☰ メニュー</b> を開き、下のほうの <b>「タスクを選ぶ」</b> で、トレーダーかマップで絞り込んで、今回やるタスクにチェック。",
+    guideM2:"メニューの外（暗いところ）をタップすると地図に戻り、選んだタスクがピンで出ます。ピンをタップするとタスク名が出ます。",
+    guideM3:"上のタブを横にスワイプしてマップを切り替え。使う脱出地点は、メニューの <b>脱出地点</b> 欄で選べます。",
+    guideM4:"進捗（選んだタスク・完了など）は、<b>このブラウザに自動で保存</b>されます。",
+    taskListLink:"📋 全タスク一覧（英語）", taskLinkMissing:"このタスクは、今のモードのデータにありません（PvP / PvE を切り替えてみてください）",
     guideStart:"はじめる", loadingInitial:"データを読み込んでいます…",
     multipleOrNone:"複数/なし", doneBadge:"✓済(自分)", markDoneTitle:"完了マーク",
     searchPrefix:mn=>`検索: ${mn}`, searchResults:"検索結果", noMatch:"該当なし", selectedHeader:"選択中",
@@ -976,6 +1000,11 @@ const STR = {
     guideStep4:"Move this window to your second monitor and press <b>F11</b> for fullscreen — easiest to read that way.",
     guideStep5:"After a wipe or new tasks, press <b>Refresh data</b> in the right column.",
     guideStep6:"Your progress (selected tasks, completed tasks, level, etc.) is <b>saved automatically in this browser</b>. Before moving to another computer or clearing browser data, save it with <b>Export backup</b> under “Settings” on the left.",
+    guideM1:"Open <b>☰ Menu</b> (top right), scroll down to <b>“Pick tasks”</b>, filter by Trader or Map and check the tasks you're running this raid.",
+    guideM2:"Tap outside the menu (the dark area) to go back to the map — your tasks show as pins. Tap a pin to see the task name.",
+    guideM3:"Swipe the tabs at the top to switch maps. Pick the extracts you'll use in the <b>Extracts</b> section of the menu.",
+    guideM4:"Your progress (selected and completed tasks, etc.) is <b>saved automatically in this browser</b>.",
+    taskListLink:"📋 All tasks list", taskLinkMissing:"This task isn't in the current mode's data (try switching PvP / PvE).",
     guideStart:"Get started", loadingInitial:"Loading data…",
     multipleOrNone:"Multiple / none", doneBadge:"✓ done (you)", markDoneTitle:"Mark complete",
     searchPrefix:mn=>`Search: ${mn}`, searchResults:"Search results", noMatch:"No matches", selectedHeader:"Selected",
@@ -1234,6 +1263,8 @@ const STR = {
 };
 STR.zh = (typeof window !== "undefined" && window.__STR_ZH__) || {};
 STR.ru = (typeof window !== "undefined" && window.__STR_RU__) || {};
+STR.pl = (typeof window !== "undefined" && window.__STR_PL__) || {};
+STR.pt = (typeof window !== "undefined" && window.__STR_PT__) || {};
 function T(key, ...args){
   const v = (STR[LANG] && STR[LANG][key] !== undefined) ? STR[LANG][key] : (STR.en[key] !== undefined ? STR.en[key] : STR.ja[key]);
   return typeof v === "function" ? v(...args) : v;
@@ -1549,10 +1580,12 @@ const isCoopExit = e => isCoopExtract(e && (e.key || e.name));   // zh/ru は名
 // 別フロアバッジ用の短縮表記("Underground"等の長い名前だとマーカーと重なって見づらいため)
 const FLOOR_SHORT = { Underground:"B1", Bunkers:"B1", Tunnels:"B1", Garage:"B1", Technical:"B1" };
 const floorShort = jp => FLOOR_SHORT[jp] || jp;
-// 階の名前（zh/ru のみ現地語。ja/en は従来どおり）
+// 階の名前（zh/ru/pl/pt は現地語。ja/en は従来どおり）
 const FLOOR_LOC = {
   zh:{ Underground:"地下", Bunkers:"地下", Tunnels:"地下通道", Garage:"车库", Technical:"技术层", Ground:"地面" },
   ru:{ Underground:"Подвал", Bunkers:"Бункеры", Tunnels:"Тоннели", Garage:"Гараж", Technical:"Технический", Ground:"Земля" },
+  pl:{ Underground:"Podziemie", Bunkers:"Bunkry", Tunnels:"Tunele", Garage:"Garaż", Technical:"Poziom techniczny", Ground:"Parter" },
+  pt:{ Underground:"Subsolo", Bunkers:"Bunkers", Tunnels:"Túneis", Garage:"Garagem", Technical:"Técnico", Ground:"Térreo" },
 };
 const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
 // 脱出口の実フロア: 座標のY値だけで判定すると、Shorelineのような屋外主体のマップで地形の起伏を
@@ -2312,8 +2345,8 @@ function toast(msg){
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
 }
-async function focusQuest(t){
-  track("use/jump-to-task");
+async function focusQuest(t, noTrack){
+  if(!noTrack) track("use/jump-to-task");
   document.getElementById("app").classList.remove("sb-open");   // 狭い画面ではメニューを閉じて地図を見せる
   const shown = m => !objHidden(m.obj);
   const cnt = mn => MAPBY[mn] ? (t.byMap[mn] || []).filter(shown).length : 0;
@@ -2676,7 +2709,10 @@ function renderLegend(){
   selArr.forEach((t,i) => {
     rows.push(`<div class="li"><span class="dot" style="background:${colorForSelIndex(i)}"></span><b style="margin-right:4px">${selLabel(i)}</b>${t.name}</div>`);
   });
-  if(!rows.length) rows.push(`<div class="li muted">${T("noQuestSelected")}</div>`);
+  if(!rows.length){
+    rows.push(`<div class="li muted">${T("noQuestSelected")}</div>`);
+    rows.push(`<button type="button" id="legpick" class="primary narrow-only legpick">${T("pkReopenBtn")}</button>`);   // スマホ: メニューを開いてタスク一覧へ
+  }
 
   const active = [];
   if(opts.hazard){
@@ -2730,6 +2766,8 @@ function renderLegend(){
   el.innerHTML = rows.join("");
   const lt = document.getElementById("legtoggle");
   if(lt) lt.onclick = (e) => { e.preventDefault(); legendOpen = !legendOpen; renderLegend(); };
+  const lp = document.getElementById("legpick");
+  if(lp) lp.onclick = () => { track("use/legend-pick"); openPicker(); };
 }
 
 /* ---------- 共有コード（選択・ピン・完了・レベルをURL/コード化。バックエンド不要） ---------- */
@@ -3524,6 +3562,25 @@ async function init(){
 
   await loadMap();
   showOverlay(false);
+  // タスクページ(/tasks/…)の「地図で見る」から来た場合: そのタスクを選んで、地図をそのピンへ
+  const tl = (location.hash || "").match(/[#&]task=([0-9a-f]{24})/);
+  if(tl){
+    try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+    const t = TASKS.find(x => x.id === tl[1]);
+    if(t){
+      track("use/task-link");
+      document.getElementById("guide").classList.add("hidden");   // 今回だけ説明を出さずに地図を見せる（次に開いたときは出る）
+      await focusQuest(t, true);
+      if(!selected.has(t.id)){
+        // 地図のピンが無いタスク（渡すだけ・どこでも倒す等）: 選択には入れて、関係するマップを開く
+        selected.add(t.id); saveSel();
+        const mn = (t.allMaps || []).find(m => MAPBY[m]);
+        if(mn && mn !== curMap){ curMap = mn; try{ localStorage.setItem(MAP_KEY, curMap); }catch(e){} await loadMap(); }
+        else refreshFloors();
+        renderTabs(); renderQuestList(); renderLegend(); renderPrep(); updateSelInfo();
+      }
+    }else toast(T("taskLinkMissing"));
+  }
 }
 
 function setDataInfo(ts, stale){
@@ -3580,7 +3637,7 @@ if(SHOW_TIP) document.querySelectorAll("[data-tip]").forEach(el => el.classList.
 
 // 利用集計: 主なボタンが押された回数だけを数える（押した内容は送らない）
 [["sharemake","use/share-create"], ["shareload","use/share-load"], ["ttimport","use/tt-import-open"], ["ttrun","use/tt-import-run"],
- ["refresh","use/refresh-data"], ["raidstart","use/raid-timer"], ["helpBtn","use/help-open"], ["fbLink","use/feedback-open"]
+ ["refresh","use/refresh-data"], ["raidstart","use/raid-timer"], ["helpBtn","use/help-open"], ["fbLink","use/feedback-open"], ["taskListLink","use/task-list-open"]
 ].forEach(([id, ev]) => { const el = document.getElementById(id); if(el) el.addEventListener("click", () => track(ev)); });
 document.getElementById("opt_route").addEventListener("change", e => { if(e.target.checked) track("use/route-on"); });
 // 使い方ダイアログ
@@ -3658,6 +3715,11 @@ const closeDrawer = () => appEl.classList.remove("sb-open");
 document.getElementById("menuBtn").onclick = () => appEl.classList.add("sb-open");
 document.getElementById("sbShade").onclick = closeDrawer;
 document.getElementById("sbClose").onclick = closeDrawer;
+// スマホ: メニューを開いて「タスクを選ぶ」の欄まで送る
+function openPicker(){
+  appEl.classList.add("sb-open");
+  setTimeout(() => { try{ document.getElementById("picker").scrollIntoView({ block:"start" }); }catch(e){} }, 220);
+}
 
 /* 左パネルの畳み込み（地図を広く使う）。次に開いたときも覚えている */
 const lsGet = (k) => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
@@ -3704,6 +3766,11 @@ for(const [id, key, dflt] of [["filtSect", "eft_qm_filt_open_v1", true], ["setti
 document.getElementById("guideclose").onclick = () => {
   document.getElementById("guide").classList.add("hidden");
   try{ localStorage.setItem(GUIDE_KEY, "1"); }catch(e){}
+};
+document.getElementById("guidePick").onclick = () => {
+  document.getElementById("guideclose").onclick();
+  track("use/guide-pick");
+  openPicker();
 };
 for(const [id,key] of [["opt_transit","transit"],
                        ["opt_hazard","hazard"],["opt_lock","lock"],["opt_switch","switch"],
