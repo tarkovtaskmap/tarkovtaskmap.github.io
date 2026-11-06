@@ -1,6 +1,9 @@
-// タスクごとの紹介ページ tasks/<slug>/index.html と一覧 tasks/index.html を作る（検索や AI から各タスクで見つけてもらうため）。
-// データはツール本体と同じ json.tarkov.dev（PvP）。英語のゲーム表記で書く。sitemap.xml もここで作り直す。
-// 使い方: node tools/gen-tasks.mjs   ※ 公開前に gen-en.mjs と一緒に実行する（tasks/ と sitemap.xml を直接編集しない）
+// タスクごとの紹介ページと一覧を作る（検索や AI から各タスクで見つけてもらうため）。
+//   英語: tasks/<slug>/index.html と tasks/index.html
+//   日本語: ja/tasks/<slug>/index.html と ja/tasks/index.html（目標はツールと同じ日本語訳。名前は英語のゲーム表記）
+// データはツール本体と同じ json.tarkov.dev（PvP）。sitemap.xml もここで作り直す。
+// 使い方: node tools/gen-tasks.mjs   ※ 公開前に gen-en.mjs と一緒に実行する（tasks/ ja/ sitemap.xml を直接編集しない）
+//         公開して反映されたら node tools/indexnow.mjs で検索エンジンに知らせる
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -16,9 +19,14 @@ async function jd(p){
   }
   throw new Error("取得失敗: " + p);
 }
-const [rawT, en, rawM, men, rawTr, ten, ien] = await Promise.all(["tasks", "tasks_en", "maps", "maps_en", "traders", "traders_en", "items_en"].map(jd));
+const [rawT, en, ja, rawM, men, rawTr, ten, ien] = await Promise.all(["tasks", "tasks_en", "tasks_ja", "maps", "maps_en", "traders", "traders_en", "items_en"].map(jd));
 const has = (o, k) => k != null && o[k] != null && o[k] !== "";
 const tEN = k => has(en, k) ? String(en[k]).trim() : "";
+// 日本語の目標: tarkov.dev の日本語 → 訳が無ければツールの補足訳(ja-supplement.js、「※訳」付き) → 英語
+const supW = {}; new Function("window", fs.readFileSync(path.join(root, "ja-supplement.js"), "utf8"))(supW);
+const JA_SUPP = supW.__JA_SUPP__ || {};
+const HAS_JA = /[぀-ヿ一-鿿]/;
+const tJA = k => { const j = has(ja, k) ? String(ja[k]).trim() : ""; if(HAS_JA.test(j)) return j; if(JA_SUPP[k]) return JA_SUPP[k] + " ※訳"; return j || tEN(k); };
 const itemName = id => has(ien, id + " Name") ? ien[id + " Name"] : (has(en, id + " Name") ? en[id + " Name"] : id);
 const QI = rawT.questItems || {};
 const qiName = id => { const q = QI[id]; const k = q && q.name; return has(ien, k) ? ien[k] : (has(en, k) ? en[k] : itemName(id)); };
@@ -38,6 +46,48 @@ const CUR = { "5449016a4bdc2d6f028b456f":"₽", "5696686a4bdc2da3298b456a":"$", 
 const num = n => Number(n).toLocaleString("en-US");
 const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const slugOf = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
+
+// --- 言語ごとの文言 ---
+const LANGS = {
+  en: {
+    dir: "tasks", base: "/tasks/", html: "en", objText: o => tEN(o.description),
+    anyMap: "Any location", optional: "optional", fir: "Found in raid", more: n => ` (+${n} more)`,
+    questItem: "Quest item: ", use: "Use: ", weapon: "Weapon: ",
+    title: t => `${t.name} — EFT ${t.trader} task: objectives & map | Tarkov Task Map`,
+    desc: (t, maps, objs) => `${t.name} is a ${t.trader} task in Escape from Tarkov (${maps}, level ${t.lvl || 1}+). ${objs ? "Objectives: " + objs + ". " : ""}See every objective on the interactive map.`,
+    objJoin: "; ", lead: (t, maps) => `${esc(t.trader)} task · ${esc(maps)} · Level ${t.lvl || 1}+${t.kappa ? " · Kappa ★" : ""}${t.lk ? " · Lightkeeper" : ""}`,
+    cta: "🗺️ Show this task on the map", ctaNote: "Opens Tarkov Task Map with this task selected: objective pins and extracts on the map, free, no install.",
+    hObj: "Objectives", noObj: "No objective data.", hKeys: "Keys needed", hInfo: "Task info",
+    facts: t => [["Trader", esc(t.trader)], ["Map", null], ["Minimum level", String(t.lvl || 1)], ["Required for Kappa", t.kappa ? "Yes ★" : "No"], ["Required for Lightkeeper", t.lk ? "Yes" : "No"]],
+    hPrev: "Previous tasks", hNext: "Unlocks next", hFail: "Fails if", fail: l => `You complete ${l} (you can only do one of them)`, hRew: "Rewards",
+    standing: (tr, v) => `${tr} standing ${v}`, skill: (n, l) => `${n} skill +${l}`, offer: (it, tr, ll) => `Unlocks purchase: ${it} (${tr} LL${ll})`, trUnlock: tr => `Unlocks trader: ${tr}`,
+    moreDetails: "More details:", crumbAll: "Tasks", navAll: "All tasks", navTool: "Open the map tool", toolHref: "/en/", otherLang: "日本語",
+    foot: `<p>Unofficial fan-made tool, not affiliated with Battlestate Games. Task data: <a href="https://tarkov.dev/" rel="noopener">tarkov.dev</a> (CC BY-NC-SA 4.0), PvP. Updated ${TODAY}.</p>\n<p><a href="/en/">Tarkov Task Map (English)</a> · <a href="/">タルコフ タスクマップ（日本語）</a> · <a href="/tasks/">All tasks</a> · <a href="/ja/tasks/">全タスク一覧（日本語）</a></p>`,
+    idxTitle: "All Escape from Tarkov tasks (quests): objectives & maps | Tarkov Task Map",
+    idxDesc: n => `All ${n} Escape from Tarkov tasks by trader, with objectives, maps, keys and rewards. Open any task on the interactive map with its objective pins and extracts.`,
+    idxH1: "All Escape from Tarkov tasks", idxLead: n => `${n} tasks by trader, with objectives, maps, keys and rewards. Pick one to see its objectives, or open it on the map.`,
+    idxCta: "🗺️ Open the map tool", search: "Search tasks or maps…", kappaNote: "★ = required for the Kappa container.", lv: "Lv", any: "Any",
+  },
+  ja: {
+    dir: "ja/tasks", base: "/ja/tasks/", html: "ja", objText: o => tJA(o.description),
+    anyMap: "どのマップでも", optional: "任意", fir: "FiR（レイド内で入手）", more: n => `（ほか ${n} 件）`,
+    questItem: "タスクアイテム: ", use: "使うアイテム: ", weapon: "武器: ",
+    title: t => `${t.name}（${t.trader}）攻略：目標・場所・報酬｜タルコフ タスクマップ`,
+    desc: (t, maps, objs) => `${t.name} は Escape from Tarkov（タルコフ）の ${t.trader} のタスクです（${maps}・レベル${t.lvl || 1}以上）。${objs ? "目標：" + objs + "。" : ""}すべての目標の場所を地図で確認できます。`,
+    objJoin: "／", lead: (t, maps) => `${esc(t.trader)} のタスク · ${esc(maps)} · レベル${t.lvl || 1}以上${t.kappa ? " · Kappa ★" : ""}${t.lk ? " · Lightkeeper" : ""}`,
+    cta: "🗺️ このタスクを地図で見る", ctaNote: "タルコフ タスクマップで、このタスクを選んだ状態で開きます（目標のピンと脱出地点を地図に表示・無料・インストール不要）。",
+    hObj: "目標", noObj: "目標のデータがありません。", hKeys: "必要な鍵", hInfo: "タスクの情報",
+    facts: t => [["トレーダー", esc(t.trader)], ["マップ", null], ["必要レベル", String(t.lvl || 1)], ["Kappa に必要", t.kappa ? "必要 ★" : "不要"], ["Lightkeeper に必要", t.lk ? "必要" : "不要"]],
+    hPrev: "前のタスク", hNext: "このあと受けられるタスク", hFail: "失敗条件", fail: l => `${l} を完了すると失敗します（どちらか一方しかできません）`, hRew: "報酬",
+    standing: (tr, v) => `${tr} 信頼度 ${v}`, skill: (n, l) => `${n} スキル +${l}`, offer: (it, tr, ll) => `購入解禁: ${it}（${tr} LL${ll}）`, trUnlock: tr => `トレーダー解禁: ${tr}`,
+    moreDetails: "詳しく:", crumbAll: "全タスク一覧", navAll: "全タスク一覧", navTool: "ツールを開く", toolHref: "/", otherLang: "English",
+    foot: `<p>Battlestate Games とは関係のない、非公式のファン制作ツールです。タスクのデータ: <a href="https://tarkov.dev/" rel="noopener">tarkov.dev</a>（CC BY-NC-SA 4.0）、PvP。更新: ${TODAY}</p>\n<p><a href="/">タルコフ タスクマップ</a> · <a href="/ja/tasks/">全タスク一覧</a> · <a href="/tasks/">All tasks (English)</a></p>`,
+    idxTitle: "タルコフ 全タスク一覧：目標・マップ・報酬｜タルコフ タスクマップ",
+    idxDesc: n => `Escape from Tarkov（タルコフ）の全 ${n} タスクをトレーダー別に一覧。目標・マップ・必要な鍵・報酬を確認でき、どのタスクも目標のピンと脱出地点つきで地図に表示できます。`,
+    idxH1: "タルコフ 全タスク一覧", idxLead: n => `全 ${n} タスクをトレーダー別に並べています。タスクを選ぶと目標や報酬が見られ、そのまま地図でも開けます。`,
+    idxCta: "🗺️ ツールを開く", search: "タスク名・マップ名で検索…", kappaNote: "★ = Kappa コンテナに必要なタスク", lv: "Lv", any: "どのマップでも",
+  },
+};
 
 // --- タスクを整える ---
 const tasks = Object.values(rawT.tasks).map(t => ({ raw:t, id:t.id, name:tEN(t.name) || t.id, trader:trName(t.trader), lvl:t.minPlayerLevel || 0, kappa:!!t.kappaRequired, lk:!!t.lightkeeperRequired }))
@@ -62,17 +112,17 @@ function taskMaps(t){
   for(const o of t.raw.objectives || []) for(const m of (o.maps || [])) if(mapName(m)) s.add(mapName(m));
   return [...s];
 }
-const itemList = (ids, max = 8) => { const n = ids.map(itemName); return n.length > max ? n.slice(0, max).join(", ") + ` (+${n.length - max} more)` : n.join(", "); };
+const itemList = (L, ids, max = 8) => { const n = ids.map(itemName); return n.length > max ? n.slice(0, max).join(", ") + L.more(n.length - max) : n.join(", "); };
 
-function objDetail(o){
+function objDetail(L, o){
   const d = [];
   const its = (o.items || []).map(x => typeof x === "object" ? x.id : x);
   if(["giveItem", "findItem", "sellItem", "plantItem"].includes(o.type) && its.length)
-    d.push(`${o.count > 1 ? num(o.count) + " × " : ""}${esc(itemList(its))}${o.foundInRaid ? ' <span class="tag fir">Found in raid</span>' : ""}`);
-  if(o.questItem) d.push(`Quest item: ${esc(qiName(o.questItem))}${o.count > 1 ? " × " + o.count : ""}`);
-  if(o.markerItem) d.push(`Use: ${esc(itemName(o.markerItem))}`);
-  if(o.type === "buildWeapon" && its.length) d.push(`Weapon: ${esc(itemList(its, 4))}`);
-  if(o.type === "shoot" && o.count > 1 && !/\d/.test(tEN(o.description))) d.push(`× ${o.count}`);
+    d.push(`${o.count > 1 ? num(o.count) + " × " : ""}${esc(itemList(L, its))}${o.foundInRaid ? ` <span class="tag fir">${L.fir}</span>` : ""}`);
+  if(o.questItem) d.push(`${L.questItem}${esc(qiName(o.questItem))}${o.count > 1 ? " × " + o.count : ""}`);
+  if(o.markerItem) d.push(`${L.use}${esc(itemName(o.markerItem))}`);
+  if(o.type === "buildWeapon" && its.length) d.push(`${L.weapon}${esc(itemList(L, its, 4))}`);
+  if(o.type === "shoot" && o.count > 1 && !/\d/.test(L.objText(o))) d.push(`× ${o.count}`);
   return d;
 }
 function keysOf(t){
@@ -85,29 +135,32 @@ function keysOf(t){
   const seen = new Set();
   return out.filter(k => !seen.has(k.name) && seen.add(k.name));
 }
-function rewardsOf(t){
+function rewardsOf(L, t){
   const r = t.raw.finishRewards || {}, out = [];
   if(t.raw.experience) out.push(`${num(t.raw.experience)} EXP`);
-  for(const s of (r.traderStanding || [])) out.push(`${esc(trName(s.trader))} standing ${s.standing > 0 ? "+" : ""}${s.standing}`);
+  for(const s of (r.traderStanding || [])) out.push(L.standing(esc(trName(s.trader)), `${s.standing > 0 ? "+" : ""}${s.standing}`));
   for(const it of (r.items || [])){
     const c = CUR[it.item];
     out.push(c ? `${c}${num(it.count)}` : `${esc(itemName(it.item))}${it.count > 1 ? " × " + num(it.count) : ""}`);
   }
-  for(const s of (r.skillLevelReward || [])) out.push(`${esc(s.name)} skill +${s.level}`);
-  for(const u of (r.offerUnlock || [])) out.push(`Unlocks purchase: ${esc(itemName(u.item))} (${esc(trName(u.trader))} LL${u.level})`);
-  for(const u of (r.traderUnlock || [])) out.push(`Unlocks trader: ${esc(trName(u.trader || u))}`);
+  for(const s of (r.skillLevelReward || [])) out.push(L.skill(esc(s.name), s.level));
+  for(const u of (r.offerUnlock || [])) out.push(L.offer(esc(itemName(u.item)), esc(trName(u.trader)), u.level));
+  for(const u of (r.traderUnlock || [])) out.push(L.trUnlock(esc(trName(u.trader || u))));
   return out;
 }
-const link = t => `<a href="/tasks/${t.slug}/">${esc(t.name)}</a>`;
-const head = ({ title, desc, url, jsonld }) => `<!DOCTYPE html>
+const link = (L, t) => `<a href="${L.base}${t.slug}/">${esc(t.name)}</a>`;
+const head = (L, { title, desc, url, alt, jsonld }) => `<!DOCTYPE html>
 ${MARK}
-<html lang="en">
+<html lang="${L.html}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}" />
 <link rel="canonical" href="${url}" />
+<link rel="alternate" hreflang="en" href="${alt.en}" />
+<link rel="alternate" hreflang="ja" href="${alt.ja}" />
+<link rel="alternate" hreflang="x-default" href="${alt.en}" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Tarkov Task Map" />
@@ -121,99 +174,100 @@ ${MARK}
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
-<header class="top"><a class="brand" href="/en/">🗺️ Tarkov Task Map</a><nav><a href="/tasks/">All tasks</a><a href="/en/">Open the map tool</a></nav></header>
+<header class="top"><a class="brand" href="${L.toolHref}">🗺️ Tarkov Task Map</a><nav><a href="${L.base}">${L.navAll}</a><a href="${L.toolHref}">${L.navTool}</a><a href="${L === LANGS.en ? alt.ja : alt.en}" hreflang="${L === LANGS.en ? "ja" : "en"}">${L.otherLang}</a></nav></header>
 <main>`;
-const foot = `</main>
+const foot = L => `</main>
 <footer>
-<p>Unofficial fan-made tool, not affiliated with Battlestate Games. Task data: <a href="https://tarkov.dev/" rel="noopener">tarkov.dev</a> (CC BY-NC-SA 4.0), PvP. Updated ${TODAY}.</p>
-<p><a href="/en/">Tarkov Task Map (English)</a> · <a href="/">タルコフ タスクマップ（日本語）</a> · <a href="/tasks/">All tasks</a></p>
+${L.foot}
 </footer>
 </body>
 </html>
 `;
 const crumbs = items => ({ "@context":"https://schema.org", "@type":"BreadcrumbList", itemListElement: items.map((x, i) => ({ "@type":"ListItem", position:i + 1, name:x[0], item:x[1] })) });
+const urlOf = (lang, slug) => SITE + LANGS[lang].base.slice(1) + (slug ? slug + "/" : "");
 
-// --- 各タスクのページ ---
-const outDir = path.join(root, "tasks");
-fs.mkdirSync(outDir, { recursive:true });
-let written = 0;
-for(const t of tasks){
-  const maps = taskMaps(t);
-  const objs = (t.raw.objectives || []).filter(o => tEN(o.description));
-  const multiMap = maps.length > 1;
-  const objHtml = objs.map(o => {
-    const om = [...new Set((o.maps || []).map(mapName).filter(Boolean))];
-    const det = objDetail(o);
-    return `<li>${esc(tEN(o.description))}${o.optional ? ' <span class="tag">optional</span>' : ""}${multiMap && om.length ? ` <span class="tag map">${esc(om.join(" / "))}</span>` : ""}${det.length ? `<div class="det">${det.join("<br>")}</div>` : ""}</li>`;
-  }).join("\n");
-  const keys = keysOf(t), rewards = rewardsOf(t);
-  const prev = (t.raw.taskRequirements || []).map(r => byId[r.task]).filter(Boolean);
-  const next = (nextOf[t.id] || []).slice().sort(byLvlName);
-  const fails = (t.raw.failConditions || []).filter(c => c.type === "taskStatus" && byId[c.task] && (c.status || []).includes("complete")).map(c => byId[c.task]);
-  const mapTxt = maps.length ? maps.join(", ") : "Any location";
-  const firstObjs = objs.slice(0, 2).map(o => tEN(o.description).replace(/\s+/g, " ")).join("; ");
-  let desc = `${t.name} is a ${t.trader} task in Escape from Tarkov (${mapTxt}, level ${t.lvl || 1}+). ${firstObjs ? "Objectives: " + firstObjs + ". " : ""}See every objective on the interactive map.`;
-  if(desc.length > 300) desc = desc.slice(0, 297).replace(/\s+\S*$/, "") + "…";
-  const url = `${SITE}tasks/${t.slug}/`;
-  const facts = [
-    ["Trader", esc(t.trader)], ["Map", esc(mapTxt)], ["Minimum level", String(t.lvl || 1)],
-    ["Required for Kappa", t.kappa ? "Yes ★" : "No"], ["Required for Lightkeeper", t.lk ? "Yes" : "No"],
-  ];
-  const html = head({
-    title: `${t.name} — EFT ${t.trader} task: objectives & map | Tarkov Task Map`, desc, url,
-    jsonld: crumbs([["Tasks", SITE + "tasks/"], [t.trader, SITE + "tasks/#" + slugOf(t.trader)], [t.name, url]]),
-  }) + `
-<p class="crumb"><a href="/tasks/">Tasks</a> › <a href="/tasks/#${slugOf(t.trader)}">${esc(t.trader)}</a></p>
+// 古いページの片付け（このスクリプトが作ったものだけ）
+function cleanDir(dir){
+  let removed = 0;
+  for(const d of fs.readdirSync(dir, { withFileTypes:true })){
+    if(!d.isDirectory() || used.has(d.name)) continue;
+    const f = path.join(dir, d.name, "index.html");
+    if(fs.existsSync(f) && fs.readFileSync(f, "utf8").includes(MARK)){ fs.rmSync(path.join(dir, d.name), { recursive:true }); removed++; }
+  }
+  return removed;
+}
+
+const report = [];
+for(const [lang, L] of Object.entries(LANGS)){
+  const outDir = path.join(root, L.dir);
+  fs.mkdirSync(outDir, { recursive:true });
+  let written = 0;
+  // --- 各タスクのページ ---
+  for(const t of tasks){
+    const maps = taskMaps(t);
+    const objs = (t.raw.objectives || []).filter(o => L.objText(o));
+    const multiMap = maps.length > 1;
+    const objHtml = objs.map(o => {
+      const om = [...new Set((o.maps || []).map(mapName).filter(Boolean))];
+      const det = objDetail(L, o);
+      return `<li>${esc(L.objText(o))}${o.optional ? ` <span class="tag">${L.optional}</span>` : ""}${multiMap && om.length ? ` <span class="tag map">${esc(om.join(" / "))}</span>` : ""}${det.length ? `<div class="det">${det.join("<br>")}</div>` : ""}</li>`;
+    }).join("\n");
+    const keys = keysOf(t), rewards = rewardsOf(L, t);
+    const prev = (t.raw.taskRequirements || []).map(r => byId[r.task]).filter(Boolean);
+    const next = (nextOf[t.id] || []).slice().sort(byLvlName);
+    const fails = (t.raw.failConditions || []).filter(c => c.type === "taskStatus" && byId[c.task] && (c.status || []).includes("complete")).map(c => byId[c.task]);
+    const mapTxt = maps.length ? maps.join(", ") : L.anyMap;
+    const firstObjs = objs.slice(0, 2).map(o => L.objText(o).replace(/\s+/g, " ")).join(L.objJoin);
+    let desc = L.desc(t, mapTxt, firstObjs);
+    if(desc.length > 300) desc = desc.slice(0, 297).replace(/\s+\S*$/, "") + "…";
+    const url = urlOf(lang, t.slug), alt = { en: urlOf("en", t.slug), ja: urlOf("ja", t.slug) };
+    const facts = L.facts(t).map(f => f[1] === null ? [f[0], esc(mapTxt)] : f);
+    const html = head(L, {
+      title: L.title(t), desc, url, alt,
+      jsonld: crumbs([[L.crumbAll, urlOf(lang)], [t.trader, urlOf(lang) + "#" + slugOf(t.trader)], [t.name, url]]),
+    }) + `
+<p class="crumb"><a href="${L.base}">${L.crumbAll}</a> › <a href="${L.base}#${slugOf(t.trader)}">${esc(t.trader)}</a></p>
 <h1>${esc(t.name)}</h1>
-<p class="lead">${esc(t.trader)} task · ${esc(mapTxt)} · Level ${t.lvl || 1}+${t.kappa ? " · Kappa ★" : ""}${t.lk ? " · Lightkeeper" : ""}</p>
-<p><a class="cta" href="/#task=${t.id}">🗺️ Show this task on the map</a></p>
-<p class="muted small">Opens Tarkov Task Map with this task selected: objective pins and extracts on the map, free, no install.</p>
-<h2>Objectives</h2>
+<p class="lead">${L.lead(t, mapTxt)}</p>
+<p><a class="cta" href="/#task=${t.id}">${L.cta}</a></p>
+<p class="muted small">${L.ctaNote}</p>
+<h2>${L.hObj}</h2>
 <ol class="objs">
-${objHtml || "<li>No objective data.</li>"}
+${objHtml || `<li>${L.noObj}</li>`}
 </ol>
-${keys.length ? `<h2>Keys needed</h2>\n<ul>${keys.map(k => `<li>${esc(k.name)}${k.map ? ` <span class="tag map">${esc(k.map)}</span>` : ""}</li>`).join("")}</ul>` : ""}
-<h2>Task info</h2>
+${keys.length ? `<h2>${L.hKeys}</h2>\n<ul>${keys.map(k => `<li>${esc(k.name)}${k.map ? ` <span class="tag map">${esc(k.map)}</span>` : ""}</li>`).join("")}</ul>` : ""}
+<h2>${L.hInfo}</h2>
 <table class="facts">${facts.map(f => `<tr><th>${f[0]}</th><td>${f[1]}</td></tr>`).join("")}</table>
-${prev.length ? `<h2>Previous tasks</h2>\n<ul>${prev.map(p => `<li>${link(p)} <span class="muted">(${esc(p.trader)})</span></li>`).join("")}</ul>` : ""}
-${next.length ? `<h2>Unlocks next</h2>\n<ul>${next.map(p => `<li>${link(p)} <span class="muted">(${esc(p.trader)})</span></li>`).join("")}</ul>` : ""}
-${fails.length ? `<h2>Fails if</h2>\n<ul>${fails.map(p => `<li>You complete ${link(p)} (you can only do one of them)</li>`).join("")}</ul>` : ""}
-${rewards.length ? `<h2>Rewards</h2>\n<ul>${rewards.map(r => `<li>${r}</li>`).join("")}</ul>` : ""}
-${t.raw.wikiLink ? `<p class="muted small">More details: <a href="${esc(t.raw.wikiLink)}" rel="noopener">wiki ↗</a> · <a href="https://tarkov.dev/task/${esc(t.raw.normalizedName || t.slug)}" rel="noopener">tarkov.dev ↗</a></p>` : ""}
-<p><a class="cta" href="/#task=${t.id}">🗺️ Show this task on the map</a></p>
-` + foot;
-  const dir = path.join(outDir, t.slug);
-  fs.mkdirSync(dir, { recursive:true });
-  fs.writeFileSync(path.join(dir, "index.html"), html);
-  written++;
-}
+${prev.length ? `<h2>${L.hPrev}</h2>\n<ul>${prev.map(p => `<li>${link(L, p)} <span class="muted">(${esc(p.trader)})</span></li>`).join("")}</ul>` : ""}
+${next.length ? `<h2>${L.hNext}</h2>\n<ul>${next.map(p => `<li>${link(L, p)} <span class="muted">(${esc(p.trader)})</span></li>`).join("")}</ul>` : ""}
+${fails.length ? `<h2>${L.hFail}</h2>\n<ul>${fails.map(p => `<li>${L.fail(link(L, p))}</li>`).join("")}</ul>` : ""}
+${rewards.length ? `<h2>${L.hRew}</h2>\n<ul>${rewards.map(r => `<li>${r}</li>`).join("")}</ul>` : ""}
+${t.raw.wikiLink ? `<p class="muted small">${L.moreDetails} <a href="${esc(t.raw.wikiLink)}" rel="noopener">wiki ↗</a> · <a href="https://tarkov.dev/task/${esc(t.raw.normalizedName || t.slug)}" rel="noopener">tarkov.dev ↗</a></p>` : ""}
+<p><a class="cta" href="/#task=${t.id}">${L.cta}</a></p>
+` + foot(L);
+    const dir = path.join(outDir, t.slug);
+    fs.mkdirSync(dir, { recursive:true });
+    fs.writeFileSync(path.join(dir, "index.html"), html);
+    written++;
+  }
+  const removed = cleanDir(outDir);
 
-// 消えたタスクのページを片付ける（このスクリプトが作ったものだけ）
-let removed = 0;
-for(const d of fs.readdirSync(outDir, { withFileTypes:true })){
-  if(!d.isDirectory() || used.has(d.name)) continue;
-  const f = path.join(outDir, d.name, "index.html");
-  if(fs.existsSync(f) && fs.readFileSync(f, "utf8").includes(MARK)){ fs.rmSync(path.join(outDir, d.name), { recursive:true }); removed++; }
-}
-
-// --- 一覧ページ ---
-const groups = {};
-for(const t of tasks) (groups[t.trader] = groups[t.trader] || []).push(t);
-const traders = Object.keys(groups).sort((a, b) => trRank(a) - trRank(b) || a.localeCompare(b, "en"));
-const indexHtml = head({
-  title: "All Escape from Tarkov tasks (quests): objectives & maps | Tarkov Task Map",
-  desc: `All ${tasks.length} Escape from Tarkov tasks by trader, with objectives, maps, keys and rewards. Open any task on the interactive map with its objective pins and extracts.`,
-  url: SITE + "tasks/",
-  jsonld: crumbs([["Tasks", SITE + "tasks/"]]),
-}) + `
-<h1>All Escape from Tarkov tasks</h1>
-<p class="lead">${tasks.length} tasks by trader, with objectives, maps, keys and rewards. Pick one to see its objectives, or open it on the map.</p>
-<p><a class="cta" href="/en/">🗺️ Open the map tool</a></p>
-<input id="q" type="search" placeholder="Search tasks or maps…" aria-label="Search tasks" />
+  // --- 一覧ページ ---
+  const groups = {};
+  for(const t of tasks) (groups[t.trader] = groups[t.trader] || []).push(t);
+  const traders = Object.keys(groups).sort((a, b) => trRank(a) - trRank(b) || a.localeCompare(b, "en"));
+  const indexHtml = head(L, {
+    title: L.idxTitle, desc: L.idxDesc(tasks.length), url: urlOf(lang), alt: { en: urlOf("en"), ja: urlOf("ja") },
+    jsonld: crumbs([[L.crumbAll, urlOf(lang)]]),
+  }) + `
+<h1>${L.idxH1}</h1>
+<p class="lead">${L.idxLead(tasks.length)}</p>
+<p><a class="cta" href="${L.toolHref}">${L.idxCta}</a></p>
+<input id="q" type="search" placeholder="${L.search}" aria-label="${L.search}" />
 <nav class="jump">${traders.map(tr => `<a href="#${slugOf(tr)}">${esc(tr)}</a>`).join("")}</nav>
 ${traders.map(tr => `<section id="${slugOf(tr)}"><h2>${esc(tr)} <span class="muted">(${groups[tr].length})</span></h2>
-<ul class="tlist">${groups[tr].slice().sort(byLvlName).map(t => `<li data-s="${esc((t.name + " " + taskMaps(t).join(" ")).toLowerCase())}">${link(t)} <span class="muted">Lv ${t.lvl || 1} · ${esc(taskMaps(t).join(", ") || "Any")}${t.kappa ? " · ★" : ""}</span></li>`).join("\n")}</ul></section>`).join("\n")}
-<p class="muted small">★ = required for the Kappa container.</p>
+<ul class="tlist">${groups[tr].slice().sort(byLvlName).map(t => `<li data-s="${esc((t.name + " " + taskMaps(t).join(" ")).toLowerCase())}">${link(L, t)} <span class="muted">${L.lv} ${t.lvl || 1} · ${esc(taskMaps(t).join(", ") || L.any)}${t.kappa ? " · ★" : ""}</span></li>`).join("\n")}</ul></section>`).join("\n")}
+<p class="muted small">${L.kappaNote}</p>
 <script>
 document.getElementById("q").addEventListener("input", function(){
   var q = this.value.trim().toLowerCase();
@@ -221,17 +275,19 @@ document.getElementById("q").addEventListener("input", function(){
   document.querySelectorAll("main section").forEach(function(s){ s.style.display = s.querySelector('li:not([style*="none"])') ? "" : "none"; });
 });
 </script>
-` + foot;
-fs.writeFileSync(path.join(outDir, "index.html"), indexHtml);
+` + foot(L);
+  fs.writeFileSync(path.join(outDir, "index.html"), indexHtml);
+  report.push(`${lang}: ${written} ページ（削除 ${removed}）`);
+}
 
-fs.writeFileSync(path.join(outDir, "style.css"), `/* generated by tools/gen-tasks.mjs */
+fs.writeFileSync(path.join(root, "tasks", "style.css"), `/* generated by tools/gen-tasks.mjs */
 :root{--bg:#15130f;--panel:#1f1c16;--line:#3a352b;--text:#e8e2d4;--dim:#a39b88;--accent:#c7b083;--accent2:#e6cf9a}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 system-ui,-apple-system,"Segoe UI","Yu Gothic UI","Meiryo",sans-serif}
 a{color:var(--accent2)}
 .top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
 .top .brand{font-weight:700;text-decoration:none;color:var(--text)}
-.top nav{display:flex;gap:14px;font-size:14px}
+.top nav{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
 main{max-width:820px;margin:0 auto;padding:16px 16px 32px}
 h1{font-size:26px;line-height:1.3;margin:6px 0 4px}
 h2{font-size:18px;margin:26px 0 8px;border-bottom:1px solid var(--line);padding-bottom:4px}
@@ -254,16 +310,21 @@ h2{font-size:18px;margin:26px 0 8px;border-bottom:1px solid var(--line);padding-
 footer{max-width:820px;margin:0 auto;padding:16px;border-top:1px solid var(--line);font-size:12px;color:var(--dim)}
 `);
 
-// --- sitemap.xml（ツール本体の 2 ページ + 一覧 + 各タスク）---
-const alt = `    <xhtml:link rel="alternate" hreflang="ja" href="${SITE}" />
+// --- sitemap.xml（ツール本体の 2 ページ + 英日の一覧 + 各タスク。英日は互いに alternate）---
+const altTool = `    <xhtml:link rel="alternate" hreflang="ja" href="${SITE}" />
     <xhtml:link rel="alternate" hreflang="en" href="${SITE}en/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}" />`;
+const altPair = slug => `    <xhtml:link rel="alternate" hreflang="en" href="${urlOf("en", slug)}" />
+    <xhtml:link rel="alternate" hreflang="ja" href="${urlOf("ja", slug)}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${urlOf("en", slug)}" />`;
+const entry = (loc, alt, pri) => `  <url>\n    <loc>${loc}</loc>\n${alt}\n    <priority>${pri}</priority>\n  </url>`;
 const urls = [
-  `  <url>\n    <loc>${SITE}</loc>\n${alt}\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
-  `  <url>\n    <loc>${SITE}en/</loc>\n${alt}\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`,
-  `  <url>\n    <loc>${SITE}tasks/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
-  ...tasks.slice().sort((a, b) => a.slug.localeCompare(b.slug)).map(t => `  <url>\n    <loc>${SITE}tasks/${t.slug}/</loc>\n    <priority>0.6</priority>\n  </url>`),
+  entry(SITE, altTool, "1.0"), entry(SITE + "en/", altTool, "0.9"),
+  entry(urlOf("en"), altPair(""), "0.8"), entry(urlOf("ja"), altPair(""), "0.8"),
 ];
+for(const t of tasks.slice().sort((a, b) => a.slug.localeCompare(b.slug))){
+  urls.push(entry(urlOf("en", t.slug), altPair(t.slug), "0.6"), entry(urlOf("ja", t.slug), altPair(t.slug), "0.6"));
+}
 fs.writeFileSync(path.join(root, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join("\n")}\n</urlset>\n`);
 
-console.log(`tasks/ を生成しました（タスク ${written} ページ、削除 ${removed}、sitemap ${urls.length} URL）`);
+console.log(`タスクページを生成しました（${report.join(" / ")}、sitemap ${urls.length} URL）`);

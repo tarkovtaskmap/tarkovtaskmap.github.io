@@ -718,7 +718,7 @@ const STR = {
     guideM2:"メニューの外（暗いところ）をタップすると地図に戻り、選んだタスクがピンで出ます。ピンをタップするとタスク名が出ます。",
     guideM3:"上のタブを横にスワイプしてマップを切り替え。使う脱出地点は、メニューの <b>脱出地点</b> 欄で選べます。",
     guideM4:"進捗（選んだタスク・完了など）は、<b>このブラウザに自動で保存</b>されます。",
-    taskListLink:"📋 全タスク一覧（英語）", taskLinkMissing:"このタスクは、今のモードのデータにありません（PvP / PvE を切り替えてみてください）",
+    taskListLink:"📋 全タスク一覧", taskLinkMissing:"このタスクは、今のモードのデータにありません（PvP / PvE を切り替えてみてください）",
     guideStart:"はじめる", loadingInitial:"データを読み込んでいます…",
     multipleOrNone:"複数/なし", doneBadge:"✓済(自分)", markDoneTitle:"完了マーク",
     searchPrefix:mn=>`検索: ${mn}`, searchResults:"検索結果", noMatch:"該当なし", selectedHeader:"選択中",
@@ -1279,6 +1279,8 @@ function applyStaticI18n(){
   document.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = T(el.getAttribute("data-i18n-title")); });
   const ls = document.getElementById("langSel");
   if(ls) ls.value = LANG;
+  const tll = document.getElementById("taskListLink");   // タスク一覧: 日本語は日本語版、ほかは英語版
+  if(tll) tll.href = LANG === "ja" ? "/ja/tasks/" : "/tasks/";
 }
 applyStaticI18n();
 // 匿名の利用集計(GoatCounter)。「機能が使われた回数」だけを送る。タスク名・進捗・入力した文字は送らない
