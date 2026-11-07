@@ -664,11 +664,12 @@
    svg=SVGパス, lyr=表示するSVGレイヤーID, tile=タイルURL(SVGが無い時) */
 /* ---------- 多言語対応 (i18n) ---------- */
 // 初回の言語: 保存された選択があればそれ、なければブラウザの言語（日本語なら日本語、それ以外は英語）
+// ロシア語・ポーランド語・ポルトガル語・ドイツ語・中国語のブラウザは、/en/ ページから来てもその言語で開く
 let LANG = (function(){
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
   if(["ja", "en", "zh", "ru", "pl", "pt", "de"].includes(s)) return s;
-  if(window.__PAGE_LANG__) return window.__PAGE_LANG__;   // /en/ ページは、言語を選んだことが無ければ英語で開く
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
+  if(window.__PAGE_LANG__ && !/^(ru|pl|pt|de|zh)/.test(nl)) return window.__PAGE_LANG__;   // /en/ ページは、上の5言語以外（日本語ブラウザも）なら英語で開く
   if(nl.startsWith("ja")) return "ja";
   if(nl.startsWith("ru")) return "ru";
   if(nl.startsWith("pl")) return "pl";
