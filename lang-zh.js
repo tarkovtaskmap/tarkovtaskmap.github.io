@@ -119,7 +119,7 @@ window.__STR_ZH__ = {
   helpBtn:"帮助", helpTitle:"使用方法", helpClose:"关闭",
   fbLink:"💬 发送反馈 / 建议", fbSub:"欢迎提出想法和报告错误（可匿名）", fbBtn:"反馈 / 错误报告", fbTitle:"反馈 / 错误报告",
   fbIntro:"欢迎告诉我们你想要的功能、遇到的问题或错误。你发送的内容<b>只有开发者能看到</b>（不会公开）。无需登录、姓名或邮箱。请不要填写个人信息。我们可能无法逐一回复。也欢迎指出界面翻译中不自然的地方（用中文或英文均可）。",
-  fbTypeIdea:"💡 功能建议", fbTypeBug:"🐞 错误", fbTypeOther:"💬 其他",
+  fbTypeIdea:"💡 功能建议", fbTypeBug:"🐞 错误", fbTypeOther:"💬 其他", fbTypeTr:"🌐 翻译修正", fbMsgPhTr:"例如：“○○”改成“△△”更自然（如能注明出现在哪个界面就更好了）", installBtn:"📲 安装为应用", installTip:"在没有地址栏的独立窗口中打开，放在第二块显示器上很方便（Chrome / Edge）", installDone:"已安装。可以从桌面或开始菜单打开。",
   fbMsgLabel:"内容", fbMsgPh:"例：任务 X 的标记位置不对 / 希望增加……功能",
   fbInfoLabel:"一并发送的信息（可查看）",
   fbCopy:"复制文本", fbSend:"发送", fbCopied:"已复制。", fbEmpty:"请输入内容。",

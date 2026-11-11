@@ -122,7 +122,7 @@
   helpBtn:"Ajuda", helpTitle:"Como usar", helpClose:"Fechar",
   fbLink:"💬 Enviar feedback / pedido", fbSub:"Ideias e relatos de bugs são bem-vindos (pode ser anônimo)", fbBtn:"Feedback / relatar bug", fbTitle:"Feedback / relatar bug",
   fbIntro:"Conte que recurso você quer, um problema ou um bug. Só o <b>desenvolvedor vê</b> o que você envia (não é público). Não precisa de login, nome nem e-mail. Não inclua dados pessoais. Nem sempre será possível responder.",
-  fbTypeIdea:"💡 Pedido de recurso", fbTypeBug:"🐞 Bug", fbTypeOther:"💬 Outro",
+  fbTypeIdea:"💡 Pedido de recurso", fbTypeBug:"🐞 Bug", fbTypeOther:"💬 Outro", fbTypeTr:"🌐 Correção de tradução", fbMsgPhTr:"ex.: \"○○\" ficaria mais natural como \"△△\" (se puder, diga onde aparece)", installBtn:"📲 Instalar como app", installTip:"Abre em uma janela própria, sem barra de endereço — prático no segundo monitor (Chrome / Edge)", installDone:"Instalado. Você pode abrir pela área de trabalho ou pelo menu Iniciar.",
   fbMsgLabel:"Mensagem", fbMsgPh:"ex.: O pino da tarefa X está no lugar errado / queria um recurso que…",
   fbInfoLabel:"Informações enviadas junto (você pode conferir)",
   fbCopy:"Copiar texto", fbSend:"Enviar", fbCopied:"Copiado.", fbEmpty:"Escreva uma mensagem.",

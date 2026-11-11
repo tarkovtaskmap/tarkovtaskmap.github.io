@@ -7,11 +7,22 @@
 <meta name="google-site-verification" content="dRMDDWVpydKFe4Ky8DVFOGZRoY956Th5tZrCiRQCQCc" />
 <meta name="description" content="Escape from Tarkov のタスク目標と脱出地点を地図にピン表示する無料ツール。PvP / PvE / Seasonal 対応。Task (quest) objectives and extracts on the map for Escape from Tarkov (free, PvP / PvE / Seasonal)." />
 <link rel="canonical" href="https://tarkovtaskmap.github.io/" />
-<!-- 言語別ページ（/en/ は tools/gen-en.mjs でこのファイルから生成する。直接編集しない） -->
+<!-- 言語別ページ（/en/ などは tools/gen-en.mjs でこのファイルから生成する。直接編集しない。一覧は tools/page-langs.mjs） -->
 <link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
 <link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+<link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+<link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+<link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+<link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+<link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+<link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+<link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
 <link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<!-- アプリとして使う（PWA）。manifest は tools/gen-en.mjs が言語ごとに作る（相対パスなので /de/ などではそのフォルダのものを読む） -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#1b1b1b" />
+<link rel="apple-touch-icon" href="/icon-192.png" />
+<link rel="icon"href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 <!-- SNS / Discord などにリンクを貼ったときのプレビュー -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Tarkov Task Map" />
@@ -38,7 +49,7 @@
   "applicationCategory": "GameApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
-  "inLanguage": ["ja", "en", "zh", "ru", "pl", "pt", "de"],
+  "inLanguage": ["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr"],
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
@@ -63,12 +74,14 @@
 <script src="data-snapshot.js" onerror="console.warn('data-snapshot.js なし')"></script>
 <!-- 日本語訳が無いタスク目標の補足訳（無くてもツールは動く） -->
 <script src="ja-supplement.js" onerror="console.warn('ja-supplement.js なし')"></script>
-<!-- 簡体字中国語・ロシア語の画面文言（無くてもツールは動く。無い文言は英語で表示） -->
+<!-- 簡体字中国語・ロシア語・ポーランド語・ポルトガル語・ドイツ語・スペイン語・トルコ語の画面文言（無くてもツールは動く。無い文言は英語で表示） -->
 <script src="lang-zh.js" onerror="console.warn('lang-zh.js なし')"></script>
 <script src="lang-ru.js" onerror="console.warn('lang-ru.js なし')"></script>
 <script src="lang-pl.js" onerror="console.warn('lang-pl.js なし')"></script>
 <script src="lang-pt.js" onerror="console.warn('lang-pt.js なし')"></script>
 <script src="lang-de.js" onerror="console.warn('lang-de.js なし')"></script>
+<script src="lang-es.js" onerror="console.warn('lang-es.js なし')"></script>
+<script src="lang-tr.js" onerror="console.warn('lang-tr.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
@@ -182,8 +195,9 @@
   details.sect .grouped{border-top:1px solid var(--line)}
   details.sect .grouped>details.sect:last-child{border-bottom:0}
   #settingsSect>.grouped>details.sect>summary{padding-left:24px}
-  #toolbar{padding:6px 14px;border-bottom:1px solid var(--line);flex-wrap:nowrap}
-  #sbCollapse{flex:1;font-weight:700;color:var(--accent2);border-color:var(--accent)}
+  #toolbar{padding:6px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  #sbCollapse{flex:1;font-weight:700;color:var(--accent2);border-color:var(--accent);white-space:nowrap}
+  #toolbar .pwa-install{white-space:nowrap}   /* 長い言語では 2 段に分かれる */
   #sbReopen{flex:0 0 auto;padding:6px 10px}
   #sbReopen{display:none;margin:8px 0 8px 8px}
   #bknote{padding:8px 14px;border-bottom:1px solid var(--line);background:#2a261c;font-size:11.5px;line-height:1.55;color:var(--text)}
@@ -389,12 +403,13 @@
       <div class="row" style="flex-wrap:nowrap;gap:6px">
         <button id="helpBtn" class="hbtn" data-i18n="helpBtn">使い方</button>
         <button id="sbClose" class="narrow-only" data-i18n-title="closeMenu" title="閉じる">✕</button>
-        <select id="langSel" title="Language / 言語 / 语言 / Язык / Język / Idioma / Sprache"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option><option value="pl">Polski</option><option value="pt">Português</option><option value="de">Deutsch</option></select>
+        <select id="langSel" title="Language / 言語 / 语言 / Язык / Język / Idioma / Sprache / Dil"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option><option value="pl">Polski</option><option value="pt">Português</option><option value="de">Deutsch</option><option value="es">Español</option><option value="tr">Türkçe</option></select>
       </div>
     </div>
 
     <div id="toolbar" class="row">
       <button id="sbCollapse" class="wide-only" data-i18n="collapseBtn" data-i18n-title="collapseTip" title="">◀ 地図を広く使う</button>
+      <button class="pwa-install hidden" data-i18n="installBtn" data-i18n-title="installTip" title="">📲 アプリとして使う</button>
     </div>
 
     <div id="bknote" class="hidden"></div>
@@ -462,6 +477,7 @@
         <button id="bkimport" data-i18n="bkImportBtn">バックアップ読込</button>
         <input type="file" id="bkfile" accept=".json,application/json" class="hidden" />
       </div>
+      <div class="row"><button class="pwa-install hidden" data-i18n="installBtn" data-i18n-title="installTip" title="">📲 アプリとして使う</button></div>
       </div>
     </details>
       </div>
@@ -664,22 +680,26 @@
    svg=SVGパス, lyr=表示するSVGレイヤーID, tile=タイルURL(SVGが無い時) */
 /* ---------- 多言語対応 (i18n) ---------- */
 // 初回の言語: 保存された選択があればそれ、なければブラウザの言語（日本語なら日本語、それ以外は英語）
-// ロシア語・ポーランド語・ポルトガル語・ドイツ語・中国語のブラウザは、/en/ ページから来てもその言語で開く
+// ロシア語・ポーランド語・ポルトガル語・ドイツ語・スペイン語・トルコ語・中国語のブラウザは、/en/ ページから来てもその言語で開く
 let LANG = (function(){
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
-  if(["ja", "en", "zh", "ru", "pl", "pt", "de"].includes(s)) return s;
+  if(["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr"].includes(s)) return s;
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
-  if(window.__PAGE_LANG__ && !/^(ru|pl|pt|de|zh)/.test(nl)) return window.__PAGE_LANG__;   // /en/ ページは、上の5言語以外（日本語ブラウザも）なら英語で開く
+  const pageLang = window.__PAGE_LANG__;
+  if(pageLang && pageLang !== "en") return pageLang;   // /de/ /es/ などの言語別ページは、そのページの言語で開く
+  if(pageLang && !/^(ru|pl|pt|de|es|tr|zh)/.test(nl)) return pageLang;   // /en/ ページは、上の7言語以外（日本語ブラウザも）なら英語で開く
   if(nl.startsWith("ja")) return "ja";
   if(nl.startsWith("ru")) return "ru";
   if(nl.startsWith("pl")) return "pl";
   if(nl.startsWith("pt")) return "pt";
   if(nl.startsWith("de")) return "de";
+  if(nl.startsWith("es")) return "es";
+  if(nl.startsWith("tr")) return "tr";
   if(nl.startsWith("zh") && !/^zh[-_](tw|hk|mo|hant)/.test(nl)) return "zh";   // 簡体字のみ対応（繁体字の地域は英語）
   return "en";
 })();
-// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語(zh/ru/pl/pt/de)。ja/en は従来どおり英語表記のまま
-const DL = ["zh", "ru", "pl", "pt", "de"].includes(LANG) ? LANG : null;
+// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語(zh/ru/pl/pt/de/es/tr)。ja/en は従来どおり英語表記のまま
+const DL = ["zh", "ru", "pl", "pt", "de", "es", "tr"].includes(LANG) ? LANG : null;
 /* ゲームモード: PvP / PvE / Seasonal は別キャラ＝進行状況が別。
    PvP は従来のキー名のまま(既存データを引き継ぐ)、他は末尾に _pve / _seasonal を付けて分離する。
    データ元: PvE は json.tarkov.dev/pve/*(タスク・脱出地点・ボス等が別)、
@@ -810,7 +830,7 @@ const STR = {
     helpBtn:"使い方", helpTitle:"使い方", helpClose:"閉じる",
     fbLink:"💬 ご意見・要望を送る", fbSub:"「こんな機能が欲しい」大歓迎です（匿名OK）", fbBtn:"ご意見・不具合報告", fbTitle:"ご意見・不具合報告",
     fbIntro:"欲しい機能・困ったこと・不具合をお知らせください。内容は<b>開発者だけが見られます</b>（公開されません）。ログインや名前・メールアドレスは不要です。個人情報は書かないでください。返信できない場合があります。",
-    fbTypeIdea:"💡 要望", fbTypeBug:"🐞 不具合", fbTypeOther:"💬 その他",
+    fbTypeIdea:"💡 要望", fbTypeBug:"🐞 不具合", fbTypeOther:"💬 その他", fbTypeTr:"🌐 翻訳の直し", fbMsgPhTr:"例：「○○」という表示は「△△」のほうが自然です（どの画面の文言か書いてもらえると助かります）", installBtn:"📲 アプリとして使う", installTip:"アドレスバーのない専用ウィンドウで開けます。第2モニターに置くのに便利です（Chrome / Edge）", installDone:"アプリとして入れました。デスクトップやスタートメニューから開けます。",
     fbMsgLabel:"内容", fbMsgPh:"例: 〇〇のタスクのピンが違う場所に出ます／〇〇の機能が欲しいです",
     fbInfoLabel:"一緒に送られる情報（確認できます）",
     fbCopy:"内容をコピー", fbSend:"送信", fbCopied:"コピーしました。", fbEmpty:"内容を入力してください。",
@@ -1096,7 +1116,7 @@ const STR = {
     helpBtn:"Help", helpTitle:"How to use", helpClose:"Close",
     fbLink:"💬 Send feedback / request", fbSub:"Ideas and bug reports welcome (anonymous OK)", fbBtn:"Feedback / bug report", fbTitle:"Feedback / bug report",
     fbIntro:"Tell us about a feature you want, a problem, or a bug. Only the <b>developer can see</b> what you send (it is not public). No login, name or email is needed. Please don't include personal info. Replies may not always be possible.",
-    fbTypeIdea:"💡 Feature request", fbTypeBug:"🐞 Bug", fbTypeOther:"💬 Other",
+    fbTypeIdea:"💡 Feature request", fbTypeBug:"🐞 Bug", fbTypeOther:"💬 Other", fbTypeTr:"🌐 Translation fix", fbMsgPhTr:"e.g. \"○○\" would sound more natural as \"△△\" (it helps to mention where it appears)", installBtn:"📲 Install as app", installTip:"Opens in its own window without the address bar — handy on a second monitor (Chrome / Edge)", installDone:"Installed. You can open it from your desktop or Start menu.",
     fbMsgLabel:"Message", fbMsgPh:"e.g. The pin for task X is in the wrong place / I'd like a feature that…",
     fbInfoLabel:"Info sent along (you can review it)",
     fbCopy:"Copy text", fbSend:"Send", fbCopied:"Copied.", fbEmpty:"Please enter a message.",
@@ -1267,13 +1287,16 @@ STR.ru = (typeof window !== "undefined" && window.__STR_RU__) || {};
 STR.pl = (typeof window !== "undefined" && window.__STR_PL__) || {};
 STR.pt = (typeof window !== "undefined" && window.__STR_PT__) || {};
 STR.de = (typeof window !== "undefined" && window.__STR_DE__) || {};
+STR.es = (typeof window !== "undefined" && window.__STR_ES__) || {};
+STR.tr = (typeof window !== "undefined" && window.__STR_TR__) || {};
 function T(key, ...args){
   const v = (STR[LANG] && STR[LANG][key] !== undefined) ? STR[LANG][key] : (STR.en[key] !== undefined ? STR.en[key] : STR.ja[key]);
   return typeof v === "function" ? v(...args) : v;
 }
 function applyStaticI18n(){
   document.documentElement.lang = LANG;
-  document.title = (STR[LANG] && STR[LANG].docTitle) || T("appTitle");   // タブ/検索結果用の長いタイトル（zh/ru は短い名前のまま）
+  // タブ/検索結果用の長いタイトル。言語別ページをその言語で見ているときは、ページに書いたタイトル（検索向け）のまま
+  if(window.__PAGE_LANG__ !== LANG) document.title = (STR[LANG] && STR[LANG].docTitle) || T("appTitle");
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.getAttribute("data-i18n")); });
   document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = T(el.getAttribute("data-i18n-html")); });
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { el.placeholder = T(el.getAttribute("data-i18n-placeholder")); });
@@ -1584,13 +1607,15 @@ const isCoopExit = e => isCoopExtract(e && (e.key || e.name));   // zh/ru は名
 // 別フロアバッジ用の短縮表記("Underground"等の長い名前だとマーカーと重なって見づらいため)
 const FLOOR_SHORT = { Underground:"B1", Bunkers:"B1", Tunnels:"B1", Garage:"B1", Technical:"B1" };
 const floorShort = jp => FLOOR_SHORT[jp] || jp;
-// 階の名前（zh/ru/pl/pt/de は現地語。ja/en は従来どおり）
+// 階の名前（zh/ru/pl/pt/de/es/tr は現地語。ja/en は従来どおり）
 const FLOOR_LOC = {
   zh:{ Underground:"地下", Bunkers:"地下", Tunnels:"地下通道", Garage:"车库", Technical:"技术层", Ground:"地面" },
   ru:{ Underground:"Подвал", Bunkers:"Бункеры", Tunnels:"Тоннели", Garage:"Гараж", Technical:"Технический", Ground:"Земля" },
   pl:{ Underground:"Podziemie", Bunkers:"Bunkry", Tunnels:"Tunele", Garage:"Garaż", Technical:"Poziom techniczny", Ground:"Parter" },
   pt:{ Underground:"Subsolo", Bunkers:"Bunkers", Tunnels:"Túneis", Garage:"Garagem", Technical:"Técnico", Ground:"Térreo" },
   de:{ Underground:"Untergeschoss", Bunkers:"Bunker", Tunnels:"Tunnel", Garage:"Garage", Technical:"Technikebene", Ground:"Erdgeschoss" },
+  es:{ Underground:"Subterráneo", Bunkers:"Búnkeres", Tunnels:"Túneles", Garage:"Garaje", Technical:"Planta técnica", Ground:"Planta baja" },
+  tr:{ Underground:"Yer altı", Bunkers:"Sığınaklar", Tunnels:"Tüneller", Garage:"Garaj", Technical:"Teknik kat", Ground:"Zemin kat" },
 };
 const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
 // 脱出口の実フロア: 座標のY値だけで判定すると、Shorelineのような屋外主体のマップで地形の起伏を
@@ -2417,7 +2442,9 @@ function renderSelBox(){
 
 function renderQuestList(){
   const box = document.getElementById("questlist");
-  const q = document.getElementById("search").value.trim().toLowerCase();
+  // 検索用の小文字化: トルコ語の ı / İ を i にそろえる（「Işık」を「ışık」で探しても当たるように）
+  const low = s => String(s || "").toLowerCase().replace(/ı/g, "i").replace(/̇/g, "");
+  const q = low(document.getElementById("search").value.trim());
   const fmap = effMapFilter();
   box.innerHTML = "";
   renderSelBox();
@@ -2425,7 +2452,7 @@ function renderQuestList(){
   const pass = t => {
     if(opts.kappaOnly && !t.kappa) return false;
     if(fmap && !t.allMaps.includes(fmap)) return false;
-    if(q && !t.name.toLowerCase().includes(q) && !(t.nameEn || "").toLowerCase().includes(q)) return false;
+    if(q && !low(t.name).includes(q) && !low(t.nameEn).includes(q)) return false;
     if((isDone(t.id) || isFailed(t.id) || lockedOut(t)) && !showDone && !selected.has(t.id)) return false;  // 完了・失敗は既定で隠す
     return true;
   };
@@ -3659,8 +3686,11 @@ const FEEDBACK_FORM = {
   open:   "https://forms.gle/2mLbU6EbMtXWq7FM9",
   entry:  { type:"entry.628211291", msg:"entry.66753766", env:"entry.1216307841" },
   // 選択式の選択肢はフォーム側の表記と完全一致が必要(表示言語に関係なく常にこの文字を送る)
-  types:  { idea:"要望 / Feature request", bug:"不具合 / Bug", other:"その他 / Other" },
+  // 「翻訳の直し」はフォームに選択肢が無いので「その他」として送り、本文の先頭に印(FB_TAG)を付ける
+  types:  { idea:"要望 / Feature request", bug:"不具合 / Bug", tr:"その他 / Other", other:"その他 / Other" },
 };
+const FB_TAG = { tr:"[🌐 翻訳 / Translation]\n" };
+const FB_LABEL = { idea:"fbTypeIdea", bug:"fbTypeBug", tr:"fbTypeTr", other:"fbTypeOther" };
 let fbType = "idea", fbBusy = false, fbLast = 0;
 function fbInfoText(){
   const di = document.getElementById("datainfo").textContent;
@@ -3668,10 +3698,13 @@ function fbInfoText(){
 }
 function fbRenderTypes(){
   const box = document.getElementById("fbtypes");
-  box.innerHTML = ["idea", "bug", "other"].map(k =>
-    `<label class="chk"><input type="radio" name="fbtype" value="${k}" ${k === fbType ? "checked" : ""} /> ${T(k === "idea" ? "fbTypeIdea" : k === "bug" ? "fbTypeBug" : "fbTypeOther")}</label>`).join("");
-  box.querySelectorAll("input").forEach(r => r.onchange = () => { fbType = r.value; });
+  box.innerHTML = ["idea", "bug", "tr", "other"].map(k =>
+    `<label class="chk"><input type="radio" name="fbtype" value="${k}" ${k === fbType ? "checked" : ""} /> ${T(FB_LABEL[k])}</label>`).join("");
+  box.querySelectorAll("input").forEach(r => r.onchange = () => { fbType = r.value; fbPlaceholder(); });
+  fbPlaceholder();
 }
+// 「翻訳の直し」を選んだときは、書き方の例を翻訳向けに変える
+function fbPlaceholder(){ document.getElementById("fbmsg").placeholder = T(fbType === "tr" ? "fbMsgPhTr" : "fbMsgPh"); }
 function fbOpen(){
   const dlg = document.getElementById("fbdlg");
   fbRenderTypes();
@@ -3693,7 +3726,7 @@ document.getElementById("fbsend").onclick = async () => {
   fbBusy = true; btn.disabled = true; out.className = "muted"; out.textContent = T("fbSending");
   const fd = new URLSearchParams();
   fd.set(FEEDBACK_FORM.entry.type, FEEDBACK_FORM.types[fbType]);
-  fd.set(FEEDBACK_FORM.entry.msg, msg);
+  fd.set(FEEDBACK_FORM.entry.msg, (FB_TAG[fbType] || "") + msg);
   fd.set(FEEDBACK_FORM.entry.env, fbInfoText());
   try{
     // Googleフォームは CORS ヘッダを返さないため no-cors で送る(結果は読めないが送信は行われる)
@@ -3709,10 +3742,31 @@ document.getElementById("fbcopy").onclick = async () => {
   const out = document.getElementById("fbmsgout");
   const msg = document.getElementById("fbmsg").value.trim();
   if(!msg){ out.className = "tt-err"; out.textContent = T("fbEmpty"); return; }
-  const text = `[${FEEDBACK_FORM.types[fbType]}]\n${msg}\n\n---\n${fbInfoText()}`;
+  const text = `[${FEEDBACK_FORM.types[fbType]}]\n${FB_TAG[fbType] || ""}${msg}\n\n---\n${fbInfoText()}`;
   try{ await navigator.clipboard.writeText(text); out.className = "tt-ok"; out.textContent = T("fbCopied"); }
   catch(e){ window.prompt("Copy:", text); }
 };
+
+// アプリとして使う（PWA）: アドレスバーのない専用ウィンドウで開ける。https（とローカル確認）のときだけ
+if("serviceWorker" in navigator && window.isSecureContext){
+  window.addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(() => {}); });
+}
+let pwaPrompt = null;
+const pwaBtns = () => document.querySelectorAll(".pwa-install");
+window.addEventListener("beforeinstallprompt", e => {   // 入れられる状態のとき（Chrome / Edge）だけボタンを出す
+  e.preventDefault(); pwaPrompt = e;
+  pwaBtns().forEach(b => b.classList.remove("hidden"));
+});
+pwaBtns().forEach(b => b.onclick = async () => {
+  if(!pwaPrompt) return;
+  track("use/pwa-install");
+  pwaPrompt.prompt();
+  try{ await pwaPrompt.userChoice; }catch(e){}
+  pwaPrompt = null;
+  pwaBtns().forEach(x => x.classList.add("hidden"));
+});
+window.addEventListener("appinstalled", () => { track("use/pwa-installed"); pwaBtns().forEach(x => x.classList.add("hidden")); toast(T("installDone")); });
+try{ if(window.matchMedia("(display-mode: standalone)").matches) track("load/standalone"); }catch(e){}
 
 // 狭い画面ではサイドバーがメニュー(ドロワー)になる
 const appEl = document.getElementById("app");

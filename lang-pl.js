@@ -123,7 +123,7 @@
   helpBtn:"Pomoc", helpTitle:"Jak używać", helpClose:"Zamknij",
   fbLink:"💬 Wyślij opinię / prośbę", fbSub:"Pomysły i zgłoszenia błędów mile widziane (anonimowo OK)", fbBtn:"Opinia / zgłoszenie błędu", fbTitle:"Opinia / zgłoszenie błędu",
   fbIntro:"Napisz, jakiej funkcji potrzebujesz albo co nie działa. To, co wyślesz, <b>widzi tylko autor</b> (nie jest publiczne). Nie trzeba logowania, imienia ani e-maila. Nie podawaj danych osobowych. Nie zawsze uda się odpowiedzieć.",
-  fbTypeIdea:"💡 Prośba o funkcję", fbTypeBug:"🐞 Błąd", fbTypeOther:"💬 Inne",
+  fbTypeIdea:"💡 Prośba o funkcję", fbTypeBug:"🐞 Błąd", fbTypeOther:"💬 Inne", fbTypeTr:"🌐 Poprawka tłumaczenia", fbMsgPhTr:"np. „○○” brzmiałoby naturalniej jako „△△” (napisz, gdzie to widać)", installBtn:"📲 Zainstaluj jako aplikację", installTip:"Otwiera się w osobnym oknie bez paska adresu — wygodne na drugim monitorze (Chrome / Edge)", installDone:"Zainstalowano. Otworzysz ją z pulpitu lub menu Start.",
   fbMsgLabel:"Wiadomość", fbMsgPh:"np. Pinezka zadania X jest w złym miejscu / chciałbym funkcję, która…",
   fbInfoLabel:"Informacje wysyłane razem z wiadomością (możesz je sprawdzić)",
   fbCopy:"Kopiuj tekst", fbSend:"Wyślij", fbCopied:"Skopiowano.", fbEmpty:"Wpisz wiadomość.",

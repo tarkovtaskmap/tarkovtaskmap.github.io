@@ -122,7 +122,7 @@
   helpBtn:"Hilfe", helpTitle:"Anleitung", helpClose:"Schließen",
   fbLink:"💬 Feedback / Wunsch senden", fbSub:"Ideen und Fehlermeldungen willkommen (anonym möglich)", fbBtn:"Feedback / Fehler melden", fbTitle:"Feedback / Fehler melden",
   fbIntro:"Schreib uns, welche Funktion du dir wünschst, was nicht klappt oder welchen Fehler du gefunden hast. Was du sendest, sieht <b>nur der Entwickler</b> (es ist nicht öffentlich). Kein Login, kein Name, keine E-Mail nötig. Bitte keine persönlichen Daten angeben. Eine Antwort ist nicht immer möglich.",
-  fbTypeIdea:"💡 Funktionswunsch", fbTypeBug:"🐞 Fehler", fbTypeOther:"💬 Sonstiges",
+  fbTypeIdea:"💡 Funktionswunsch", fbTypeBug:"🐞 Fehler", fbTypeOther:"💬 Sonstiges", fbTypeTr:"🌐 Übersetzung verbessern", fbMsgPhTr:"z. B. „○○“ klingt natürlicher als „△△“ (schreib gern dazu, wo es steht)", installBtn:"📲 Als App installieren", installTip:"Öffnet sich in einem eigenen Fenster ohne Adressleiste — praktisch auf dem zweiten Monitor (Chrome / Edge)", installDone:"Installiert. Du kannst sie über den Desktop oder das Startmenü öffnen.",
   fbMsgLabel:"Nachricht", fbMsgPh:"z. B. Der Pin von Aufgabe X ist an der falschen Stelle / Ich hätte gern eine Funktion, die…",
   fbInfoLabel:"Mitgesendete Infos (kannst du prüfen)",
   fbCopy:"Text kopieren", fbSend:"Senden", fbCopied:"Kopiert.", fbEmpty:"Bitte gib eine Nachricht ein.",

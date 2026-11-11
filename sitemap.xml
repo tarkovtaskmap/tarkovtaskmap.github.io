@@ -4,6 +4,13 @@
     <loc>https://tarkovtaskmap.github.io/</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
     <priority>1.0</priority>
   </url>
@@ -11,6 +18,111 @@
     <loc>https://tarkovtaskmap.github.io/en/</loc>
     <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/de/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/es/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/pt/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/pl/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ru/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tr/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/zh/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/en/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://tarkovtaskmap.github.io/de/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://tarkovtaskmap.github.io/es/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://tarkovtaskmap.github.io/pt/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
     <priority>0.9</priority>
   </url>
