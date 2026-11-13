@@ -204,6 +204,8 @@
 
 <details><summary>9. Links zum Teilen</summary><div>
 <p>„Link erstellen“ kopiert den aktuellen Stand (Modus, ausgewählte Aufgaben, Erledigtes, Level, eigene Pins, Karte, gewählte Extraktionen) als URL. Ein Freund, der ihn öffnet oder unter „Code laden“ einfügt, bekommt denselben Stand. Fehlgeschlagene Aufgaben und erledigte Ziele werden nicht geteilt.</p>
+<p><b>Auf 𝕏 teilen</b>: öffnet einen X-Post mit deinen ausgewählten Aufgaben (Kartenname und Anzahl). Den Text kannst du vor dem Posten ändern.</p>
+<p><b>📺 Stream-Overlay</b>: eine transparente Ansicht, die du in OBS usw. über deinen Stream legen kannst. Sie zeigt nur die Ziele deiner ausgewählten Aufgaben auf der aktuellen Karte. Folge den Schritten im Fenster und füge die URL in eine OBS-„Browser“-Quelle ein. Als eigenes Fenster im selben Browser geöffnet, aktualisiert sie sich bei jeder Änderung deiner Auswahl von selbst.</p>
 </div></details>
 
 <details><summary>10. Daten aktualisieren &amp; Probleme</summary><div><ul>
@@ -286,5 +288,16 @@
   objSellItem:"Auf dem Flohmarkt anbieten", objExperience:"Bedingung erfüllen", objSkill:"Fertigkeitsstufe erreichen",
   objTraderLevel:"Treuestufe beim Händler", objTraderStanding:"Ansehen beim Händler",
   objTaskStatus:"Status einer anderen Aufgabe", objDialogue:"Dialog", objGlobalVariable:"Fortschrittsmarke",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"Auf 𝕏 teilen", xShareTip:"Öffnet einen X-Post zu deinen ausgewählten Aufgaben (den Text kannst du vor dem Posten ändern)",
+  xShareText:(map, n, first)=>`Heute ${n} ${s(n,"Aufgabe","Aufgaben")} auf ${map} (${first}${n > 1 ? " und mehr" : ""}). Ziele und Extraktionen auf einer Karte`,
+  xShareGeneric:"Ich plane meine Tarkov-Aufgaben: Ziele und Extraktionen auf einer Karte", obsBtn:"📺 Stream-Overlay", obsTip:"Transparentes Overlay für OBS und andere Streaming-Software",
+  obsTitle:"Stream-Overlay (OBS usw.)",
+  obsHow:`<ol><li>Klicke in OBS unter „Quellen“ auf <b>+</b> und füge eine <b>Browser</b>-Quelle hinzu.</li><li>Füge die URL unten bei <b>URL</b> ein und stelle die Größe auf etwa <b>450</b> × <b>700</b>.</li><li>Der Hintergrund ist transparent. Es werden nur die Ziele deiner ausgewählten Aufgaben auf der aktuellen Karte angezeigt (mit denselben Buchstaben A, B, C wie die Kartenmarkierungen).</li></ol>`,
+  obsCopyBtn:"URL kopieren", obsCopied:"Kopiert",
+  obsNote:"Wenn du Aufgaben oder die Karte änderst, kopiere die URL erneut und ersetze sie in OBS (OBS hat einen eigenen Speicher, getrennt von diesem Browser, und aktualisiert sich daher nicht von selbst).",
+  obsWindowBtn:"In eigenem Fenster öffnen (aktualisiert sich automatisch)",
+  obsWindowNote:"Als eigenes Fenster in diesem Browser geöffnet, ändert es sich jedes Mal, wenn du im Tool Aufgaben oder die Karte wechselst. Leg es auf einen zweiten Monitor oder nimm es in OBS mit „Fensteraufnahme“ auf.",
+  obsCount:n=>`${n} ${s(n,"Aufgabe","Aufgaben")}`, obsEmpty:"Keine ausgewählten Aufgaben auf dieser Karte", obsHelpBar:"Stream-Overlay (in OBS wird dieser Hinweis nicht angezeigt; mit × schließen)",
   };
 })();

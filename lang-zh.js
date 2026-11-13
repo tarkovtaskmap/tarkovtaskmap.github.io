@@ -201,6 +201,8 @@ window.__STR_ZH__ = {
 
 <details><summary>9. 分享链接</summary><div>
 <p>「生成分享链接」会把当前状态（模式、已选任务、完成情况、等级、自定义标记、地图、撤离点选择）复制为一个 URL。朋友打开它，或粘贴到「读取代码」中，就能得到相同的状态。已失败的任务和已完成的目标不会被分享。</p>
+<p><b>分享到 𝕏</b>：用已选任务（地图名和数量）生成一条 X 帖子。发布前可以随意修改文字。</p>
+<p><b>📺 直播叠加层</b>：可以叠加到 OBS 等直播画面上的透明画面，只显示当前地图上已选任务的目标。按照弹出窗口中的步骤，把 URL 粘贴到 OBS 的“浏览器”来源即可。在同一浏览器中以单独窗口打开时，每次更改选择都会自动更新。</p>
 </div></details>
 
 <details><summary>10. 更新数据与故障排除</summary><div><ul>
@@ -284,4 +286,10 @@ window.__STR_ZH__ = {
   objSellItem:"在跳蚤市场上架", objExperience:"达成条件", objSkill:"达到技能等级",
   objTraderLevel:"商人忠诚等级", objTraderStanding:"商人声望",
   objTaskStatus:"其他任务状态", objDialogue:"对话", objGlobalVariable:"进度标记",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"分享到 𝕏", xShareTip:"用已选任务生成一条 X 帖子（发布前可以修改文字）", xShareText:(map, n, first)=>`今天在 ${map} 做 ${n} 个任务（${first}${n > 1 ? " 等" : ""}）。目标和撤离点都在一张地图上`, xShareGeneric:"在一张地图上查看塔科夫任务目标和撤离点",
+  obsBtn:"📺 直播叠加层", obsTip:"可叠加到 OBS 等直播软件上的透明画面", obsTitle:"直播叠加层（OBS 等）",
+  obsHow:`<ol><li>在 OBS 的“来源”中点击 <b>+</b>，添加 <b>浏览器</b> 来源。</li><li>把下面的 URL 粘贴到 <b>URL</b>，尺寸设为约 <b>450</b> × <b>700</b>。</li><li>背景透明，只显示当前地图上已选任务的目标（带有与地图标记相同的 A、B、C 字母）。</li></ol>`,
+  obsCopyBtn:"复制 URL", obsCopied:"已复制", obsNote:"更换任务或地图后，请重新复制 URL 并在 OBS 中替换（OBS 的数据与本浏览器分开保存，不会自动更新）。", obsWindowBtn:"在单独窗口中打开（自动更新）",
+  obsWindowNote:"在本浏览器中以单独窗口打开时，每次在工具中更换任务或地图都会自动更新。可以放在第二块显示器上，或用 OBS 的“窗口采集”捕获。", obsCount:n=>`${n} 个任务`, obsEmpty:"此地图上没有已选任务", obsHelpBar:"直播叠加层（在 OBS 中不会显示此提示；点 × 关闭）",
 };

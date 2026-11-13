@@ -205,6 +205,8 @@
 
 <details><summary>9. Linki do udostępniania</summary><div>
 <p>„Utwórz link” kopiuje obecny stan (tryb, wybrane zadania, ukończenia, poziom, własne pinezki, mapa, wybór wyjść) jako adres URL. Znajomy, który go otworzy albo wklei w „Wczytaj kod”, dostanie ten sam stan. Nieudane zadania i ukończone cele nie są udostępniane.</p>
+<p><b>Udostępnij na 𝕏</b>: otwiera post na X z wybranymi zadaniami (nazwa mapy i liczba). Tekst możesz zmienić przed publikacją.</p>
+<p><b>📺 Nakładka na stream</b>: przezroczysty widok, który możesz nałożyć na stream w OBS itp. Pokazuje tylko cele wybranych zadań na bieżącej mapie. Wykonaj kroki z jej okna i wklej URL do źródła „Przeglądarka” w OBS. Otwarta jako osobne okno w tej samej przeglądarce aktualizuje się sama przy każdej zmianie wyboru.</p>
 </div></details>
 
 <details><summary>10. Odświeżanie danych i problemy</summary><div><ul>
@@ -287,5 +289,16 @@
   objSellItem:"Wystaw na pchlim targu", objExperience:"Spełnij warunek", objSkill:"Osiągnij poziom umiejętności",
   objTraderLevel:"Poziom lojalności handlarza", objTraderStanding:"Reputacja u handlarza",
   objTaskStatus:"Status innego zadania", objDialogue:"Dialog", objGlobalVariable:"Flaga postępu",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"Udostępnij na 𝕏", xShareTip:"Otwiera post na X o wybranych zadaniach (tekst możesz zmienić przed publikacją)",
+  xShareText:(map, n, first)=>`Dziś ${n} ${pl(n,"zadanie","zadania","zadań")} na mapie ${map} (${first}${n > 1 ? " i inne" : ""}). Cele i wyjścia na jednej mapie`,
+  xShareGeneric:"Planuję zadania w Tarkov: cele i wyjścia na jednej mapie", obsBtn:"📺 Nakładka na stream", obsTip:"Przezroczysta nakładka dla OBS i innych programów do streamowania",
+  obsTitle:"Nakładka na stream (OBS itp.)",
+  obsHow:`<ol><li>W OBS kliknij <b>+</b> w sekcji „Źródła” i dodaj źródło <b>Przeglądarka</b>.</li><li>Wklej poniższy URL w polu <b>URL</b> i ustaw rozmiar na około <b>450</b> × <b>700</b>.</li><li>Tło jest przezroczyste. Widać tylko cele wybranych zadań na bieżącej mapie (z tymi samymi literami A, B, C co znaczniki na mapie).</li></ol>`,
+  obsCopyBtn:"Kopiuj URL", obsCopied:"Skopiowano",
+  obsNote:"Gdy zmienisz zadania lub mapę, skopiuj URL ponownie i podmień go w OBS (OBS ma własne dane, oddzielne od tej przeglądarki, więc nie zaktualizuje się sam).",
+  obsWindowBtn:"Otwórz w osobnym oknie (aktualizuje się samo)",
+  obsWindowNote:"Otwarte jako osobne okno w tej przeglądarce zmienia się za każdym razem, gdy zmienisz zadania lub mapę w narzędziu. Umieść je na drugim monitorze albo przechwyć w OBS przez „Przechwytywanie okna”.",
+  obsCount:n=>`${n} ${pl(n,"zadanie","zadania","zadań")}`, obsEmpty:"Brak wybranych zadań na tej mapie", obsHelpBar:"Nakładka na stream (w OBS ta informacja się nie pokazuje; × aby zamknąć)",
   };
 })();

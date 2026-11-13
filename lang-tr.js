@@ -203,6 +203,8 @@
 
 <details><summary>9. Paylaşım bağlantıları</summary><div>
 <p>«Bağlantı oluştur», mevcut durumu (mod, seçili görevler, tamamlananlar, seviye, kendi işaretlerin, harita, seçilen çıkışlar) URL olarak kopyalar. Bağlantıyı açan ya da «Kodu yükle» bölümüne yapıştıran arkadaşın aynı durumu görür. Başarısız görevler ve tamamlanan hedefler paylaşılmaz.</p>
+<p><b>𝕏'te paylaş</b>: seçtiğin görevlerle (harita adı ve sayısı) bir X gönderisi açar. Göndermeden önce metni değiştirebilirsin.</p>
+<p><b>📺 Yayın kaplaması</b>: OBS vb. ile yayınının üstüne koyabileceğin şeffaf bir görünüm. Yalnızca geçerli haritadaki seçili görevlerinin hedeflerini gösterir. Penceresindeki adımları izleyip URL'yi OBS'te bir “Tarayıcı” kaynağına yapıştır. Aynı tarayıcıda ayrı bir pencere olarak açarsan, seçimini her değiştirdiğinde kendini günceller.</p>
 </div></details>
 
 <details><summary>10. Verileri güncelleme ve sorunlar</summary><div><ul>
@@ -285,5 +287,16 @@
   objSellItem:"Bit Pazarı'nda sat", objExperience:"Bir koşulu yerine getir", objSkill:"Beceri seviyesine ulaş",
   objTraderLevel:"Tüccar sadakat seviyesi", objTraderStanding:"Tüccardaki itibar",
   objTaskStatus:"Başka bir görevin durumu", objDialogue:"Diyalog", objGlobalVariable:"İlerleme işareti",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"𝕏'te paylaş", xShareTip:"Seçtiğin görevlerle ilgili bir X gönderisi açar (göndermeden önce metni değiştirebilirsin)",
+  xShareText:(map, n, first)=>`Bugün ${map} haritasında ${n} görev (${first}${n > 1 ? " ve diğerleri" : ""}). Hedefler ve çıkışlar tek haritada`,
+  xShareGeneric:"Tarkov görevlerimi planlıyorum: hedefler ve çıkışlar tek haritada", obsBtn:"📺 Yayın kaplaması", obsTip:"OBS ve diğer yayın programları için şeffaf kaplama",
+  obsTitle:"Yayın kaplaması (OBS vb.)",
+  obsHow:`<ol><li>OBS'te “Kaynaklar” altındaki <b>+</b> düğmesine bas ve bir <b>Tarayıcı</b> kaynağı ekle.</li><li>Aşağıdaki URL'yi <b>URL</b> alanına yapıştır ve boyutu yaklaşık <b>450</b> × <b>700</b> yap.</li><li>Arka plan şeffaftır. Yalnızca geçerli haritadaki seçili görevlerinin hedefleri görünür (haritadaki işaretlerle aynı A, B, C harfleriyle).</li></ol>`,
+  obsCopyBtn:"URL'yi kopyala", obsCopied:"Kopyalandı",
+  obsNote:"Görevleri veya haritayı değiştirirsen URL'yi yeniden kopyalayıp OBS'te değiştir (OBS verilerini bu tarayıcıdan ayrı tutar, bu yüzden kendiliğinden güncellenmez).",
+  obsWindowBtn:"Ayrı pencerede aç (kendini günceller)",
+  obsWindowNote:"Bu tarayıcıda ayrı bir pencere olarak açarsan, araçta görevleri veya haritayı her değiştirdiğinde o da değişir. İkinci monitöre koyabilir ya da OBS'te “Pencere Yakalama” ile alabilirsin.",
+  obsCount:n=>`${n} görev`, obsEmpty:"Bu haritada seçili görev yok", obsHelpBar:"Yayın kaplaması (OBS içinde bu not görünmez; kapatmak için ×)",
   };
 })();

@@ -83,6 +83,8 @@
 <script src="lang-es.js" onerror="console.warn('lang-es.js なし')"></script>
 <script src="lang-tr.js" onerror="console.warn('lang-tr.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
+<!-- 配信用の表示(?obs=1)は配信ソフトが何度も読み直すので、ページの表示回数には数えない（使われた回数は load/obs/… で別に数える） -->
+<script>if(/[?&]obs=1(&|$)/.test(location.search)) window.goatcounter = Object.assign(window.goatcounter || {}, { no_onload:true });</script>
 <script data-goatcounter="https://tarkovtaskmap.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 <style>
@@ -390,9 +392,45 @@
   .leaflet-popup-content{font-size:12px;line-height:1.5}
   .leaflet-popup-content b{color:#111}
   .leaflet-container{background:#111}
+
+  /* 選んだタスクの見出しの右の「X で共有」 */
+  #selbox .trader{display:flex;align-items:center;gap:6px}
+  #selbox .trader .xs{margin-left:auto;padding:1px 8px;font-size:11px;font-weight:400}
+  /* 配信用の表示の説明（ダイアログ） */
+  #obsdlg{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:10px;padding:0;width:min(520px,92vw);max-height:88vh}
+  #obsdlg::backdrop{background:#000b}
+  #obsdlg .tt-in{padding:18px 20px;display:flex;flex-direction:column;gap:12px;font-size:13px;line-height:1.6;max-height:88vh;overflow-y:auto}
+  #obsdlg h3{margin:0;color:var(--accent2);font-size:15px}
+  #obsdlg ol{margin:0;padding-left:20px}
+  #obsdlg input{flex:1 1 220px;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:5px 8px;font-size:11px;font-family:monospace}
+  #obsdlg .tt-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+
+  /* 配信用の表示（?obs=1）: ツールの画面は全部隠して、選んだタスクの目標だけを出す。
+     OBS の中では背景を透明に（ゲーム画面に重なる）。普通のブラウザでは暗い背景 */
+  #obsview{display:none}
+  html.obs body > *:not(#obsview){display:none!important}
+  html.obs, html.obs body{background:#14161a!important;overflow:hidden;height:auto}
+  html.obs.in-obs, html.obs.in-obs body{background:transparent!important}
+  html.obs #obsview{display:block;padding:10px;color:#f2f2f2;font:14px/1.45 system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP","Yu Gothic UI","Microsoft YaHei",sans-serif}
+  #obsview .ob-help{display:flex;gap:8px;align-items:flex-start;background:#2b3a4a;border:1px solid #4a6a8a;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:12px;line-height:1.5}
+  #obsview .ob-help button{margin-left:auto;flex:0 0 auto;padding:0 8px;font-size:14px;line-height:1.4}
+  #obsview .ob-card{background:rgba(12,14,18,.78);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px 8px;text-shadow:0 1px 2px #000}
+  #obsview .ob-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:700;font-size:17px}
+  #obsview .ob-sub{font-weight:400;font-size:12px;color:#c8c8c8}
+  #obsview .ob-task{margin-top:8px}
+  #obsview .ob-tn{display:flex;align-items:center;gap:2px;font-weight:700;font-size:15px}
+  #obsview .ob-tr{font-weight:400;font-size:11px;color:#b8b8b8;margin-left:6px}
+  #obsview ul{margin:2px 0 0;padding-left:30px}
+  #obsview li{font-size:13px;margin:1px 0}
+  #obsview li .ob-c{font-size:11px;color:#bbb}
+  #obsview li.done{text-decoration:line-through;opacity:.5}
+  #obsview .ob-empty{margin-top:6px;font-size:13px;color:#c8c8c8}
+  #obsview .ob-ex{margin-top:8px;font-size:12px;color:#cfe3cf}
+  #obsview .ob-foot{margin-top:8px;font-size:10px;color:#a0a4aa;text-align:right}
 </style>
 </head>
 <body>
+<div id="obsview" aria-live="polite"></div>
 <div id="app">
   <div id="sbShade"></div>
   <div id="panels">
@@ -467,6 +505,10 @@
       <div class="row">
         <button id="sharemake" data-i18n="shareCreateBtn">共有リンク作成</button>
         <button id="shareload" data-i18n="shareLoadBtn">コード読込</button>
+      </div>
+      <div class="row">
+        <button id="xshare" data-i18n="xShareBtn" data-i18n-title="xShareTip" title="">𝕏 で共有</button>
+        <button id="obsopen" data-i18n="obsBtn" data-i18n-title="obsTip" title="">📺 配信用の表示</button>
       </div>
       <div class="row">
         <button id="ttimport" data-i18n="ttBtn">TarkovTracker取込</button>
@@ -563,6 +605,22 @@
         <button id="ttrun" class="primary hidden" data-i18n="ttRun"></button>
         <button id="ttclose" data-i18n="ttClose"></button>
       </div>
+    </div>
+  </dialog>
+
+  <!-- ===== 配信用の表示（OBS など）の説明 ===== -->
+  <dialog id="obsdlg">
+    <div class="tt-in">
+      <h3 data-i18n="obsTitle">配信用の表示（OBS など）</h3>
+      <div data-i18n-html="obsHow"></div>
+      <div class="row" style="flex-wrap:wrap">
+        <input type="text" id="obsurl" readonly />
+        <button id="obscopy" class="primary" data-i18n="obsCopyBtn">URL をコピー</button>
+      </div>
+      <div class="muted" data-i18n="obsNote"></div>
+      <div class="row"><button id="obswin" data-i18n="obsWindowBtn">別ウィンドウで開く（自動で更新）</button></div>
+      <div class="muted" data-i18n="obsWindowNote"></div>
+      <div class="tt-btns"><button id="obsclose" data-i18n="ttClose">閉じる</button></div>
     </div>
   </dialog>
 
@@ -681,7 +739,15 @@
 /* ---------- 多言語対応 (i18n) ---------- */
 // 初回の言語: 保存された選択があればそれ、なければブラウザの言語（日本語なら日本語、それ以外は英語）
 // ロシア語・ポーランド語・ポルトガル語・ドイツ語・スペイン語・トルコ語・中国語のブラウザは、/en/ ページから来てもその言語で開く
+/* 配信用の表示（?obs=1）: 地図などは出さず、選んだタスクの「いまのマップの目標」だけを出す画面。
+   ・URL に t=(タスクID) があれば、その内容を出す（OBS の「ブラウザ」ソース用。OBS は普通のブラウザと保存場所が別なので、URL で渡す）
+   ・t= が無ければ、このブラウザに保存された選択を出し、ツールで選び直すと自動で変わる（別ウィンドウ用）
+   ・OBS の中（window.obsstudio がある）では背景を透明にする */
+const OBS = /[?&]obs=1(&|$)/.test(location.search);
+const OBSQ = new URLSearchParams(OBS ? location.search : "");
+if(OBS){ document.documentElement.classList.add("obs"); if(window.obsstudio) document.documentElement.classList.add("in-obs"); }
 let LANG = (function(){
+  if(OBS && /^(ja|en|zh|ru|pl|pt|de|es|tr)$/.test(OBSQ.get("lang") || "")) return OBSQ.get("lang");
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
   if(["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr"].includes(s)) return s;
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
@@ -707,6 +773,7 @@ const DL = ["zh", "ru", "pl", "pt", "de", "es", "tr"].includes(LANG) ? LANG : nu
 const MODES = ["pvp", "pve", "seasonal"];
 let MODE = "pvp";
 try{ const m = localStorage.getItem("eft_qm_mode"); if(MODES.includes(m)) MODE = m; }catch(e){}
+if(OBS && MODES.includes(OBSQ.get("g"))) MODE = OBSQ.get("g");   // 配信用の表示の URL に書いたモード
 const MK = base => MODE === "pvp" ? base : base + "_" + MODE;
 const DATA_SRC = MODE === "pve" ? "pve" : "regular";
 const STR = {
@@ -912,6 +979,8 @@ const STR = {
 
 <details><summary>9. 共有リンク</summary><div>
 <p>「共有リンク作成」で、いまの状態（モード・選んだタスク・完了・レベル・カスタムピン・マップ・脱出地点）をURLにしてコピーできます。フレンドがそのURLを開く、または「コード読込」に貼り付けると同じ状態になります。失敗タスクと達成済みの目標は共有されません。</p>
+<p><b>𝕏 で共有</b>: 選んでいるタスク（マップ名と件数）を短い文にして、X の投稿画面を開きます。投稿する前に文は自由に直せます。</p>
+<p><b>📺 配信用の表示</b>: 配信ソフト（OBS など）に重ねられる、背景が透明な画面です。いまのマップで選んでいるタスクの目標だけが出ます。ボタンを押すと出る説明のとおり、URL を OBS の「ブラウザ」ソースに貼ってください。同じブラウザの別ウィンドウで開くと、ツールで選び直すたびに自動で変わります。</p>
 </div></details>
 
 <details><summary>10. データ更新・困ったとき</summary><div><ul>
@@ -995,6 +1064,13 @@ const STR = {
     objSellItem:"フリマ出品", objExperience:"特定状況の達成", objSkill:"スキル到達",
     objTraderLevel:"トレーダーLL", objTraderStanding:"トレーダー信頼度",
     objTaskStatus:"他タスクの状態", objDialogue:"会話", objGlobalVariable:"進行フラグ",
+    // 𝕏 で共有・配信用の表示(?obs=1)
+    xShareBtn:"𝕏 で共有", xShareTip:"選んでいるタスクを短い文にして、X の投稿画面を開きます（投稿する前に文は直せます）", xShareText:(map, n, first)=>`今日は ${map} で ${n} 件のタスク（${first}${n > 1 ? " ほか" : ""}）。目標と脱出地点を 1 枚の地図で確認中`,
+    xShareGeneric:"タルコフのタスクの目標と脱出地点を、1 枚の地図で確認しています", obsBtn:"📺 配信用の表示", obsTip:"OBS などの配信画面に重ねられる、背景が透明な表示です", obsTitle:"配信用の表示（OBS など）",
+    obsHow:`<ol><li>OBS の「ソース」の <b>＋</b> から <b>ブラウザ</b> を追加します。</li><li><b>URL</b> に下の URL を貼り、幅を <b>450</b>、高さを <b>700</b> くらいにします。</li><li>背景は透明になり、いまのマップで選んでいるタスクの目標だけが出ます（地図のピンと同じ A・B・C の印付き）。</li></ol>`,
+    obsCopyBtn:"URL をコピー", obsCopied:"コピーしました", obsNote:"タスクやマップを変えたら、もう一度コピーして OBS の URL を貼り替えてください（OBS は、このブラウザとは保存場所が別なので、自動では変わりません）。", obsWindowBtn:"別ウィンドウで開く（自動で更新）",
+    obsWindowNote:"このブラウザの別ウィンドウで開くと、ツールでタスクやマップを変えるたびに自動で変わります。2 台目のモニターに置いたり、OBS の「ウィンドウキャプチャ」で取り込んだりできます。", obsCount:n=>`${n} タスク`, obsEmpty:"このマップで選んでいるタスクはありません",
+    obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
   },
   en: {
     appTitle:"Tarkov Task Map",
@@ -1198,6 +1274,8 @@ const STR = {
 
 <details><summary>9. Share links</summary><div>
 <p>"Create share link" copies the current state (mode, selected tasks, completions, level, custom pins, map, extract picks) as a URL. A friend who opens it, or pastes it into "Load code", gets the same state. Failed tasks and completed objectives are not shared.</p>
+<p><b>Share on 𝕏</b>: opens an X post with your selected tasks (map name and count). You can edit the text before posting.</p>
+<p><b>📺 Stream overlay</b>: a transparent view you can put on top of your stream in OBS etc. It shows only the objectives of your selected tasks on the current map. Follow the steps in its window and paste the URL into an OBS “Browser” source. Opened as a separate window in the same browser, it updates by itself whenever you change your selection.</p>
 </div></details>
 
 <details><summary>10. Refreshing data &amp; troubleshooting</summary><div><ul>
@@ -1280,6 +1358,17 @@ const STR = {
     objSellItem:"List on flea market", objExperience:"Achieve condition", objSkill:"Reach skill level",
     objTraderLevel:"Trader loyalty level", objTraderStanding:"Trader standing",
     objTaskStatus:"Other task status", objDialogue:"Dialogue", objGlobalVariable:"Progress flag",
+    // 𝕏 で共有・配信用の表示(?obs=1)
+    xShareBtn:"Share on 𝕏", xShareTip:"Opens an X post about your selected tasks (you can edit the text before posting)",
+    xShareText:(map, n, first)=>`Running ${n} task${n === 1 ? "" : "s"} on ${map} today (${first}${n > 1 ? " and more" : ""}). Objectives and extracts on one map`,
+    xShareGeneric:"Checking my Tarkov task objectives and extracts on one map", obsBtn:"📺 Stream overlay", obsTip:"A transparent overlay for OBS and other streaming software",
+    obsTitle:"Stream overlay (OBS etc.)",
+    obsHow:`<ol><li>In OBS, click <b>+</b> under “Sources” and add a <b>Browser</b> source.</li><li>Paste the URL below into <b>URL</b> and set the size to about <b>450</b> × <b>700</b>.</li><li>The background is transparent. It shows only the objectives of your selected tasks on the current map (with the same A, B, C labels as the map pins).</li></ol>`,
+    obsCopyBtn:"Copy URL", obsCopied:"Copied",
+    obsNote:"If you change tasks or maps, copy the URL again and replace it in OBS (OBS keeps its own storage, separate from this browser, so it won't update by itself).",
+    obsWindowBtn:"Open in a separate window (auto-updates)",
+    obsWindowNote:"Opened as a separate window in this browser, it updates whenever you change tasks or maps in the tool. Put it on a second monitor, or capture it with OBS “Window Capture”.",
+    obsCount:n=>`${n} task${n === 1 ? "" : "s"}`, obsEmpty:"No selected tasks on this map", obsHelpBar:"Stream overlay (this note is hidden inside OBS; × to close)",
   },
 };
 STR.zh = (typeof window !== "undefined" && window.__STR_ZH__) || {};
@@ -1323,8 +1412,11 @@ function trackOnce(name){ if(_trackOnceSeen.has(name)) return; _trackOnceSeen.ad
 (function(){   // 集計スクリプトの読み込み完了を待って、たまった分を送る（広告ブロック等で読めないときは諦める）
   let n = 0; const iv = setInterval(() => { if(trackFlush() || ++n > 40) clearInterval(iv); }, 500);
 })();
-track("load/mode/" + MODE); track("load/lang/" + LANG);
+// 配信用の表示は「使われた回数」だけを別に数える（OBS が読み直すたびに訪問・使用時間が増えないよう、下の2つは数えない）
+if(OBS) track("load/obs/" + (window.obsstudio ? "in-obs" : "browser") + (OBSQ.has("t") ? "-url" : "-live"));
+else { track("load/mode/" + MODE); track("load/lang/" + LANG); }
 (function(){   // 使用時間: タブが見えている時間を数え、5・15・30・60分に達したとき1回ずつだけ送る
+  if(OBS) return;
   let sec = 0; const marks = { 300:"time/5min", 900:"time/15min", 1800:"time/30min", 3600:"time/60min" };
   setInterval(() => { if(document.hidden) return; sec += 10; if(marks[sec]) track(marks[sec]); }, 10000);
 })();
@@ -1332,6 +1424,7 @@ track("load/mode/" + MODE); track("load/lang/" + LANG);
    30分以内の開き直し（言語やモードの切り替え・再読み込み）は同じ訪問として数えない。
    使い始めた日(eft_qm_first_v1)は 2026-09-20 からバックアップのお知らせ用に保存している */
 (function(){ try{
+  if(OBS) return;   // 配信用の表示は数えない
   const SEEN = "eft_qm_seen_v1", FIRST = "eft_qm_first_v1", DAY = 864e5, now = Date.now();
   const last = +localStorage.getItem(SEEN) || 0, first = +localStorage.getItem(FIRST) || 0;
   const touch = () => { try{ localStorage.setItem(SEEN, String(Date.now())); }catch(e){} };
@@ -2453,7 +2546,8 @@ function renderSelBox(){
   }
   const h = document.createElement("div");
   h.className = "trader";
-  h.innerHTML = `${T("selectedHeader")} <span class="count">(${rows.length})</span>`;
+  h.innerHTML = `${T("selectedHeader")} <span class="count">(${rows.length})</span><button type="button" class="xs" title="${escH(T("xShareTip"))}">${escH(T("xShareBtn"))}</button>`;
+  h.querySelector(".xs").onclick = e => { e.preventDefault(); e.stopPropagation(); xShare("list"); };
   box.appendChild(h);
   rows.forEach(({ t, i }) => box.appendChild(questRow(t, { label:selLabel(i), color:colorForSelIndex(i) })));
   const ms = mapSummaryEl(); if(ms) box.appendChild(ms);
@@ -2869,6 +2963,112 @@ function sharePrompt(){
     loadMap();
     alert(T("shareLoadedAlert"));
   }catch(e){ alert(T("shareLoadFailedAlert", e.message)); }
+}
+
+/* ---------- X で共有 ----------
+   選んでいるタスク（今のマップ。無ければ選んだタスクが一番多いマップ）を短い文にして、X の投稿画面を開く。
+   リンクは言語別の入口ページ（共有リンク #s= は長いうえ進捗も入るので付けない）。文は投稿する前に本人が直せる */
+const SITE_URL = "https://tarkovtaskmap.github.io/";
+function xShareUrl(){
+  const ts = [...selected].map(id => TASKS.find(x => x.id === id)).filter(t => t && !isDone(t.id));
+  const on = mn => ts.filter(t => (t.allMaps || []).includes(mn));
+  let mn = on(curMap).length ? curMap : null;
+  if(!mn){
+    const cnt = {};
+    for(const t of ts) for(const m of (t.allMaps || [])) if(MAPBY[m]) cnt[m] = (cnt[m] || 0) + 1;
+    mn = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0] || null;
+  }
+  let text = T("xShareGeneric");
+  if(mn && MAPBY[mn]){
+    const list = on(mn), nm = list[0].name;
+    text = T("xShareText", mapDisp(MAPBY[mn]), list.length, nm.length > 40 ? nm.slice(0, 39) + "…" : nm);
+  }
+  const p = new URLSearchParams({ text, url:SITE_URL + (LANG === "ja" ? "" : LANG + "/"),
+    hashtags:LANG === "ja" ? "タルコフ,EFT" : "EscapefromTarkov,Tarkov", via:"TarkovTaskMap" });
+  return "https://x.com/intent/post?" + p.toString();
+}
+function xShare(where){
+  track("use/x-share/" + where);
+  window.open(xShareUrl(), "_blank", "noopener");
+}
+
+/* ---------- 配信用の表示（?obs=1）の中身 ---------- */
+// レイドの外でやる目標（渡す・売る・組み立てる・レベルなど）は出さない
+const OBS_SKIP = new Set(["giveItem", "giveQuestItem", "sellItem", "buildWeapon", "traderLevel", "traderStanding", "skill", "experience", "taskStatus", "globalVariable", "dialogue", "playerLevel"]);
+function obsState(){
+  const list = k => (OBSQ.get(k) || "").split(",").filter(Boolean);
+  if(OBSQ.has("t")) return { sel:list("t"), tdone:new Set(list("td")), od:new Set(list("od")), map:OBSQ.get("m") || "customs", ex:(OBSQ.get("x") || "").split("|").filter(Boolean) };
+  // 別ウィンドウ: このブラウザに保存されている内容（ツールで変えると storage イベントで描き直す）
+  let mn = "customs"; try{ mn = localStorage.getItem(MAP_KEY) || mn; }catch(e){}
+  const ex = loadExits(), pk = ex.picks[mn + "|" + ex.fac];
+  return { sel:loadSel(), tdone:new Set(loadDone()), od:loadIdSet(OBJDONE_KEY), map:mn, ex:pk ? Object.keys(pk).filter(k => pk[k] && !k.startsWith("⇄")) : [] };
+}
+// そのマップでやる目標（マップの決まっていない目標は、タスク自体のマップが合うか、どこでもよいタスクなら出す）
+function obsTaskObjs(raw, mn){
+  const tm = raw.map ? canonMap(raw.map.normalizedName) : null;
+  return (raw.objectives || []).filter(o => {
+    if(OBS_SKIP.has(o.type)) return false;
+    const ms = (o.maps || []).map(m => canonMap(m.normalizedName));
+    return ms.length ? ms.includes(mn) : (!tm || tm === mn);
+  });
+}
+function renderObs(){
+  const box = document.getElementById("obsview");
+  const st = obsState(), mn = canonMap(st.map), md = MAPBY[mn];
+  const paren = s => (LANG === "ja" || LANG === "zh") ? `（${s}）` : ` (${s})`;
+  const blocks = [];
+  st.sel.forEach((id, i) => {   // i = ツールの地図のピンと同じ A, B, C… の並び
+    if(st.tdone.has(id)) return;
+    const raw = DATA && (DATA.tasks || []).find(x => x.id === id), t = TASKS.find(x => x.id === id);
+    if(!raw || !t) return;
+    const objs = obsTaskObjs(raw, mn);
+    if(!objs.length) return;
+    const lis = objs.map(o => {
+      const c = (o.conditions && o.conditions.length) ? ` <span class="ob-c">${escH(paren(T("conditionsLabel") + o.conditions.join(" / ")))}</span>` : "";
+      return `<li${st.od.has(o.id) ? ' class="done"' : ""}>${escH(objDescN(o))}${o.optional ? escH(T("optionalTag")) : ""}${c}</li>`;
+    }).join("");
+    blocks.push(`<div class="ob-task"><div class="ob-tn"><span class="selchip" style="background:${colorForSelIndex(i)}">${selLabel(i)}</span>${escH(t.name)}<span class="ob-tr">${escH(t.trader)}</span></div><ul>${lis}</ul></div>`);
+  });
+  let help = "";
+  let hid = false; try{ hid = localStorage.getItem("eft_qm_obs_help_v1") === "1"; }catch(e){}
+  if(!window.obsstudio && !hid) help = `<div class="ob-help"><span>${escH(T("obsHelpBar"))}</span><button type="button" id="obhelpx" aria-label="×">×</button></div>`;
+  const modeTag = MODE === "pvp" ? "" : " · " + T(MODE === "pve" ? "modePve" : "modeSeasonal");
+  box.innerHTML = help + `<div class="ob-card"><div class="ob-head">${escH(md ? mapDisp(md) : mn)}<span class="ob-sub">${escH(T("obsCount", blocks.length) + modeTag)}</span></div>` +
+    (blocks.length ? blocks.join("") : `<div class="ob-empty">${escH(T("obsEmpty"))}</div>`) +
+    (st.ex.length ? `<div class="ob-ex">🚪 ${escH(T("exitSection"))}: ${st.ex.map(escH).join(" / ")}</div>` : "") +
+    `<div class="ob-foot">Tarkov Task Map · tarkovtaskmap.github.io</div></div>`;
+  const hx = document.getElementById("obhelpx");
+  if(hx) hx.onclick = () => { try{ localStorage.setItem("eft_qm_obs_help_v1", "1"); }catch(e){} renderObs(); };
+}
+function obsStart(){
+  document.title = "Tarkov Task Map — " + T("obsTitle");
+  renderObs();
+  if(OBSQ.has("t")) return;
+  // 別ウィンドウ: ツールのほうで選び直す・マップを変える・完了にすると、ここも描き直す（言語・モードを変えたら読み直す）
+  addEventListener("storage", e => {
+    if(e.key === "eft_qm_mode" || e.key === "eft_qm_lang"){ location.reload(); return; }
+    if(e.key === null || [SEL_KEY, DONE_KEY, OBJDONE_KEY, MAP_KEY, EXIT_KEY].includes(e.key)) renderObs();
+  });
+}
+/* ツール側: 配信用の表示の URL（いまの選択・マップ・モード・言語・達成済みの目標・使う脱出地点を入れる） */
+function obsUrl(live){
+  const base = location.origin + location.pathname;
+  if(live) return base + "?obs=1";
+  const sel = [...selected];
+  const p = new URLSearchParams({ obs:"1", lang:LANG, g:MODE, m:curMap, t:sel.join(",") });
+  const td = sel.filter(id => isDone(id)); if(td.length) p.set("td", td.join(","));
+  const od = [];
+  for(const id of sel){ const raw = DATA && (DATA.tasks || []).find(x => x.id === id); if(raw) for(const o of (raw.objectives || [])) if(doneObjs.has(o.id)) od.push(o.id); }
+  if(od.length) p.set("od", od.join(","));
+  const pk = exits.picks[curMap + "|" + exits.fac];
+  if(pk){ const nm = Object.keys(pk).filter(k => pk[k] && !k.startsWith("⇄")); if(nm.length) p.set("x", nm.join("|")); }
+  return base + "?" + p.toString();
+}
+function obsOpen(){
+  track("use/obs-open");
+  document.getElementById("obsurl").value = obsUrl(false);
+  const dlg = document.getElementById("obsdlg");
+  if(typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
 }
 
 /* ---------- TarkovTracker バックアップ取込（ブラウザ内だけで処理。API不使用） ----------
@@ -3602,6 +3802,7 @@ async function init(){
       }
     }
   }
+  if(OBS){ showOverlay(false); obsStart(); return; }   // 配信用の表示: 地図は作らない
   // 共有リンクで開かれた場合は状態を復元
   const hm = (location.hash || "").match(/[#&]s=([^\s&]+)/);
   if(hm){
@@ -3875,6 +4076,21 @@ document.getElementById("exNone").onclick = () => { exits.picks[exKey()] = Objec
 })();
 document.getElementById("sharemake").onclick = shareCreate;
 document.getElementById("shareload").onclick = sharePrompt;
+document.getElementById("xshare").onclick = () => xShare("menu");
+// 配信用の表示のダイアログ
+document.getElementById("obsopen").onclick = obsOpen;
+document.getElementById("obsclose").onclick = () => document.getElementById("obsdlg").close();
+document.getElementById("obsdlg").addEventListener("click", e => { if(e.target.id === "obsdlg") e.target.close(); });   // 外側クリックで閉じる
+document.getElementById("obscopy").onclick = async () => {
+  track("use/obs-copy");
+  const inp = document.getElementById("obsurl"), btn = document.getElementById("obscopy");
+  inp.value = obsUrl(false);
+  let ok = false;
+  try{ await navigator.clipboard.writeText(inp.value); ok = true; }catch(e){}
+  if(!ok){ inp.focus(); inp.select(); try{ ok = document.execCommand("copy"); }catch(e){} }   // コピーできない環境では選択状態にしておく
+  if(ok){ btn.textContent = T("obsCopied"); setTimeout(() => { btn.textContent = T("obsCopyBtn"); }, 1800); }
+};
+document.getElementById("obswin").onclick = () => { track("use/obs-window"); window.open(obsUrl(true), "ttm_obs", "popup,width=460,height=720"); };
 // TarkovTracker 取込
 document.getElementById("ttimport").onclick = ttOpen;
 

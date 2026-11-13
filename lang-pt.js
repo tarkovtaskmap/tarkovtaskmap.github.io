@@ -204,6 +204,8 @@
 
 <details><summary>9. Links de compartilhamento</summary><div>
 <p>“Criar link” copia o estado atual (modo, tarefas selecionadas, conclusões, nível, pinos próprios, mapa, escolha de extrações) como URL. Um amigo que abrir o link, ou colar em “Carregar código”, fica com o mesmo estado. Tarefas falhadas e objetivos concluídos não são compartilhados.</p>
+<p><b>Compartilhar no 𝕏</b>: abre um post no X com as tarefas selecionadas (nome do mapa e quantidade). Dá para editar o texto antes de postar.</p>
+<p><b>📺 Overlay para live</b>: uma visualização transparente para colocar por cima da sua live no OBS etc. Mostra só os objetivos das tarefas selecionadas no mapa atual. Siga os passos da janela e cole a URL em uma fonte “Navegador” do OBS. Aberto como outra janela no mesmo navegador, atualiza sozinho sempre que você muda a seleção.</p>
 </div></details>
 
 <details><summary>10. Atualizar dados e problemas</summary><div><ul>
@@ -286,5 +288,16 @@
   objSellItem:"Anunciar no mercado de pulgas", objExperience:"Cumprir condição", objSkill:"Atingir nível de habilidade",
   objTraderLevel:"Nível de lealdade do comerciante", objTraderStanding:"Reputação com o comerciante",
   objTaskStatus:"Status de outra tarefa", objDialogue:"Diálogo", objGlobalVariable:"Marcador de progresso",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"Compartilhar no 𝕏", xShareTip:"Abre um post no X sobre as tarefas selecionadas (dá para editar o texto antes de postar)",
+  xShareText:(map, n, first)=>`Hoje ${n} ${s(n,"tarefa","tarefas")} em ${map} (${first}${n > 1 ? " e mais" : ""}). Objetivos e extrações em um só mapa`,
+  xShareGeneric:"Planejando minhas tarefas de Tarkov: objetivos e extrações em um só mapa", obsBtn:"📺 Overlay para live", obsTip:"Overlay transparente para o OBS e outros programas de transmissão",
+  obsTitle:"Overlay para live (OBS etc.)",
+  obsHow:`<ol><li>No OBS, clique em <b>+</b> em “Fontes” e adicione uma fonte de <b>Navegador</b>.</li><li>Cole a URL abaixo em <b>URL</b> e defina o tamanho em cerca de <b>450</b> × <b>700</b>.</li><li>O fundo fica transparente. Mostra só os objetivos das tarefas selecionadas no mapa atual (com as mesmas letras A, B, C dos marcadores do mapa).</li></ol>`,
+  obsCopyBtn:"Copiar URL", obsCopied:"Copiado",
+  obsNote:"Se mudar as tarefas ou o mapa, copie a URL de novo e substitua no OBS (o OBS guarda os dados separado deste navegador, então não atualiza sozinho).",
+  obsWindowBtn:"Abrir em outra janela (atualiza sozinho)",
+  obsWindowNote:"Aberto como outra janela neste navegador, muda sempre que você troca tarefas ou mapa na ferramenta. Coloque em um segundo monitor ou capture no OBS com “Captura de janela”.",
+  obsCount:n=>`${n} ${s(n,"tarefa","tarefas")}`, obsEmpty:"Nenhuma tarefa selecionada neste mapa", obsHelpBar:"Overlay para live (este aviso não aparece dentro do OBS; × para fechar)",
   };
 })();

@@ -204,6 +204,8 @@
 
 <details><summary>9. Enlaces para compartir</summary><div>
 <p>«Crear enlace» copia el estado actual (modo, misiones seleccionadas, completadas, nivel, pines propios, mapa, extracciones elegidas) como URL. Un amigo que lo abra o lo pegue en «Cargar código» recibe el mismo estado. Las misiones fallidas y los objetivos completados no se comparten.</p>
+<p><b>Compartir en 𝕏</b>: abre una publicación de X con tus misiones seleccionadas (nombre del mapa y cantidad). Puedes editar el texto antes de publicar.</p>
+<p><b>📺 Overlay para stream</b>: una vista transparente que puedes poner encima de tu stream en OBS, etc. Solo muestra los objetivos de tus misiones seleccionadas en el mapa actual. Sigue los pasos de su ventana y pega la URL en una fuente «Navegador» de OBS. Abierta como otra ventana en el mismo navegador, se actualiza sola cada vez que cambias tu selección.</p>
 </div></details>
 
 <details><summary>10. Actualizar datos y problemas</summary><div><ul>
@@ -286,5 +288,16 @@
   objSellItem:"Publicar en el Mercadillo", objExperience:"Cumplir una condición", objSkill:"Alcanzar nivel de habilidad",
   objTraderLevel:"Nivel de lealtad del comerciante", objTraderStanding:"Reputación con el comerciante",
   objTaskStatus:"Estado de otra misión", objDialogue:"Diálogo", objGlobalVariable:"Marca de progreso",
+  // 𝕏 で共有・配信用の表示(?obs=1)
+  xShareBtn:"Compartir en 𝕏", xShareTip:"Abre una publicación de X sobre tus misiones seleccionadas (puedes editar el texto antes de publicar)",
+  xShareText:(map, n, first)=>`Hoy ${n} ${s(n,"misión","misiones")} en ${map} (${first}${n > 1 ? " y más" : ""}). Objetivos y extracciones en un solo mapa`,
+  xShareGeneric:"Planeando mis misiones de Tarkov: objetivos y extracciones en un solo mapa", obsBtn:"📺 Overlay para stream", obsTip:"Overlay transparente para OBS y otros programas de streaming",
+  obsTitle:"Overlay para stream (OBS, etc.)",
+  obsHow:`<ol><li>En OBS, pulsa <b>+</b> en «Fuentes» y añade una fuente de <b>Navegador</b>.</li><li>Pega la URL de abajo en <b>URL</b> y pon un tamaño de unos <b>450</b> × <b>700</b>.</li><li>El fondo es transparente. Solo muestra los objetivos de tus misiones seleccionadas en el mapa actual (con las mismas letras A, B, C que los marcadores del mapa).</li></ol>`,
+  obsCopyBtn:"Copiar URL", obsCopied:"Copiada",
+  obsNote:"Si cambias de misiones o de mapa, vuelve a copiar la URL y reemplázala en OBS (OBS guarda sus datos aparte de este navegador, así que no se actualiza solo).",
+  obsWindowBtn:"Abrir en otra ventana (se actualiza sola)",
+  obsWindowNote:"Abierta como otra ventana en este navegador, cambia cada vez que cambias de misiones o de mapa en la herramienta. Ponla en un segundo monitor o captúrala en OBS con «Captura de ventana».",
+  obsCount:n=>`${n} ${s(n,"misión","misiones")}`, obsEmpty:"No hay misiones seleccionadas en este mapa", obsHelpBar:"Overlay para stream (este aviso no aparece dentro de OBS; × para cerrar)",
   };
 })();
