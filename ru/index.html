@@ -60,7 +60,7 @@
 <!-- Leaflet (地図ライブラリ) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- 旧URL(akinoririririri.github.io/tarkov-quest-map)からの引っ越し: 旧ページが保存データを #mig= で渡してくる。
+<!-- 旧URL(以前の GitHub Pages)からの引っ越し: 旧ページが保存データを #mig= で渡してくる。
      新しいURLに同じキーが無いものだけ書き込む(本体スクリプトより前に実行する必要がある) -->
 <script>
 (function(){ try{
@@ -1330,6 +1330,25 @@ track("load/mode/" + MODE); track("load/lang/" + LANG);
   let sec = 0; const marks = { 300:"time/5min", 900:"time/15min", 1800:"time/30min", 3600:"time/60min" };
   setInterval(() => { if(document.hidden) return; sec += 10; if(marks[sec]) track(marks[sec]); }, 10000);
 })();
+/* また来てくれたか: 前に開いてから何日ぶりか・使い始めて何日目かを、大まかな区分だけで数える（日時・個人は送らない）。
+   30分以内の開き直し（言語やモードの切り替え・再読み込み）は同じ訪問として数えない。
+   使い始めた日(eft_qm_first_v1)は 2026-09-20 からバックアップのお知らせ用に保存している */
+(function(){ try{
+  const SEEN = "eft_qm_seen_v1", FIRST = "eft_qm_first_v1", DAY = 864e5, now = Date.now();
+  const last = +localStorage.getItem(SEEN) || 0, first = +localStorage.getItem(FIRST) || 0;
+  const touch = () => { try{ localStorage.setItem(SEEN, String(Date.now())); }catch(e){} };
+  if(!last || now - last >= 30 * 60000){
+    if(!last && !first) track("load/visit/new");
+    else {
+      const g = last ? (now - last) / DAY : -1;
+      track("load/visit/back-" + (g < 0 ? "unknown" : g < 1 ? "1d" : g < 7 ? "7d" : g < 30 ? "30d" : "30d+"));
+      if(first){ const t = (now - first) / DAY; track("load/since/" + (t < 7 ? "0-6d" : t < 30 ? "7-29d" : t < 90 ? "30-89d" : "90d+")); }
+    }
+  }
+  touch();
+  setInterval(() => { if(!document.hidden) touch(); }, 5 * 60000);   // 開いている間も更新（長く使う人の再読み込みを「また来た」にしない）
+  addEventListener("pagehide", touch);
+}catch(e){} })();
 document.getElementById("langSel").onchange = (e) => {
   try{ localStorage.setItem("eft_qm_lang", e.target.value); }catch(err){}
   location.reload();
