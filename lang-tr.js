@@ -298,5 +298,14 @@
   obsWindowBtn:"Ayrı pencerede aç (kendini günceller)",
   obsWindowNote:"Bu tarayıcıda ayrı bir pencere olarak açarsan, araçta görevleri veya haritayı her değiştirdiğinde o da değişir. İkinci monitöre koyabilir ya da OBS'te “Pencere Yakalama” ile alabilirsin.",
   obsCount:n=>`${n} görev`, obsEmpty:"Bu haritada seçili görev yok", obsHelpBar:"Yayın kaplaması (OBS içinde bu not görünmez; kapatmak için ×)",
+  // 新しくなったこと・お礼
+  newsTip:"Yenilikler", newsThanksTitle:"Teşekkürler", newsThanksBody:"Görüş, hata bildirimi ve çeviri düzeltmesi gönderen herkese teşekkürler. Araç bu mesajlarla gelişiyor.",
+  newsTrNote:"Japonca ve İngilizce dışındaki diller makine çevirisine dayanır. Tuhaf bir ifade görürsen, görüş formundaki “🌐 Çeviri düzeltmesi” ile bildir.", newsNames:"İzinleriyle:",
+  newsThanksHow:"Adının (veya takma adının) burada yer almasını ister misin? Görüş formuna “Adım yazılabilir: ___” yaz.",
+  news1115:"Korece eklendi.", news1114:"“𝕏'te paylaş” düğmesi ve yayın kaplaması (OBS vb. için şeffaf görünüm) eklendi.",
+  news1112:"İspanyolca ve Türkçe, “📲 Uygulama olarak yükle” ve görüş formuna “🌐 Çeviri düzeltmesi” eklendi.", news1104:"Almanca eklendi.",
+  news1027:"Tüm görevlerin sayfaları (hedefler, yerler ve ödüller; İngilizce), telefonda daha iyi görünüm, Lehçe ve Portekizce eklendi.",
+  news1016:"Deniz Feneri haritasına “Road to Military Base V-Ex” çıkışı eklendi.",
+  news1013:"Koşullu çıkışlar (tırmanma ekipmanı, sırt çantasız, ücretli vb.) artık bir rozetle işaretli; transitler de varış yerini ve koşulları gösteriyor.",
   };
 })();

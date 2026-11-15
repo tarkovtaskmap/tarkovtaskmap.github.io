@@ -299,5 +299,15 @@
   obsWindowBtn:"Abrir em outra janela (atualiza sozinho)",
   obsWindowNote:"Aberto como outra janela neste navegador, muda sempre que você troca tarefas ou mapa na ferramenta. Coloque em um segundo monitor ou capture no OBS com “Captura de janela”.",
   obsCount:n=>`${n} ${s(n,"tarefa","tarefas")}`, obsEmpty:"Nenhuma tarefa selecionada neste mapa", obsHelpBar:"Overlay para live (este aviso não aparece dentro do OBS; × para fechar)",
+  // 新しくなったこと・お礼
+  newsTip:"Novidades", newsThanksTitle:"Obrigado",
+  newsThanksBody:"Obrigado a todos que enviaram feedback, relatos de bugs e correções de tradução. É com essas mensagens que a ferramenta melhora.",
+  newsTrNote:"Os idiomas além do japonês e do inglês são baseados em tradução automática. Se algo soar estranho, avise pelo “🌐 Correção de tradução” no formulário de feedback.",
+  newsNames:"Com a permissão deles:", newsThanksHow:"Quer seu nome (ou apelido) aqui? Escreva “Pode colocar meu nome: ___” no formulário de feedback.",
+  news1115:"Adicionado o coreano.", news1114:"Novo botão “Compartilhar no 𝕏” e overlay para live (uma visualização transparente para o OBS etc.).",
+  news1112:"Adicionados espanhol e turco, “📲 Instalar como app” e “🌐 Correção de tradução” no formulário de feedback.", news1104:"Adicionado o alemão.",
+  news1027:"Novas páginas com todas as tarefas (objetivos, locais e recompensas; em inglês), layout melhor no celular, e polonês e português.",
+  news1016:"Adicionada ao mapa a extração “Road to Military Base V-Ex” de Lighthouse.",
+  news1013:"Extrações com requisitos (equipamento de escalada, sem mochila, pagas etc.) agora têm um selo, e os trânsitos mostram destino e requisitos.",
   };
 })();

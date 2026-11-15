@@ -1,4 +1,4 @@
-// 言語別ページ en/ de/ es/ pt/ pl/ ru/ tr/ zh/ の index.html を index.html から生成する（検索でそれぞれの言語の人に見つけてもらうため）。
+// 言語別ページ en/ de/ es/ pt/ pl/ ru/ tr/ ko/ zh/ の index.html を index.html から生成する（検索でそれぞれの言語の人に見つけてもらうため）。
 // 題・説明文・URL は tools/page-langs.mjs にまとめてある。
 // 使い方: node tools/gen-en.mjs   ※ index.html を変えたら公開前に必ず実行する（en/ などを直接編集しない）
 import fs from "fs";
@@ -15,7 +15,7 @@ for (const L of PAGE_LANGS) {
 }
 
 // 同梱ファイル（ページが /xx/ にあるので、サイトの一番上から読む）
-const ASSETS = ["data-snapshot.js", "data-snapshot-pve.js", "ja-supplement.js", "lang-zh.js", "lang-ru.js", "lang-pl.js", "lang-pt.js", "lang-de.js", "lang-es.js", "lang-tr.js", "lighthouse-map.jpg"];
+const ASSETS = ["data-snapshot.js", "data-snapshot-pve.js", "ja-supplement.js", "lang-zh.js", "lang-ru.js", "lang-pl.js", "lang-pt.js", "lang-de.js", "lang-es.js", "lang-tr.js", "lang-ko.js", "lighthouse-map.jpg"];
 const esc = s => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
 const done = [];

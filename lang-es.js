@@ -299,5 +299,16 @@
   obsWindowBtn:"Abrir en otra ventana (se actualiza sola)",
   obsWindowNote:"Abierta como otra ventana en este navegador, cambia cada vez que cambias de misiones o de mapa en la herramienta. Ponla en un segundo monitor o captúrala en OBS con «Captura de ventana».",
   obsCount:n=>`${n} ${s(n,"misión","misiones")}`, obsEmpty:"No hay misiones seleccionadas en este mapa", obsHelpBar:"Overlay para stream (este aviso no aparece dentro de OBS; × para cerrar)",
+  // 新しくなったこと・お礼
+  newsTip:"Novedades", newsThanksTitle:"Gracias",
+  newsThanksBody:"Gracias a todas las personas que han enviado comentarios, informes de errores y correcciones de traducción. Con esos mensajes la herramienta mejora.",
+  newsTrNote:"Los idiomas distintos del japonés y el inglés se basan en traducción automática. Si algo suena raro, avísame con «🌐 Corregir traducción» en el formulario de comentarios.",
+  newsNames:"Con su permiso:",
+  newsThanksHow:"¿Quieres que tu nombre (o apodo) aparezca aquí? Escribe «Pueden poner mi nombre: ___» en el formulario de comentarios.",
+  news1115:"Añadido el coreano.", news1114:"Nuevo botón «Compartir en 𝕏» y overlay para stream (una vista transparente para OBS, etc.).",
+  news1112:"Añadidos el español y el turco, «📲 Instalar como app» y «🌐 Corregir traducción» en el formulario de comentarios.", news1104:"Añadido el alemán.",
+  news1027:"Nuevas páginas con todas las misiones (objetivos, lugares y recompensas; en inglés), mejor vista en el móvil, y polaco y portugués.",
+  news1016:"Añadida al mapa la extracción «Road to Military Base V-Ex» de Faro.",
+  news1013:"Las extracciones con requisitos (equipo de escalada, sin mochila, de pago, etc.) ahora tienen una insignia, y los tránsitos muestran su destino y requisitos.",
   };
 })();

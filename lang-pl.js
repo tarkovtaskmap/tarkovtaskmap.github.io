@@ -300,5 +300,15 @@
   obsWindowBtn:"Otwórz w osobnym oknie (aktualizuje się samo)",
   obsWindowNote:"Otwarte jako osobne okno w tej przeglądarce zmienia się za każdym razem, gdy zmienisz zadania lub mapę w narzędziu. Umieść je na drugim monitorze albo przechwyć w OBS przez „Przechwytywanie okna”.",
   obsCount:n=>`${n} ${pl(n,"zadanie","zadania","zadań")}`, obsEmpty:"Brak wybranych zadań na tej mapie", obsHelpBar:"Nakładka na stream (w OBS ta informacja się nie pokazuje; × aby zamknąć)",
+  // 新しくなったこと・お礼
+  newsTip:"Co nowego", newsThanksTitle:"Dziękuję",
+  newsThanksBody:"Dziękuję wszystkim, którzy przesłali opinie, zgłoszenia błędów i poprawki tłumaczeń. To dzięki nim narzędzie jest coraz lepsze.",
+  newsTrNote:"Języki inne niż japoński i angielski są oparte na tłumaczeniu maszynowym. Jeśli coś brzmi dziwnie, daj znać przez „🌐 Poprawka tłumaczenia” w formularzu opinii.", newsNames:"Za ich zgodą:",
+  newsThanksHow:"Chcesz, aby Twoje imię (lub nick) było tutaj? Napisz w formularzu opinii „Można podać moje imię: ___”.",
+  news1115:"Dodano koreański.", news1114:"Nowość: przycisk „Udostępnij na 𝕏” i nakładka na stream (przezroczysty widok do OBS itp.).",
+  news1112:"Dodano hiszpański i turecki, „📲 Zainstaluj jako aplikację” oraz „🌐 Poprawka tłumaczenia” w formularzu opinii.", news1104:"Dodano niemiecki.",
+  news1027:"Nowe strony ze wszystkimi zadaniami (cele, miejsca i nagrody; po angielsku), lepszy widok na telefonie oraz polski i portugalski.",
+  news1016:"Dodano na mapę wyjście „Road to Military Base V-Ex” na mapie Latarnia morska.",
+  news1013:"Wyjścia z wymaganiami (sprzęt do wspinaczki, bez plecaka, płatne itp.) mają teraz oznaczenie, a tranzyty pokazują cel i wymagania.",
   };
 })();

@@ -299,5 +299,16 @@
   obsWindowBtn:"In eigenem Fenster öffnen (aktualisiert sich automatisch)",
   obsWindowNote:"Als eigenes Fenster in diesem Browser geöffnet, ändert es sich jedes Mal, wenn du im Tool Aufgaben oder die Karte wechselst. Leg es auf einen zweiten Monitor oder nimm es in OBS mit „Fensteraufnahme“ auf.",
   obsCount:n=>`${n} ${s(n,"Aufgabe","Aufgaben")}`, obsEmpty:"Keine ausgewählten Aufgaben auf dieser Karte", obsHelpBar:"Stream-Overlay (in OBS wird dieser Hinweis nicht angezeigt; mit × schließen)",
+  // 新しくなったこと・お礼
+  newsTip:"Was ist neu", newsThanksTitle:"Danke",
+  newsThanksBody:"Danke an alle, die Feedback, Fehlerberichte und Übersetzungskorrekturen geschickt haben. Mit euren Nachrichten wird das Tool besser.",
+  newsTrNote:"Die Sprachen außer Japanisch und Englisch beruhen auf maschineller Übersetzung. Wenn etwas seltsam klingt, melde es bitte über „🌐 Übersetzung verbessern“ im Feedback-Formular.",
+  newsNames:"Mit ihrer Erlaubnis genannt:",
+  newsThanksHow:"Möchtest du hier mit Namen (oder Nickname) genannt werden? Schreib „Name darf genannt werden: ___“ ins Feedback-Formular.",
+  news1115:"Koreanisch hinzugefügt.", news1114:"Neu: „Auf 𝕏 teilen“ und ein Stream-Overlay (eine transparente Ansicht für OBS usw.).",
+  news1112:"Neu: Spanisch und Türkisch, „📲 Als App installieren“ und „🌐 Übersetzung verbessern“ im Feedback-Formular.", news1104:"Deutsch als Sprache hinzugefügt.",
+  news1027:"Neu: Seiten mit allen Aufgaben (Ziele, Orte, Belohnungen; auf Englisch), eine bessere Handy-Ansicht sowie Polnisch und Portugiesisch.",
+  news1016:"Lighthouse „Road to Military Base V-Ex“ zur Karte hinzugefügt.",
+  news1013:"Extraktionen mit Bedingungen (Kletterausrüstung, kein Rucksack, kostenpflichtig usw.) haben jetzt ein Abzeichen, und Transits zeigen Ziel und Bedingungen.",
   };
 })();

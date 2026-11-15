@@ -7,8 +7,9 @@ choose, on an interactive map — meant for a second monitor.
 **▶ Live tool:** https://tarkovtaskmap.github.io/
 
 No installation, no login (only anonymous visit / feature-usage counts via GoatCounter, no cookies), no game-memory access — just static data from
-[tarkov.dev](https://tarkov.dev)'s public API. Works in any browser; the language follows your browser (Japanese, English, Simplified Chinese or Russian) —
-use the language dropdown top-left to switch. In Chinese and Russian, task / item / map / extract names are shown in that language (as in the game).
+[tarkov.dev](https://tarkov.dev)'s public API. Works in any browser; the language follows your browser — Japanese, English, Simplified Chinese,
+Russian, Polish, Portuguese, German, Spanish, Turkish or Korean (use the language dropdown top-left to switch, or open a language page such as
+`/de/` or `/ko/`). In languages other than Japanese and English, task / item / map / extract names are shown in that language (as in the game).
 
 ## Features
 
@@ -17,6 +18,10 @@ use the language dropdown top-left to switch. In Chinese and Russian, task / ite
 - Pre-raid checklist (keys to bring / items to plant / items to find)
 - Task chain view (prerequisites / unlocks), Kappa/Lightkeeper progress
 - Custom pins & notes, route ordering, share your setup via a link (no backend)
+- Extract and transit requirements (climbing gear, no backpack, paid, keycards…) as badges and in the checklist
+- Stream overlay for OBS (transparent background) and a "Share on 𝕏" button
+- Task list pages (objectives, locations, rewards) in English and Japanese: https://tarkovtaskmap.github.io/tasks/
+- Install as an app (PWA); "What's new" panel (✨ button above the map)
 - Works offline-ish: caches data locally, falls back to a bundled snapshot if
   tarkov.dev's API is down
 

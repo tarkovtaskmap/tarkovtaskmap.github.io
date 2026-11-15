@@ -17,6 +17,7 @@
 <link rel="alternate" hreflang="pl" href="https://tarkovtaskmap.github.io/pl/" />
 <link rel="alternate" hreflang="ru" href="https://tarkovtaskmap.github.io/ru/" />
 <link rel="alternate" hreflang="tr" href="https://tarkovtaskmap.github.io/tr/" />
+<link rel="alternate" hreflang="ko" href="https://tarkovtaskmap.github.io/ko/" />
 <link rel="alternate" hreflang="zh-Hans" href="https://tarkovtaskmap.github.io/zh/" />
 <link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/" />
 <script>window.__PAGE_LANG__ = "tr";</script>
@@ -51,7 +52,7 @@
   "applicationCategory": "GameApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
-  "inLanguage": ["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr"],
+  "inLanguage": ["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr", "ko"],
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
 }
@@ -84,6 +85,7 @@
 <script src="/lang-de.js" onerror="console.warn('lang-de.js なし')"></script>
 <script src="/lang-es.js" onerror="console.warn('lang-es.js なし')"></script>
 <script src="/lang-tr.js" onerror="console.warn('lang-tr.js なし')"></script>
+<script src="/lang-ko.js" onerror="console.warn('lang-ko.js なし')"></script>
 <!-- 匿名のアクセス集計 (GoatCounter: Cookieなし・個人を特定しない)。ローカルのファイルとして開いたときは送られない -->
 <!-- 配信用の表示(?obs=1)は配信ソフトが何度も読み直すので、ページの表示回数には数えない（使われた回数は load/obs/… で別に数える） -->
 <script>if(/[?&]obs=1(&|$)/.test(location.search)) window.goatcounter = Object.assign(window.goatcounter || {}, { no_onload:true });</script>
@@ -116,7 +118,8 @@
   details.sect[open]>summary::before{transform:rotate(90deg)}
   details.sect .inner{padding:0 14px 10px;display:flex;flex-direction:column;gap:8px}
   #titlebar{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
-  #titlebar h1{font-size:15px;margin:0;padding:0;border:0;color:var(--accent2);letter-spacing:.04em}
+  #titlebar h1{font-size:15px;margin:0;padding:0;border:0;color:var(--accent2);letter-spacing:.04em;word-break:keep-all;line-height:1.3;min-width:0}   /* 日本語の題名が「タスクマッ/プ」のように語の途中で折れないように */
+  #titlebar>.row{flex:0 0 auto}   /* ボタンの段は縮めない（縮むと言語の選択欄が右にはみ出す）。縮むのは題名のほう */
   #langSel{font-size:11px;padding:3px 4px;flex:0 0 auto;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:4px}
   #toast{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);z-index:1200;background:#000d;color:var(--text);border:1px solid var(--accent);border-radius:6px;padding:8px 14px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s}
   #toast.show{opacity:1}
@@ -134,6 +137,21 @@
   #helpdlg li{margin:3px 0}
   #helpdlg p{margin:6px 0}
   #helpdlg .k{display:inline-block;padding:0 6px;border:1px solid var(--line);border-radius:4px;font-size:11px;background:var(--panel2)}
+  #newsBtn{position:relative;flex:0 0 auto;margin:8px 6px 8px auto;padding:4px 9px;font-size:15px;line-height:1.3;background:#2a261c;border:1px solid var(--accent);border-radius:6px}
+  #newsBtn:hover{background:#352f22;border-color:var(--accent2)}
+  #newsBtn .ndot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;background:#e6564e;box-shadow:0 0 0 2px var(--panel)}
+  #newsdlg{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh}
+  #newsdlg::backdrop{background:#000b}
+  #newsdlg .help-in{padding:18px 20px;display:flex;flex-direction:column;gap:12px;font-size:13px;line-height:1.7;max-height:90vh;overflow-y:auto}
+  #newsdlg h3{margin:0;color:var(--accent2);font-size:16px}
+  #newsdlg h4{margin:2px 0 0;color:var(--accent2);font-size:13px}
+  #newslist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  #newslist li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:#00000030}
+  #newslist li.new{border-color:var(--accent)}
+  #newslist .nd{color:var(--dim);font-size:11px;white-space:nowrap}
+  #newslist .nnew{display:inline-block;margin-left:6px;padding:0 5px;border-radius:3px;background:#e6564e;color:#fff;font-size:10px;font-weight:700;line-height:1.6;vertical-align:1px}
+  #newsthanks{border-top:1px solid var(--line);padding-top:8px}
+  #newsthanks p{margin:4px 0}
   #fbdlg{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:10px;padding:0;width:min(520px,94vw);max-height:90vh}
   #fbdlg::backdrop{background:#000b}
   #fbdlg h3{margin:0;color:var(--accent2);font-size:16px}
@@ -312,6 +330,8 @@
   #menuBtn,#sbShade,.narrow-only,.narrow-block{display:none}
   @media (max-width:1100px){
     #sidebar,#picker{width:300px;min-width:300px}
+    #titlebar{padding:10px 12px}
+    #titlebar h1{font-size:14px}
   }
   @media (max-width:820px){
     /* 2つの列を縦に並べて、左からスライドするメニューにして、地図を画面いっぱいに使う */
@@ -330,6 +350,7 @@
     /* 意見ボタンはアイコンだけにして、マップのタブを広く見せる */
     #fbLink{font-size:0;padding:4px 10px;margin-left:4px}
     #fbLink::before{content:"💬";font-size:16px}
+    #newsBtn{padding:3px 8px;margin:8px 0 8px 4px}
     #legend .legpick{margin:4px 0 2px;padding:6px 12px;font-size:13px}
     #tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
     #tabs button{flex:0 0 auto}
@@ -443,7 +464,7 @@
       <div class="row" style="flex-wrap:nowrap;gap:6px">
         <button id="helpBtn" class="hbtn" data-i18n="helpBtn">使い方</button>
         <button id="sbClose" class="narrow-only" data-i18n-title="closeMenu" title="閉じる">✕</button>
-        <select id="langSel" title="Language / 言語 / 语言 / Язык / Język / Idioma / Sprache / Dil"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option><option value="pl">Polski</option><option value="pt">Português</option><option value="de">Deutsch</option><option value="es">Español</option><option value="tr">Türkçe</option></select>
+        <select id="langSel" title="Language / 言語 / 语言 / Язык / Język / Idioma / Sprache / Dil / 언어"><option value="ja">日本語</option><option value="en">English</option><option value="zh">简体中文</option><option value="ru">Русский</option><option value="pl">Polski</option><option value="pt">Português</option><option value="de">Deutsch</option><option value="es">Español</option><option value="tr">Türkçe</option><option value="ko">한국어</option></select>
       </div>
     </div>
 
@@ -632,6 +653,7 @@
       <button id="sbReopen" type="button" data-i18n-title="reopenTip" title="">▶</button>
       <button id="pkReopen" type="button" data-i18n="pkReopenBtn" data-i18n-title="pkReopenTip" title="">🗂 タスクを選ぶ</button>
       <div id="tabs"></div>
+      <button id="newsBtn" type="button" data-i18n-title="newsTip" title="新しくなったこと">✨<span class="ndot hidden"></span></button>
       <button id="fbLink" type="button" data-i18n="fbLink" data-i18n-title="fbSub">💬 ご意見・要望を送る</button>
     </div>
     <div id="floorbar" class="hidden"></div>
@@ -703,6 +725,24 @@
   </div>
 </dialog>
 
+<dialog id="newsdlg">
+  <div class="help-in">
+    <h3 data-i18n="newsTip">新しくなったこと</h3>
+    <ul id="newslist"></ul>
+    <div id="newsthanks">
+      <h4 data-i18n="newsThanksTitle">ありがとうございます</h4>
+      <p data-i18n="newsThanksBody"></p>
+      <p id="newsnames" class="hidden"></p>
+      <p id="newstr" class="muted hidden" data-i18n="newsTrNote"></p>
+      <p class="muted" data-i18n="newsThanksHow"></p>
+    </div>
+    <div class="tt-btns">
+      <button id="newsfb" data-i18n="fbLink">💬 ご意見・要望を送る</button>
+      <button id="newsclose" class="primary" data-i18n="helpClose">閉じる</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="fbdlg">
   <div class="help-in">
     <h3 data-i18n="fbTitle">ご意見・不具合報告</h3>
@@ -749,13 +789,13 @@ const OBS = /[?&]obs=1(&|$)/.test(location.search);
 const OBSQ = new URLSearchParams(OBS ? location.search : "");
 if(OBS){ document.documentElement.classList.add("obs"); if(window.obsstudio) document.documentElement.classList.add("in-obs"); }
 let LANG = (function(){
-  if(OBS && /^(ja|en|zh|ru|pl|pt|de|es|tr)$/.test(OBSQ.get("lang") || "")) return OBSQ.get("lang");
+  if(OBS && /^(ja|en|zh|ru|pl|pt|de|es|tr|ko)$/.test(OBSQ.get("lang") || "")) return OBSQ.get("lang");
   let s = null; try{ s = localStorage.getItem("eft_qm_lang"); }catch(e){}
-  if(["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr"].includes(s)) return s;
+  if(["ja", "en", "zh", "ru", "pl", "pt", "de", "es", "tr", "ko"].includes(s)) return s;
   const nl = String((navigator.languages && navigator.languages[0]) || navigator.language || "ja").toLowerCase();
   const pageLang = window.__PAGE_LANG__;
   if(pageLang && pageLang !== "en") return pageLang;   // /de/ /es/ などの言語別ページは、そのページの言語で開く
-  if(pageLang && !/^(ru|pl|pt|de|es|tr|zh)/.test(nl)) return pageLang;   // /en/ ページは、上の7言語以外（日本語ブラウザも）なら英語で開く
+  if(pageLang && !/^(ru|pl|pt|de|es|tr|ko|zh)/.test(nl)) return pageLang;   // /en/ ページは、上の8言語以外（日本語ブラウザも）なら英語で開く
   if(nl.startsWith("ja")) return "ja";
   if(nl.startsWith("ru")) return "ru";
   if(nl.startsWith("pl")) return "pl";
@@ -763,11 +803,12 @@ let LANG = (function(){
   if(nl.startsWith("de")) return "de";
   if(nl.startsWith("es")) return "es";
   if(nl.startsWith("tr")) return "tr";
+  if(nl.startsWith("ko")) return "ko";
   if(nl.startsWith("zh") && !/^zh[-_](tw|hk|mo|hant)/.test(nl)) return "zh";   // 簡体字のみ対応（繁体字の地域は英語）
   return "en";
 })();
-// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語(zh/ru/pl/pt/de/es/tr)。ja/en は従来どおり英語表記のまま
-const DL = ["zh", "ru", "pl", "pt", "de", "es", "tr"].includes(LANG) ? LANG : null;
+// 名前(タスク・アイテム・トレーダー・脱出地点など)を、その言語のゲーム内表記で出す言語(zh/ru/pl/pt/de/es/tr/ko)。ja/en は従来どおり英語表記のまま
+const DL = ["zh", "ru", "pl", "pt", "de", "es", "tr", "ko"].includes(LANG) ? LANG : null;
 /* ゲームモード: PvP / PvE / Seasonal は別キャラ＝進行状況が別。
    PvP は従来のキー名のまま(既存データを引き継ぐ)、他は末尾に _pve / _seasonal を付けて分離する。
    データ元: PvE は json.tarkov.dev/pve/*(タスク・脱出地点・ボス等が別)、
@@ -1073,6 +1114,11 @@ const STR = {
     obsCopyBtn:"URL をコピー", obsCopied:"コピーしました", obsNote:"タスクやマップを変えたら、もう一度コピーして OBS の URL を貼り替えてください（OBS は、このブラウザとは保存場所が別なので、自動では変わりません）。", obsWindowBtn:"別ウィンドウで開く（自動で更新）",
     obsWindowNote:"このブラウザの別ウィンドウで開くと、ツールでタスクやマップを変えるたびに自動で変わります。2 台目のモニターに置いたり、OBS の「ウィンドウキャプチャ」で取り込んだりできます。", obsCount:n=>`${n} タスク`, obsEmpty:"このマップで選んでいるタスクはありません",
     obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
+    // 新しくなったこと・お礼
+    newsTip:"新しくなったこと", newsThanksTitle:"ありがとうございます", newsThanksBody:"ご意見・不具合の報告・翻訳の直しを送ってくださった皆さま、ありがとうございます。いただいた声をもとに直しています。", newsTrNote:"日本語と英語以外の画面は、機械翻訳をもとにしています。不自然な訳は、ご意見箱の「🌐 翻訳の直し」で教えてください。",
+    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
+    news1112:"スペイン語・トルコ語の画面、「📲 アプリとして使う」、ご意見箱の「🌐 翻訳の直し」を追加しました。", news1107:"日本語のタスクページ（📋 全タスク一覧）を追加しました。各タスクの目標・場所・報酬を日本語で確認できます。", news1104:"ドイツ語の画面を追加しました。",
+    news1027:"スマホで使いやすくし、ポーランド語・ポルトガル語の画面を追加しました。", news1016:"Lighthouse の「Road to Military Base V-Ex」を地図に追加しました。", news1013:"条件のある脱出地点（登るための道具・バッグ不可・有料など）に印を付け、トランジットの行き先と条件を出すようにしました。",
   },
   en: {
     appTitle:"Tarkov Task Map",
@@ -1371,6 +1417,16 @@ const STR = {
     obsWindowBtn:"Open in a separate window (auto-updates)",
     obsWindowNote:"Opened as a separate window in this browser, it updates whenever you change tasks or maps in the tool. Put it on a second monitor, or capture it with OBS “Window Capture”.",
     obsCount:n=>`${n} task${n === 1 ? "" : "s"}`, obsEmpty:"No selected tasks on this map", obsHelpBar:"Stream overlay (this note is hidden inside OBS; × to close)",
+    // 新しくなったこと・お礼
+    newsTip:"What's new", newsThanksTitle:"Thank you",
+    newsThanksBody:"Thank you to everyone who has sent feedback, bug reports and translation fixes. Your messages are how this tool gets better.",
+    newsTrNote:"Languages other than Japanese and English are based on machine translation. If something reads oddly, please let me know with “🌐 Translation fix” in the feedback form.",
+    newsNames:"Listed with their permission:", newsThanksHow:"Want your name (or handle) listed here? Write “OK to list my name: ___” in the feedback form.",
+    news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
+    news1112:"Added Spanish and Turkish, “📲 Install as app”, and “🌐 Translation fix” in the feedback form.", news1104:"Added German.",
+    news1027:"Added task list pages (objectives, locations and rewards for every task), a better phone layout, and Polish and Portuguese.",
+    news1016:"Added Lighthouse “Road to Military Base V-Ex” to the map.",
+    news1013:"Extracts with requirements (climbing gear, no backpack, paid, etc.) now have a badge, and transits show their destination and requirements.",
   },
 };
 STR.zh = (typeof window !== "undefined" && window.__STR_ZH__) || {};
@@ -1380,6 +1436,7 @@ STR.pt = (typeof window !== "undefined" && window.__STR_PT__) || {};
 STR.de = (typeof window !== "undefined" && window.__STR_DE__) || {};
 STR.es = (typeof window !== "undefined" && window.__STR_ES__) || {};
 STR.tr = (typeof window !== "undefined" && window.__STR_TR__) || {};
+STR.ko = (typeof window !== "undefined" && window.__STR_KO__) || {};
 function T(key, ...args){
   const v = (STR[LANG] && STR[LANG][key] !== undefined) ? STR[LANG][key] : (STR.en[key] !== undefined ? STR.en[key] : STR.ja[key]);
   return typeof v === "function" ? v(...args) : v;
@@ -1425,10 +1482,12 @@ else { track("load/mode/" + MODE); track("load/lang/" + LANG); }
 /* また来てくれたか: 前に開いてから何日ぶりか・使い始めて何日目かを、大まかな区分だけで数える（日時・個人は送らない）。
    30分以内の開き直し（言語やモードの切り替え・再読み込み）は同じ訪問として数えない。
    使い始めた日(eft_qm_first_v1)は 2026-09-20 からバックアップのお知らせ用に保存している */
+let PREV_VISIT = 0, VISIT_NEW = false;   // 「新しくなったこと」の印に使う（前に開いた時刻／はじめての人か）
 (function(){ try{
   if(OBS) return;   // 配信用の表示は数えない
   const SEEN = "eft_qm_seen_v1", FIRST = "eft_qm_first_v1", DAY = 864e5, now = Date.now();
   const last = +localStorage.getItem(SEEN) || 0, first = +localStorage.getItem(FIRST) || 0;
+  PREV_VISIT = last; VISIT_NEW = !last && !first;
   const touch = () => { try{ localStorage.setItem(SEEN, String(Date.now())); }catch(e){} };
   if(!last || now - last >= 30 * 60000){
     if(!last && !first) track("load/visit/new");
@@ -1721,7 +1780,7 @@ const isCoopExit = e => isCoopExtract(e && (e.key || e.name));   // zh/ru は名
 // 別フロアバッジ用の短縮表記("Underground"等の長い名前だとマーカーと重なって見づらいため)
 const FLOOR_SHORT = { Underground:"B1", Bunkers:"B1", Tunnels:"B1", Garage:"B1", Technical:"B1" };
 const floorShort = jp => FLOOR_SHORT[jp] || jp;
-// 階の名前（zh/ru/pl/pt/de/es/tr は現地語。ja/en は従来どおり）
+// 階の名前（zh/ru/pl/pt/de/es/tr/ko は現地語。ja/en は従来どおり）
 const FLOOR_LOC = {
   zh:{ Underground:"地下", Bunkers:"地下", Tunnels:"地下通道", Garage:"车库", Technical:"技术层", Ground:"地面" },
   ru:{ Underground:"Подвал", Bunkers:"Бункеры", Tunnels:"Тоннели", Garage:"Гараж", Technical:"Технический", Ground:"Земля" },
@@ -1730,6 +1789,7 @@ const FLOOR_LOC = {
   de:{ Underground:"Untergeschoss", Bunkers:"Bunker", Tunnels:"Tunnel", Garage:"Garage", Technical:"Technikebene", Ground:"Erdgeschoss" },
   es:{ Underground:"Subterráneo", Bunkers:"Búnkeres", Tunnels:"Túneles", Garage:"Garaje", Technical:"Planta técnica", Ground:"Planta baja" },
   tr:{ Underground:"Yer altı", Bunkers:"Sığınaklar", Tunnels:"Tüneller", Garage:"Garaj", Technical:"Teknik kat", Ground:"Zemin kat" },
+  ko:{ Underground:"지하", Bunkers:"벙커", Tunnels:"터널", Garage:"차고", Technical:"기술층", Ground:"지상" },
 };
 const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
 // 脱出口の実フロア: 座標のY値だけで判定すると、Shorelineのような屋外主体のマップで地形の起伏を
@@ -3901,6 +3961,62 @@ document.getElementById("helpBtn").onclick = () => {
 };
 document.getElementById("helpclose").onclick = () => document.getElementById("helpdlg").close();
 document.getElementById("helpdlg").addEventListener("click", e => { if(e.target.id === "helpdlg") e.target.close(); });   // 外側クリックで閉じる
+
+/* 新しくなったこと: 公開した変更の短いお知らせ（新しい順）。公開のたびに先頭へ足す（d = 公開した日、k = 文言のキー）。
+   only = その言語の画面だけに出す。前に見たとき（初めてなら前回開いたとき）より新しいものがあると ✨ に赤い印が付く */
+const NEWS = [
+  { d:"2026-11-15", k:"news1115" },
+  { d:"2026-11-14", k:"news1114" },
+  { d:"2026-11-12", k:"news1112" },
+  { d:"2026-11-07", k:"news1107", only:["ja"] },
+  { d:"2026-11-04", k:"news1104" },
+  { d:"2026-10-27", k:"news1027" },
+  { d:"2026-10-16", k:"news1016" },
+  { d:"2026-10-13", k:"news1013" },
+].filter(n => !n.only || n.only.includes(LANG)).slice(0, 8);
+// お礼に名前を載せる方（ご意見箱で「名前を載せてよい」と書いてくださった方だけ。本人が書いた表記のまま）
+const THANKS = [];
+const NEWS_KEY = "eft_qm_news_seen_v1";   // 最後に見たお知らせの日付
+const isoDay = t => { const d = new Date(t); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+function newsSeenDay(){
+  let s = "";
+  try{ s = localStorage.getItem(NEWS_KEY) || ""; }catch(e){}
+  if(s) return s;
+  return PREV_VISIT ? isoDay(PREV_VISIT) : "";   // まだ一度も開いていない人は、前回ツールを開いた日より後の分だけを新しいとする
+}
+function newsDot(){
+  const dot = document.querySelector("#newsBtn .ndot");
+  if(dot) dot.classList.toggle("hidden", !(NEWS.length && NEWS[0].d > newsSeenDay()));
+}
+function newsDay(d){
+  try{ return new Date(d + "T12:00:00").toLocaleDateString({ zh:"zh-CN", pt:"pt-BR" }[LANG] || LANG, { year:"numeric", month:"short", day:"numeric" }); }
+  catch(e){ return d; }
+}
+function newsOpen(){
+  const seen = newsSeenDay(), hadNew = NEWS.length && NEWS[0].d > seen;
+  document.getElementById("newslist").innerHTML = NEWS.map(n => {
+    const isNew = n.d > seen;
+    return `<li class="${isNew ? "new" : ""}"><span class="nd">${escH(newsDay(n.d))}</span><span>${escH(T(n.k))}${isNew ? ' <span class="nnew">NEW</span>' : ""}</span></li>`;
+  }).join("");
+  const nm = document.getElementById("newsnames");
+  nm.classList.toggle("hidden", !THANKS.length);
+  nm.textContent = THANKS.length ? T("newsNames") + " " + THANKS.join(LANG === "ja" || LANG === "zh" ? "、" : ", ") : "";
+  document.getElementById("newstr").classList.toggle("hidden", LANG === "ja" || LANG === "en");   // 機械翻訳の言語だけ
+  try{ if(NEWS.length) localStorage.setItem(NEWS_KEY, NEWS[0].d); }catch(e){}
+  newsDot();
+  track(hadNew ? "use/news-open/new" : "use/news-open/seen");
+  const dlg = document.getElementById("newsdlg");
+  if(typeof dlg.showModal === "function"){ if(!dlg.open) dlg.showModal(); } else dlg.setAttribute("open", "");
+}
+(function(){ try{
+  if(OBS) return;
+  // はじめての人には、これまでの変更を「新しい」として知らせない（全部が新しいので、印は次の公開から）
+  if(VISIT_NEW && NEWS.length && !localStorage.getItem(NEWS_KEY)) localStorage.setItem(NEWS_KEY, NEWS[0].d);
+}catch(e){} newsDot(); })();
+document.getElementById("newsBtn").onclick = newsOpen;
+document.getElementById("newsclose").onclick = () => document.getElementById("newsdlg").close();
+document.getElementById("newsfb").onclick = () => { document.getElementById("newsdlg").close(); fbOpen(); };
+document.getElementById("newsdlg").addEventListener("click", e => { if(e.target.id === "newsdlg") e.target.close(); });
 // ご意見・不具合報告（受付先: Googleフォーム。回答はフォームの持ち主だけが見られる／送る側はログイン不要）
 // 質問IDは公開フォームの HTML から読み取ったもの。フォームの質問を作り直したら FEEDBACK_FORM を更新する。
 const FEEDBACK_FORM = {
