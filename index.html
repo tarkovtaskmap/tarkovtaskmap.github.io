@@ -401,7 +401,9 @@
   /* Leaflet マーカー */
   .qmark{border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;text-shadow:0 1px 2px #000}
   .xmark{position:relative;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:11px}
-  .xmark .xfloor{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:3px;background:#000d;color:#fff;border:1px solid #fff9;border-radius:3px;font-size:8px;line-height:1.3;padding:1px 3px;font-weight:700;white-space:nowrap}
+  .pwmark{position:relative;display:inline-flex;align-items:center;gap:2px;height:18px;box-sizing:border-box;padding:0 6px 0 2px;border-radius:4px;background:#111;border:1.5px solid #f2c14e;box-shadow:0 0 0 1px #000,0 1px 4px #000a;color:#f2c14e;font-size:10px;font-weight:800;line-height:1;white-space:nowrap}
+  .pwmark .pwg{display:inline-flex;width:14px;justify-content:center;font-size:11px}
+  .xmark .xfloor,.pwmark .xfloor{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:3px;background:#000d;color:#fff;border:1px solid #fff9;border-radius:3px;font-size:8px;line-height:1.3;padding:1px 3px;font-weight:700;white-space:nowrap}
   /* 条件付きの脱出: マークの左上に種類の印 */
   .xmark .xcond{position:absolute;right:100%;bottom:100%;margin:0 -8px -8px 0;width:18px;height:18px;border-radius:50%;background:#151515;border:1.5px solid #f0a030;box-shadow:0 0 0 1px #000;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;font-weight:400;color:#fff;overflow:hidden}
   .xmark .xcond.nobag::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:2px;margin-top:-1px;background:#ff2020;box-shadow:0 0 0 1px #000;transform:rotate(-45deg)}
@@ -1114,7 +1116,7 @@ const STR = {
     obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
     // 新しくなったこと・お礼
     newsTip:"新しくなったこと", newsThanksTitle:"ありがとうございます", newsThanksBody:"ご意見・不具合の報告・翻訳の直しを送ってくださった皆さま、ありがとうございます。いただいた声をもとに直しています。", newsTrNote:"日本語と英語以外の画面は、機械翻訳をもとにしています。不自然な訳は、ご意見箱の「🌐 翻訳の直し」で教えてください。",
-    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
+    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", pwLblPower:"電源", pwLblGate:"開閉", pwLblDrain:"排水", powerFor:n=>`${n} の電源・操作パネル`, powerAt:(f,l)=>`操作する場所：地図の「⚡ ${l}」の札${f ? "（" + f + "）" : ""}`, news1117:"The Lab の脱出口を正しい階（地下・2F）に表示し、電源・開閉・排水の操作場所を「⚡ 電源」などの札で地図に出しました（Reserve の D-2 なども）。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
     news1112:"スペイン語・トルコ語の画面、「📲 アプリとして使う」、ご意見箱の「🌐 翻訳の直し」を追加しました。", news1107:"日本語のタスクページ（📋 全タスク一覧）を追加しました。各タスクの目標・場所・報酬を日本語で確認できます。", news1104:"ドイツ語の画面を追加しました。",
     news1027:"スマホで使いやすくし、ポーランド語・ポルトガル語の画面を追加しました。", news1016:"Lighthouse の「Road to Military Base V-Ex」を地図に追加しました。", news1013:"条件のある脱出地点（登るための道具・バッグ不可・有料など）に印を付け、トランジットの行き先と条件を出すようにしました。",
   },
@@ -1420,7 +1422,7 @@ const STR = {
     newsThanksBody:"Thank you to everyone who has sent feedback, bug reports and translation fixes. Your messages are how this tool gets better.",
     newsTrNote:"Languages other than Japanese and English are based on machine translation. If something reads oddly, please let me know with “🌐 Translation fix” in the feedback form.",
     newsNames:"Listed with their permission:", newsThanksHow:"Want your name (or handle) listed here? Write “OK to list my name: ___” in the feedback form.",
-    news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
+    pwLblPower:"Power", pwLblGate:"Gate", pwLblDrain:"Drain", powerFor:n=>`Power / control panel for ${n}`, powerAt:(f,l)=>`Where to activate: the “⚡ ${l}” tag on the map${f ? " (" + f + ")" : ""}`, news1117:"The Lab extracts now show on the right floor (basement / 2F), and the power, gate and drain controls are marked on the map with “⚡ Power”-style tags (also Reserve’s D-2 and more).", news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
     news1112:"Added Spanish and Turkish, “📲 Install as app”, and “🌐 Translation fix” in the feedback form.", news1104:"Added German.",
     news1027:"Added task list pages (objectives, locations and rewards for every task), a better phone layout, and Polish and Portuguese.",
     news1016:"Added Lighthouse “Road to Military Base V-Ex” to the map.",
@@ -1589,7 +1591,7 @@ const MAPS = [
    floors:[
      {jp:"Technical", tile:"https://assets.tarkov.dev/maps/labs_v4/technical/{z}/{x}/{y}.png", lo:NINF, hi:-0.9},
      {jp:"1F", tile:"https://assets.tarkov.dev/maps/labs_v4/1st/{z}/{x}/{y}.png", lo:-0.9, hi:3, base:true},
-     {jp:"2F", tile:"https://assets.tarkov.dev/maps/labs_v4/2nd/{z}/{x}/{y}.png", lo:3, hi:PINF},
+     {jp:"2F", tile:"https://assets.tarkov.dev/maps/labs_v4/2nd/{z}/{x}/{y}.png", lo:3, hi:PINF, bx:[[-101,-422],[-271,-270]]},   // bx = その階がある範囲 [[x,z],[x,z]]（tarkov.dev の extents.bounds）。範囲外の高い所（駐車場・格納庫）は 1F
    ]},
   {n:"the-labyrinth", jp:"The Labyrinth", t:[2.115,85.5,2.115,128.0], r:270, b:[[-52,-37],[53,76]],
    tile:"https://assets.tarkov.dev/maps/labyrinth/main/{z}/{x}/{y}.png"},
@@ -1644,6 +1646,31 @@ const EXIT_COND = {
 const EXTRA_EXTRACTS = {
   "lighthouse": [{ name:"Road to Military Base V-Ex", key:"Road to Military Base V-Ex", faction:"pmc", position:{ x:-328.1, y:15.3, z:-800.7 } }],
 };
+// 電源・操作パネルが出口と別の場所にある脱出口 → そのスイッチ（tarkov.dev の switch id。PvP/PvE 共通。
+// 同梱スナップショットには id が無いので英語名でも探す）。ラボの場所は攻略サイト3件と一致を確認（2026-11-17）
+const EXIT_SWITCH = {
+  "the-lab|Cargo Elevator":         { id:"c39cf1e7caac3b830c00b539ee12dfddeb061e2b", en:"Cargo Elevator Power Button", kind:"power" },   // 地下 G1
+  "the-lab|Main Elevator":          { id:"911ef57b76415c1d42fdba3b5c8fdb587dd229a7", en:"Main Elevator Power Button", kind:"power" },    // 地下 R4 の向かい
+  "the-lab|Medical Block Elevator": { id:"014e9122e0fad99bcff6f93161712c3c6e1a2a75", en:"Med Elevator Power Button", kind:"power" },     // 地下 G6
+  "the-lab|Sewage Conduit":         { id:"a948c3ba250ffcaaa508230d0b3392bf09cb6964", en:"Sewage Conduit Pump Button", kind:"drain" },   // 地下 B1 の左
+  "the-lab|Parking Gate":           { id:"07fe694c3915c1363b5fa1faa604c68fe5849aba", en:"Parking Gate Switch", kind:"gate" },          // 2F Y21
+  "the-lab|Hangar Gate":            { id:"40ec0101fbf68e6d1b762a72080b9b9b9c91f6f1", en:"Hangar Gate Switch", kind:"gate" },           // 2F B24（格納庫の上）
+  "reserve|D-2":                    { id:"9cad024bc31223f02f7296c3cb1834c5f6fa2fe2", en:"D-2 Power Switch", kind:"power" },
+  "reserve|Bunker Hermetic Door":   { id:"2c4a9ff1d031afefbd0965b189f58e3834cdb367", en:"Bunker Hermetic Door Power Switch", kind:"power" },
+};
+function exitSwitch(mn, e){
+  const r = EXIT_SWITCH[canonMap(mn) + "|" + (e.key || e.name || "")];
+  if(!r) return null;
+  const s = (SWITCHES[mn] || []).find(s => s.position && (s.id === r.id || s.name === r.en));
+  return s ? Object.assign({ kind: r.kind || "power" }, s, { src: s }) : null;
+}
+// 出口と電源パネルを点線で結ぶ（どちらかにマウスを乗せた／押したときだけ）
+function linkLine(a, b, p1, p2){
+  let ln = null;
+  const on = () => { if(!ln && extractLayer) ln = L.polyline([gpos(p1), gpos(p2)], { color:"#f2c14e", weight:2, dashArray:"5 6", interactive:false }).addTo(extractLayer); };
+  const off = () => { if(ln){ if(extractLayer) extractLayer.removeLayer(ln); ln.remove(); ln = null; } };
+  for(const m of [a, b]){ m.on("tooltipopen popupopen", on); m.on("tooltipclose popupclose", off); }
+}
 const COND_ORDER = ["climb", "nobag", "item", "card", "tool", "flare", "pay", "power", "timer"];
 const COND_GLYPH = { climb:"🧗", nobag:"🎒", item:"📜", card:"💳", tool:"🔧", flare:"🎆", pay:"💰", power:"⚡️", timer:"⏱️" };   // FE0F: 文字ではなく絵文字で表示させる
 
@@ -1796,6 +1823,7 @@ const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
 const EXTRACT_FLOOR_OVERRIDE = {
   customs:    { "ZB-1011": "Underground" },
   shoreline:  { "Admin Basement": "Underground", "East Wing Gym Entrance": "2F" },
+  "the-lab":  { "Cargo Elevator": "2F", "Main Elevator": "Technical", "Medical Block Elevator": "Technical", "Sewage Conduit": "Technical", "Ventilation Shaft": "Technical" },
 };
 function extractFloorIndex(mapN, md, e){
   if(!md.floors) return -1;
@@ -1829,7 +1857,7 @@ async function jdFetch(path){
   return r.json();
 }
 
-const CACHE_PREFIX = "eft_qm_cache_v10_";
+const CACHE_PREFIX = "eft_qm_cache_v11_";   // v11: スイッチの id（出口の電源パネル表示）
 const CACHE_KEY = CACHE_PREFIX + LANG + (DATA_SRC === "pve" ? "_pve" : "");   // v9: 脱出の条件(req)を追加 / v7: 装備の条件(gear)を追加 / v6: ストーリー / v5: 失敗条件(failConditions)を追加 / v4: 1.1.5.0 ライトハウス改修で更新／言語別・データ元別に分離(条件文が言語焼き込みのため)
 const SEL_KEY   = MK("eft_qm_selected_v1");
 const OPT_KEY   = "eft_qm_opts_v1";
@@ -1926,6 +1954,7 @@ async function fetchData(){
         lockType: l.lockType || "", needsPower: !!l.needsPower, position: l.position,
       })),
       switches: (mp.switches || []).filter(s => s && s.position).map(s => ({
+        id: s.id || "",
         name: has(men, s.name) ? men[s.name] : (s.name || T("switchLabel")),
         position: s.position,
       })),
@@ -2151,10 +2180,16 @@ let svgLayerGroups = {};        // svgLayer id -> <g> 要素
 let floorTileLayer = null;      // タイル式フロアマップ（The Lab 用）の現在レイヤー
 
 // y座標 → 階 index（floors 配列内）
-function floorIndexOf(y, floors){
+function floorIndexOf(y, floors, pos){
   if(y == null || !floors) return floors ? floors.findIndex(f => f.base) : -1;
+  // bx（その階がある範囲）があれば、位置がその中にあるときだけその階（tarkov.dev の extents と同じ）
+  const inBx = f => {
+    if(!f.bx || !pos) return true;
+    const [[x1, z1], [x2, z2]] = f.bx;
+    return pos.x >= Math.min(x1, x2) && pos.x <= Math.max(x1, x2) && pos.z >= Math.min(z1, z2) && pos.z <= Math.max(z1, z2);
+  };
   for(let i = 0; i < floors.length; i++){
-    if(y >= floors[i].lo && y < floors[i].hi) return i;
+    if(y >= floors[i].lo && y < floors[i].hi && inBx(floors[i])) return i;
   }
   return floors.findIndex(f => f.base);
 }
@@ -2572,14 +2607,14 @@ async function focusQuest(t, noTrack){
   // このタスクのピンが最も多い階へ切り替え
   if(md.floors){
     const fc = md.floors.map(() => 0);
-    for(const m of t.byMap[curMap].filter(shown)){ const fi = floorIndexOf(m.pos ? m.pos.y : null, md.floors); if(fi >= 0) fc[fi]++; }
+    for(const m of t.byMap[curMap].filter(shown)){ const fi = floorIndexOf(m.pos ? m.pos.y : null, md.floors, m.pos); if(fi >= 0) fc[fi]++; }
     let best = curFloor == null ? 0 : curFloor;
     fc.forEach((c, i) => { if(c > (fc[best] || 0)) best = i; });
     if(best !== curFloor) showFloor(md, best);
   }
   renderTabs(); renderQuestList(); renderLegend(); renderPrep(); updateSelInfo();
   // ピンが収まる範囲へズーム（1点だけのときは寄りすぎないよう上限あり）
-  const onFloor = pos => !md.floors || curFloor == null || floorIndexOf(pos ? pos.y : null, md.floors) === curFloor;
+  const onFloor = pos => !md.floors || curFloor == null || floorIndexOf(pos ? pos.y : null, md.floors, pos) === curFloor;
   const pts = t.byMap[curMap].filter(m => shown(m) && onFloor(m.pos)).map(m => gpos(m.pos));
   if(!pts.length || !map) return;
   const maxZ = map.getBoundsZoom(toBounds(md.b)) + 2.5;
@@ -2708,6 +2743,14 @@ function iconExtract(color, letter, opt){
   return L.divIcon({ className:"", html:`<div class="xmark" style="width:15px;height:15px;background:${color};${op}">${letter||""}${badge}${cond}</div>`,
     iconSize:[15,15], iconAnchor:[7,7] });
 }
+const pwLbl = kind => T({ gate:"pwLblGate", drain:"pwLblDrain" }[kind] || "pwLblPower");   // 札の文字（電源 / 開閉 / 排水）
+function iconPower(opt){
+  opt = opt || {};
+  const badge = opt.floorTag ? `<span class="xfloor">${opt.floorTag}</span>` : "";
+  const lbl = pwLbl(opt.kind);
+  return L.divIcon({ className:"", html:`<div class="pwmark" style="${opt.dim ? "opacity:.55;" : ""}"><span class="pwg">${COND_GLYPH.power}</span>${escH(lbl)}${badge}</div>`,
+    iconSize:[18,18], iconAnchor:[9,9] });
+}
 function iconMini(color, letter, title){
   return L.divIcon({ className:"", html:`<div class="minimark" style="background:${color}" title="${(title||"").replace(/"/g,"")}">${letter||""}</div>`,
     iconSize:[13,13], iconAnchor:[6.5,6.5] });
@@ -2736,11 +2779,12 @@ function renderMarkers(){
   const md = MAPBY[curMap];
   const onFloor = pos => {
     if(!md.floors || curFloor == null) return true;
-    return floorIndexOf(pos ? pos.y : null, md.floors) === curFloor;
+    return floorIndexOf(pos ? pos.y : null, md.floors, pos) === curFloor;
   };
 
   // --- 脱出 / トランジット ---
   const fac = exits.fac;
+  const drawnSw = new Set();   // 出口の電源パネルとして描いたスイッチ（「スイッチ」層で二重に描かない）
   for(const e of exitsForCurrent()){
     if(!e.position) continue;
     if(!exitVisible(e.name || T("unknownName"))) continue;
@@ -2759,13 +2803,26 @@ function renderMarkers(){
       if(fi >= 0 && fi !== curFloor){ floorFull = floorDisp(md.floors[fi].jp); floorTag = floorShort(md.floors[fi].jp); }
     }
     const conds = exitConds(curMap, e);
+    // 電源・操作パネルが別の場所にある出口: パネルの位置に ⚡ の印を出し、出口の説明にも場所を書く
+    const sw = exitSwitch(curMap, e);
+    const swFi = sw && md.floors ? floorIndexOf(sw.position.y, md.floors, sw.position) : -1;
+    const swLine = sw ? `📍 ${escH(T("powerAt", swFi >= 0 ? floorDisp(md.floors[swFi].jp) : "", pwLbl(sw.kind)))}` : "";
     const condHtml = conds.length ? `<div class="xcpop"><span class="xch">${T("condPopupHead")}:</span>` +
-      conds.map(c => `<div>${COND_GLYPH[c.k]} ${escH(condText(c))}</div>`).join("") + `</div>` : "";
+      conds.map(c => `<div>${COND_GLYPH[c.k]} ${escH(condText(c))}</div>`).join("") + (swLine ? `<div>${swLine}</div>` : "") + `</div>` : "";
     const mk = L.marker(gpos(e.position), { icon:iconExtract(color, letter, { dim: !!floorTag, floorTag, cond: conds[0] }) })
       .bindPopup(T("extractPopup", e.name||"?", kind, fac) + (floorFull ? `<br><span style="color:#a06">${T("floorNote", floorFull)}</span>` : "") + condHtml)
       .addTo(extractLayer);
     if(conds.length) mk.on("tooltipopen", () => trackOnce("use/cond-tooltip"));
-    if(conds.length) mk.bindTooltip(`<b>${escH(e.name || "?")}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>"), TIP_OPT);
+    if(conds.length) mk.bindTooltip(`<b>${escH(e.name || "?")}</b><br>` + conds.map(c => `${COND_GLYPH[c.k]} ${escH(condText(c))}`).join("<br>") + (swLine ? "<br>" + swLine : ""), TIP_OPT);
+    if(sw){
+      const sTag = swFi >= 0 && swFi !== curFloor ? floorShort(md.floors[swFi].jp) : null;
+      const title = `<b>${COND_GLYPH.power} ${escH(T("powerFor", e.name || "?"))}</b>` + (swFi >= 0 ? `<br>${escH(floorDisp(md.floors[swFi].jp))}` : "");
+      const pm = L.marker(gpos(sw.position), { icon:iconPower({ dim: !!sTag, floorTag: sTag, kind: sw.kind }), zIndexOffset:-100 })
+        .bindTooltip(title, TIP_OPT).bindPopup(title).addTo(extractLayer);
+      pm.on("popupopen", () => trackOnce("use/power-panel"));
+      linkLine(mk, pm, sw.position, e.position);
+      drawnSw.add(sw.src);
+    }
   }
   if(opts.transit){
     for(const tr of (TRANSITS[curMap]||[])){
@@ -2820,7 +2877,7 @@ function renderMarkers(){
   }
   if(opts.switch){
     for(const s of (SWITCHES[curMap]||[])){
-      if(!onFloor(s.position)) continue;
+      if(drawnSw.has(s) || !onFloor(s.position)) continue;
       L.marker(gpos(s.position), { icon:iconMini("#4aa3c9","S") })
         .bindPopup(T("switchPopup", s.name||"")).addTo(extractLayer);
     }
@@ -3663,7 +3720,7 @@ function setupFloors(md, keep){
     const t = TASKS.find(x => x.id === id); if(!t) continue;
     for(const m of (t.byMap[curMap] || [])){
       if(objHidden(m.obj)) continue;
-      const fi = floorIndexOf(m.pos ? m.pos.y : null, md.floors);
+      const fi = floorIndexOf(m.pos ? m.pos.y : null, md.floors, m.pos);
       if(fi >= 0) counts[fi]++;
     }
   }
@@ -3963,6 +4020,7 @@ document.getElementById("helpdlg").addEventListener("click", e => { if(e.target.
 /* 新しくなったこと: 公開した変更の短いお知らせ（新しい順）。公開のたびに先頭へ足す（d = 公開した日、k = 文言のキー）。
    only = その言語の画面だけに出す。前に見たとき（初めてなら前回開いたとき）より新しいものがあると ✨ に赤い印が付く */
 const NEWS = [
+  { d:"2026-11-17", k:"news1117" },
   { d:"2026-11-16", k:"news1116" },
   { d:"2026-11-16", k:"news1116b" },
   { d:"2026-11-15", k:"news1115" },
