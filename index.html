@@ -1114,7 +1114,7 @@ const STR = {
     obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
     // 新しくなったこと・お礼
     newsTip:"新しくなったこと", newsThanksTitle:"ありがとうございます", newsThanksBody:"ご意見・不具合の報告・翻訳の直しを送ってくださった皆さま、ありがとうございます。いただいた声をもとに直しています。", newsTrNote:"日本語と英語以外の画面は、機械翻訳をもとにしています。不自然な訳は、ご意見箱の「🌐 翻訳の直し」で教えてください。",
-    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
+    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
     news1112:"スペイン語・トルコ語の画面、「📲 アプリとして使う」、ご意見箱の「🌐 翻訳の直し」を追加しました。", news1107:"日本語のタスクページ（📋 全タスク一覧）を追加しました。各タスクの目標・場所・報酬を日本語で確認できます。", news1104:"ドイツ語の画面を追加しました。",
     news1027:"スマホで使いやすくし、ポーランド語・ポルトガル語の画面を追加しました。", news1016:"Lighthouse の「Road to Military Base V-Ex」を地図に追加しました。", news1013:"条件のある脱出地点（登るための道具・バッグ不可・有料など）に印を付け、トランジットの行き先と条件を出すようにしました。",
   },
@@ -1420,7 +1420,7 @@ const STR = {
     newsThanksBody:"Thank you to everyone who has sent feedback, bug reports and translation fixes. Your messages are how this tool gets better.",
     newsTrNote:"Languages other than Japanese and English are based on machine translation. If something reads oddly, please let me know with “🌐 Translation fix” in the feedback form.",
     newsNames:"Listed with their permission:", newsThanksHow:"Want your name (or handle) listed here? Write “OK to list my name: ___” in the feedback form.",
-    news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
+    news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
     news1112:"Added Spanish and Turkish, “📲 Install as app”, and “🌐 Translation fix” in the feedback form.", news1104:"Added German.",
     news1027:"Added task list pages (objectives, locations and rewards for every task), a better phone layout, and Polish and Portuguese.",
     news1016:"Added Lighthouse “Road to Military Base V-Ex” to the map.",
@@ -1584,7 +1584,7 @@ const MAPS = [
      {jp:"2F", svg:"Second_Floor", lo:28, hi:32.3},
      {jp:"3F", svg:"Third_Floor", lo:32.3, hi:PINF},
    ]},
-  {n:"the-lab", jp:"The Lab", t:[0.575,281.2,0.575,193.7], r:270, b:[[-80,-477],[-287,-193]],
+  {n:"the-lab", jp:"The Lab", t:[0.575,281.2,0.575,193.7], r:270, b:[[-80,-477],[-287,-193]], ts:175,   // ts = タイル1枚の大きさ（tarkov.dev の tileSize。ラボだけ 175、ほかは 256）
    tile:"https://assets.tarkov.dev/maps/labs_v4/1st/{z}/{x}/{y}.png",
    floors:[
      {jp:"Technical", tile:"https://assets.tarkov.dev/maps/labs_v4/technical/{z}/{x}/{y}.png", lo:NINF, hi:-0.9},
@@ -3619,13 +3619,13 @@ async function loadMap(){
     }else if(md.img){
       L.imageOverlay(md.img, md.sb ? toBounds(md.sb) : bounds, { interactive:false }).addTo(map);
     }else if(md.tile && !md.floors){
-      L.tileLayer(md.tile, { tileSize:256, bounds, noWrap:true, maxNativeZoom:6 }).addTo(map);
+      L.tileLayer(md.tile, { tileSize:md.ts || 256, bounds, noWrap:true, maxNativeZoom:6 }).addTo(map);
     }
     // md.tile && md.floors（The Lab）は showFloor がタイルを差し替える
   }catch(e){
     console.error(e);
     if(md.tile && !md.floors){
-      L.tileLayer(md.tile, { tileSize:256, bounds, noWrap:true, maxNativeZoom:6 }).addTo(map);
+      L.tileLayer(md.tile, { tileSize:md.ts || 256, bounds, noWrap:true, maxNativeZoom:6 }).addTo(map);
     }
   }
 
@@ -3697,7 +3697,7 @@ function showFloor(md, i){
     // タイル式フロア（The Lab）: タイルレイヤーごと差し替え
     if(floorTileLayer && map){ map.removeLayer(floorTileLayer); floorTileLayer = null; }
     if(map){
-      floorTileLayer = L.tileLayer(tf.tile, { tileSize:256, noWrap:true, maxNativeZoom:6, bounds: toBounds(md.b) }).addTo(map);
+      floorTileLayer = L.tileLayer(tf.tile, { tileSize:md.ts || 256, noWrap:true, maxNativeZoom:6, bounds: toBounds(md.b) }).addTo(map);
       floorTileLayer.bringToBack();
     }
   }else{
@@ -3963,6 +3963,8 @@ document.getElementById("helpdlg").addEventListener("click", e => { if(e.target.
 /* 新しくなったこと: 公開した変更の短いお知らせ（新しい順）。公開のたびに先頭へ足す（d = 公開した日、k = 文言のキー）。
    only = その言語の画面だけに出す。前に見たとき（初めてなら前回開いたとき）より新しいものがあると ✨ に赤い印が付く */
 const NEWS = [
+  { d:"2026-11-16", k:"news1116" },
+  { d:"2026-11-16", k:"news1116b" },
   { d:"2026-11-15", k:"news1115" },
   { d:"2026-11-14", k:"news1114" },
   { d:"2026-11-12", k:"news1112" },

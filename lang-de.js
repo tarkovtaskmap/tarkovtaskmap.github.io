@@ -305,7 +305,7 @@
   newsTrNote:"Die Sprachen außer Japanisch und Englisch beruhen auf maschineller Übersetzung. Wenn etwas seltsam klingt, melde es bitte über „🌐 Übersetzung verbessern“ im Feedback-Formular.",
   newsNames:"Mit ihrer Erlaubnis genannt:",
   newsThanksHow:"Möchtest du hier mit Namen (oder Nickname) genannt werden? Schreib „Name darf genannt werden: ___“ ins Feedback-Formular.",
-  news1115:"Koreanisch hinzugefügt.", news1114:"Neu: „Auf 𝕏 teilen“ und ein Stream-Overlay (eine transparente Ansicht für OBS usw.).",
+  news1116:"Die Karte von The Lab wurde zu groß dargestellt, wodurch die Markierungen verschoben waren – behoben (alle Etagen).", news1116b:"Die „To the Light“-Aufgaben von Mechanic (Trust but Verify usw.) können noch nicht angezeigt werden, da sie in der Datenquelle (tarkov.dev) fehlen. Sie erscheinen automatisch, sobald sie ergänzt werden.", news1115:"Koreanisch hinzugefügt.", news1114:"Neu: „Auf 𝕏 teilen“ und ein Stream-Overlay (eine transparente Ansicht für OBS usw.).",
   news1112:"Neu: Spanisch und Türkisch, „📲 Als App installieren“ und „🌐 Übersetzung verbessern“ im Feedback-Formular.", news1104:"Deutsch als Sprache hinzugefügt.",
   news1027:"Neu: Seiten mit allen Aufgaben (Ziele, Orte, Belohnungen; auf Englisch), eine bessere Handy-Ansicht sowie Polnisch und Portugiesisch.",
   news1016:"Lighthouse „Road to Military Base V-Ex“ zur Karte hinzugefügt.",
