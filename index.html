@@ -1116,7 +1116,7 @@ const STR = {
     obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
     // 新しくなったこと・お礼
     newsTip:"新しくなったこと", newsThanksTitle:"ありがとうございます", newsThanksBody:"ご意見・不具合の報告・翻訳の直しを送ってくださった皆さま、ありがとうございます。いただいた声をもとに直しています。", newsTrNote:"日本語と英語以外の画面は、機械翻訳をもとにしています。不自然な訳は、ご意見箱の「🌐 翻訳の直し」で教えてください。",
-    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", pwLblPower:"電源", pwLblGate:"開閉", pwLblDrain:"排水", powerFor:n=>`${n} の電源・操作パネル`, powerAt:(f,l)=>`操作する場所：地図の「⚡ ${l}」の札${f ? "（" + f + "）" : ""}`, news1117:"The Lab の脱出口を正しい階（地下・2F）に表示し、電源・開閉・排水の操作場所を「⚡ 電源」などの札で地図に出しました（Reserve の D-2 なども）。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
+    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", pwLblPower:"電源", pwLblGate:"開閉", pwLblDrain:"排水", powerFor:n=>`${n} の電源・操作パネル`, powerAt:(f,l)=>`操作する場所：地図の「⚡ ${l}」の札${f ? "（" + f + "）" : ""}`, news1117b:"Shoreline・Customs などで、屋外のタスクの印が「地下」や「2F」として扱われ、地図が暗い階で開いていたのを直しました。階の決め方を tarkov.dev と同じにし、地下の脱出口（Customs の Old Gas Station、Reserve の D-2 など）も正しい階に出します。", news1117:"The Lab の脱出口を正しい階（地下・2F）に表示し、電源・開閉・排水の操作場所を「⚡ 電源」などの札で地図に出しました（Reserve の D-2 なども）。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
     news1112:"スペイン語・トルコ語の画面、「📲 アプリとして使う」、ご意見箱の「🌐 翻訳の直し」を追加しました。", news1107:"日本語のタスクページ（📋 全タスク一覧）を追加しました。各タスクの目標・場所・報酬を日本語で確認できます。", news1104:"ドイツ語の画面を追加しました。",
     news1027:"スマホで使いやすくし、ポーランド語・ポルトガル語の画面を追加しました。", news1016:"Lighthouse の「Road to Military Base V-Ex」を地図に追加しました。", news1013:"条件のある脱出地点（登るための道具・バッグ不可・有料など）に印を付け、トランジットの行き先と条件を出すようにしました。",
   },
@@ -1422,7 +1422,7 @@ const STR = {
     newsThanksBody:"Thank you to everyone who has sent feedback, bug reports and translation fixes. Your messages are how this tool gets better.",
     newsTrNote:"Languages other than Japanese and English are based on machine translation. If something reads oddly, please let me know with “🌐 Translation fix” in the feedback form.",
     newsNames:"Listed with their permission:", newsThanksHow:"Want your name (or handle) listed here? Write “OK to list my name: ___” in the feedback form.",
-    pwLblPower:"Power", pwLblGate:"Gate", pwLblDrain:"Drain", powerFor:n=>`Power / control panel for ${n}`, powerAt:(f,l)=>`Where to activate: the “⚡ ${l}” tag on the map${f ? " (" + f + ")" : ""}`, news1117:"The Lab extracts now show on the right floor (basement / 2F), and the power, gate and drain controls are marked on the map with “⚡ Power”-style tags (also Reserve’s D-2 and more).", news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
+    pwLblPower:"Power", pwLblGate:"Gate", pwLblDrain:"Drain", powerFor:n=>`Power / control panel for ${n}`, powerAt:(f,l)=>`Where to activate: the “⚡ ${l}” tag on the map${f ? " (" + f + ")" : ""}`, news1117b:"Fixed outdoor task pins on Shoreline, Customs and other maps being treated as “Underground” or “2F” (the map opened on a dark floor). Floors now follow the same rules as tarkov.dev, and underground extracts (Customs’ Old Gas Station, Reserve’s D-2, etc.) show on the right floor.", news1117:"The Lab extracts now show on the right floor (basement / 2F), and the power, gate and drain controls are marked on the map with “⚡ Power”-style tags (also Reserve’s D-2 and more).", news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
     news1112:"Added Spanish and Turkish, “📲 Install as app”, and “🌐 Translation fix” in the feedback form.", news1104:"Added German.",
     news1027:"Added task list pages (objectives, locations and rewards for every task), a better phone layout, and Polish and Portuguese.",
     news1016:"Added Lighthouse “Road to Military Base V-Ex” to the map.",
@@ -1523,47 +1523,50 @@ function setMode(m){
 })();
 
 const NINF = -1e9, PINF = 1e9;
+// floors[].ex = その階になる場所。h = 高さ [下, 上)、bx = 範囲 [[x,z],[x,z],"名前"]（無ければマップ全体）。
+// tarkov.dev の maps.json の layers[].extents をそのまま写したもの（2026-11-17）。どれにも入らなければ base の階。
+// Customs の 4F（タイルだけで SVG の層が無い）は 3F に入れている。Reserve の建物の 2〜5F も SVG の層が無いので地上扱い。
 const MAPS = [
   {n:"streets-of-tarkov", jp:"Streets of Tarkov", t:[0.38,0,0.38,0], r:180, b:[[323,-295],[-280,532]],
    svg:"https://assets.tarkov.dev/maps/svg/StreetsOfTarkov.svg", lyr:"Ground_Level",
    floors:[
-     {jp:"Underground", svg:"Underground_Level", lo:NINF, hi:-6},
-     {jp:"1F", svg:"Ground_Level", lo:-6, hi:10, base:true},
-     {jp:"2F", svg:"Second_Floor", lo:10, hi:15},
-     {jp:"3F", svg:"Third_Floor", lo:15, hi:20},
-     {jp:"4F", svg:"Fourth_Floor", lo:20, hi:25},
-     {jp:"5F", svg:"Fifth_Floor", lo:25, hi:PINF},
+     {jp:"Underground", svg:"Underground_Level", ex:[{h:[NINF,-6]}, {h:[NINF,0], bx:[[[-13,-16],[28,33],"center parking"]]}, {h:[NINF,2], bx:[[[151,344],[275,418],"concordia"]]}]},
+     {jp:"1F", svg:"Ground_Level", base:true},
+     {jp:"2F", svg:"Second_Floor", ex:[{h:[10,15]}, {h:[5,10], bx:[[[-190,222],[-162,237.5],"accountant building"]]}]},
+     {jp:"3F", svg:"Third_Floor", ex:[{h:[15,20]}]},
+     {jp:"4F", svg:"Fourth_Floor", ex:[{h:[20,25]}]},
+     {jp:"5F", svg:"Fifth_Floor", ex:[{h:[25,PINF]}]},
    ]},
   {n:"customs", jp:"Customs", t:[0.239,168.65,0.239,136.35], r:180, b:[[698,-307],[-372,237]],
    svg:"https://assets.tarkov.dev/maps/svg/Customs.svg", lyr:"Ground_Level",
    floors:[
-     {jp:"Underground", svg:"Underground_Level", lo:NINF, hi:0.5},
-     {jp:"1F", svg:"Ground_Level", lo:0.5, hi:2.7, base:true},
-     {jp:"2F", svg:"Second_Floor", lo:2.7, hi:5.7},
-     {jp:"3F", svg:"Third_Floor", lo:5.7, hi:PINF},
+     {jp:"Underground", svg:"Underground_Level", ex:[{h:[NINF,0.5], bx:[[[635,-137],[620,-125],"zb-1011"],[[473,-122],[458,-110],"zb-1012"],[[314,-173],[308,-184],"old gas"],[[349,-88],[323,-32],"switch basement"],[[219,-158],[193,-137],"zb-013"],[[122,-61],[88,-40],"boiler room"]]}]},
+     {jp:"1F", svg:"Ground_Level", base:true},
+     {jp:"2F", svg:"Second_Floor", ex:[{h:[2.7,6.5], bx:[[[243,190],[165,125],"dorms"],[[116,-83],[72,-170],"mechanic"],[[356,-30],[341,-84],"switch 2nd"],[[334,-52],[321,-59],"switch 2nd"],[[589,10],[577,-1],"scav checkpoint"],[[580,-104],[532,-134],"dead scav warehouse"],[[625,-120],[599,-139],"pump 2nd"]]}, {h:[5.7,PINF], bx:[[[580,-104],[532,-134],"dead scav warehouse"],[[-199,-90],[-223,-131],"big red 2nd"],[[239,3],[169,-160],"skeleton"],[[336,-56],[316,-95],"switch snipe"],[[584,-46],[556,-92],"USEC 2nd"],[[93,0],[65,-22],"construction 2nd"]]}, {h:[14,15], bx:[[[497,-44],[450,-90],"chemical warehouse sniper scav"]]}, {h:[3.9,7.6], bx:[[[73,57],[22,-38],"warehouse 17"]]}, {h:[4.4,6.5], bx:[[[119,-57],[100,-42],"boiler"]]}, {h:[4.6,7.9], bx:[[[279,-79],[246,-1.4],"oilrig & panda"]]}]},
+     {jp:"3F", svg:"Third_Floor", ex:[{h:[5.7,PINF], bx:[[[243,190],[165,125],"dorms"]]}, {h:[7.7,11.3], bx:[[[73,-73],[22,-38],"warehouse 17"]]}, {h:[6.7,11.6], bx:[[[126,-64],[88,-35],"boiler"]]}, {h:[8,11.1], bx:[[[279,-79],[246,-1.4],"oilrig & panda"]]}, {h:[11.2,54.7], bx:[[[279,-79],[246,-1.4],"oilrig & panda"]]}]},
    ]},
   {n:"woods", jp:"Woods", t:[0.1855,112.95,0.1855,167.85], r:180, b:[[646,-914],[-761,442]],
    svg:"https://assets.tarkov.dev/maps/svg/Woods.svg", lyr:"Ground_Level"},
   {n:"shoreline", jp:"Shoreline", t:[0.16,83.2,0.16,111.1], r:180, b:[[504,-415],[-1056,618]],
    svg:"https://assets.tarkov.dev/maps/svg/Shoreline.svg", lyr:"Ground_Level",
    floors:[
-     {jp:"Underground", svg:"Underground_Level", lo:NINF, hi:-5},
-     {jp:"1F", svg:"Ground_Level", lo:-5, hi:-1, base:true},
-     {jp:"2F", svg:"Second_Floor", lo:-1, hi:2},
-     {jp:"3F", svg:"Third_Floor", lo:2, hi:PINF},
+     {jp:"Underground", svg:"Underground_Level", ex:[{h:[NINF,-5], bx:[[[-137,-68],[-237,-104],"west wing"],[[-234,-134],[-268,-163],"admin"]]}]},
+     {jp:"1F", svg:"Ground_Level", base:true},
+     {jp:"2F", svg:"Second_Floor", ex:[{h:[-1,2]}]},
+     {jp:"3F", svg:"Third_Floor", ex:[{h:[2,PINF]}]},
    ]},
   {n:"interchange", jp:"Interchange", t:[0.265,150.6,0.265,134.6], r:180, b:[[598,-442],[-433,426]],
    svg:"https://assets.tarkov.dev/maps/svg/Interchange.svg", lyr:"Ground_Level",
    floors:[
-     {jp:"1F", svg:"Ground_Level", lo:NINF, hi:25, base:true},
-     {jp:"2F", svg:"First_Floor", lo:25, hi:34},
-     {jp:"3F", svg:"Second_Floor", lo:34, hi:PINF},
+     {jp:"1F", svg:"Ground_Level", base:true},
+     {jp:"2F", svg:"First_Floor", ex:[{h:[25,34], bx:[[[120,218],[-222,-327],"mall"]]}]},
+     {jp:"3F", svg:"Second_Floor", ex:[{h:[34,PINF], bx:[[[120,218],[-222,-327],"mall"]]}]},
    ]},
   {n:"reserve", jp:"Reserve", t:[0.395,122.0,0.395,137.65], r:180, b:[[289,-293],[-303,244]], sb:[[289,-274],[-303,272]],
    svg:"https://assets.tarkov.dev/maps/svg/Reserve.svg", lyr:"Ground_Level",
    floors:[
-     {jp:"Bunkers", svg:"Bunkers", lo:NINF, hi:-7.27},
-     {jp:"Ground", svg:"Ground_Level", lo:-7.27, hi:PINF, base:true},
+     {jp:"Bunkers", svg:"Bunkers", ex:[{h:[NINF,-7.27], bx:[[[128,-208],[18,-33],"storage bunker"],[[-46,-42],[-176,127],"command bunkers"]]}, {h:[NINF,-12], bx:[[[-40,124],[-124,189],"D2"]]}, {h:[NINF,18], bx:[[[23,173],[-65,189],"dome tunnels"]]}, {h:[-7.27,-3.2], bx:[[[74,-196],[19,-149],"bunker hermetic door bunkers"]]}, {h:[-11,-4.6], bx:[[[-246,-79],[-274,-53],"E1 bunkers"],[[238,-26],[126,45],"bunkers"]]}]},
+     {jp:"Ground", svg:"Ground_Level", base:true},
    ]},
   // t[0]=-1: 絵(re3mr)は左端が x=352・右端が x=-533 の向き。latLngBounds は角の順序を正規化して向きを失うので、x の符号はここで反転する
   {n:"lighthouse", jp:"Lighthouse", t:[-1,0,-1,0], r:0,
@@ -1572,26 +1575,26 @@ const MAPS = [
   {n:"factory", jp:"Factory", t:[1.629,119.9,1.629,139.3], r:90, b:[[77,-64.5],[-65.5,67.4]],
    svg:"https://assets.tarkov.dev/maps/svg/Factory.svg", lyr:"Ground_Floor",
    floors:[
-     {jp:"Tunnels", svg:"Basement", lo:NINF, hi:-1},
-     {jp:"1F", svg:"Ground_Floor", lo:-1, hi:3, base:true},
-     {jp:"2F", svg:"Second_Floor", lo:3, hi:6},
-     {jp:"3F", svg:"Third_Floor", lo:6, hi:PINF},
+     {jp:"Tunnels", svg:"Basement", ex:[{h:[NINF,-1]}]},
+     {jp:"1F", svg:"Ground_Floor", base:true},
+     {jp:"2F", svg:"Second_Floor", ex:[{h:[3,6]}]},
+     {jp:"3F", svg:"Third_Floor", ex:[{h:[6,PINF]}]},
    ]},
   {n:"ground-zero", jp:"Ground Zero", t:[0.524,167.3,0.524,65.1], r:180, b:[[249,-124],[-99,364]],
    svg:"https://assets.tarkov.dev/maps/svg/GroundZero.svg", lyr:"Ground_Level",
    tile:"https://assets.tarkov.dev/maps/groundzero/main_summer/{z}/{x}/{y}.png",
    floors:[
-     {jp:"Garage", svg:"Underground_Level", lo:NINF, hi:21},
-     {jp:"1F", svg:"Ground_Level", lo:21, hi:28, base:true},
-     {jp:"2F", svg:"Second_Floor", lo:28, hi:32.3},
-     {jp:"3F", svg:"Third_Floor", lo:32.3, hi:PINF},
+     {jp:"Garage", svg:"Underground_Level", ex:[{h:[NINF,21], bx:[[[117,-100],[43,190],"garage"],[[143,49],[117,80],"underpass"]]}]},
+     {jp:"1F", svg:"Ground_Level", base:true},
+     {jp:"2F", svg:"Second_Floor", ex:[{h:[28,32.3]}, {h:[26,31], bx:[[[98,216],[91,228],"m showroom"]]}]},
+     {jp:"3F", svg:"Third_Floor", ex:[{h:[32.3,PINF]}]},
    ]},
   {n:"the-lab", jp:"The Lab", t:[0.575,281.2,0.575,193.7], r:270, b:[[-80,-477],[-287,-193]], ts:175,   // ts = タイル1枚の大きさ（tarkov.dev の tileSize。ラボだけ 175、ほかは 256）
    tile:"https://assets.tarkov.dev/maps/labs_v4/1st/{z}/{x}/{y}.png",
    floors:[
-     {jp:"Technical", tile:"https://assets.tarkov.dev/maps/labs_v4/technical/{z}/{x}/{y}.png", lo:NINF, hi:-0.9},
-     {jp:"1F", tile:"https://assets.tarkov.dev/maps/labs_v4/1st/{z}/{x}/{y}.png", lo:-0.9, hi:3, base:true},
-     {jp:"2F", tile:"https://assets.tarkov.dev/maps/labs_v4/2nd/{z}/{x}/{y}.png", lo:3, hi:PINF, bx:[[-101,-422],[-271,-270]]},   // bx = その階がある範囲 [[x,z],[x,z]]（tarkov.dev の extents.bounds）。範囲外の高い所（駐車場・格納庫）は 1F
+     {jp:"Technical", tile:"https://assets.tarkov.dev/maps/labs_v4/technical/{z}/{x}/{y}.png", ex:[{h:[NINF,-0.9]}]},
+     {jp:"1F", tile:"https://assets.tarkov.dev/maps/labs_v4/1st/{z}/{x}/{y}.png", base:true},
+     {jp:"2F", tile:"https://assets.tarkov.dev/maps/labs_v4/2nd/{z}/{x}/{y}.png", ex:[{h:[3,PINF], bx:[[[-101,-422],[-271,-270]]]}]},
    ]},
   {n:"the-labyrinth", jp:"The Labyrinth", t:[2.115,85.5,2.115,128.0], r:270, b:[[-52,-37],[53,76]],
    tile:"https://assets.tarkov.dev/maps/labyrinth/main/{z}/{x}/{y}.png"},
@@ -1817,19 +1820,22 @@ const FLOOR_LOC = {
   ko:{ Underground:"지하", Bunkers:"벙커", Tunnels:"터널", Garage:"차고", Technical:"기술층", Ground:"지상" },
 };
 const floorDisp = jp => (FLOOR_LOC[LANG] && FLOOR_LOC[LANG][jp]) || jp;
-// 脱出口の実フロア: 座標のY値だけで判定すると、Shorelineのような屋外主体のマップで地形の起伏を
-// 「地下」と誤判定してしまう(実際は建物内の階とは無関係な高低差のため)。そのため既定は「基準階」とし、
-// 実際に基準階と異なると確認できたものだけここに手動で記録する(ユーザー確認ベース)。
+// 脱出口の実フロア: 高さだけで判定すると、屋外の地形の起伏で階が変わってしまう（Factory の Gate 3 が 2F になる等）。
+// そのため、tarkov.dev が「この建物の中はこの階」と範囲付きで決めている所（bx のある ex）に入るときだけその階にし、
+// それ以外は基準階。範囲の無い階（The Lab の地下・Factory の地下など）は、確認できたものだけここに手動で記録する。
+// 11/17: 範囲付きで地下になる脱出口（Customs の Old Gas Station・Boiler Room Basement・ZB-1013・ZB-1012、
+// Reserve の D-2・Bunker Hermetic Door）と Factory の 2 つは、攻略サイトでも地下と確認した。
 const EXTRACT_FLOOR_OVERRIDE = {
   customs:    { "ZB-1011": "Underground" },
   shoreline:  { "Admin Basement": "Underground", "East Wing Gym Entrance": "2F" },
+  factory:    { "Cellars": "Tunnels", "Smugglers' Passage": "Tunnels" },
   "the-lab":  { "Cargo Elevator": "2F", "Main Elevator": "Technical", "Medical Block Elevator": "Technical", "Sewage Conduit": "Technical", "Ventilation Shaft": "Technical" },
 };
 function extractFloorIndex(mapN, md, e){
   if(!md.floors) return -1;
   const baseIdx = md.floors.findIndex(f => f.base);
   const ov = (EXTRACT_FLOOR_OVERRIDE[mapN] || {})[e.key || e.name];
-  if(!ov) return baseIdx;
+  if(!ov) return e.position ? floorIndexOf(e.position.y, md.floors, e.position, true) : baseIdx;
   const fi = md.floors.findIndex(f => f.jp === ov);
   return fi >= 0 ? fi : baseIdx;
 }
@@ -2179,19 +2185,21 @@ let curFloor = null;            // 現在の階 index（md.floors 内）。null 
 let svgLayerGroups = {};        // svgLayer id -> <g> 要素
 let floorTileLayer = null;      // タイル式フロアマップ（The Lab 用）の現在レイヤー
 
-// y座標 → 階 index（floors 配列内）
-function floorIndexOf(y, floors, pos){
-  if(y == null || !floors) return floors ? floors.findIndex(f => f.base) : -1;
-  // bx（その階がある範囲）があれば、位置がその中にあるときだけその階（tarkov.dev の extents と同じ）
-  const inBx = f => {
-    if(!f.bx || !pos) return true;
-    const [[x1, z1], [x2, z2]] = f.bx;
-    return pos.x >= Math.min(x1, x2) && pos.x <= Math.max(x1, x2) && pos.z >= Math.min(z1, z2) && pos.z <= Math.max(z1, z2);
-  };
+// 座標 → 階 index（floors 配列内）。tarkov.dev と同じ決め方: 各階の ex（高さ h と、あれば範囲 bx）の
+// どれかに入ればその階、どれにも入らなければ基準階。bx のある ex は、その建物の中だけで効く
+// （Shoreline のように地面そのものが低いマップで、屋外を「地下」と誤判定しないため。11/17 に直した）
+// boxedOnly = true: bx のある ex だけを見る（脱出口用。屋外の高低差で階を変えない）
+const inBox = (p, b) => p.x >= Math.min(b[0][0], b[1][0]) && p.x <= Math.max(b[0][0], b[1][0]) && p.z >= Math.min(b[0][1], b[1][1]) && p.z <= Math.max(b[0][1], b[1][1]);
+function floorIndexOf(y, floors, pos, boxedOnly){
+  if(!floors) return -1;
+  const base = floors.findIndex(f => f.base);
+  if(y == null) return base;
   for(let i = 0; i < floors.length; i++){
-    if(y >= floors[i].lo && y < floors[i].hi && inBx(floors[i])) return i;
+    const f = floors[i];
+    if(f.base || !f.ex) continue;
+    if(f.ex.some(e => y >= e.h[0] && y < e.h[1] && (e.bx ? !!pos && e.bx.some(b => inBox(pos, b)) : !boxedOnly))) return i;
   }
-  return floors.findIndex(f => f.base);
+  return base;
 }
 
 function loadPins(){ try{ return JSON.parse(localStorage.getItem(PIN_KEY)) || {}; }catch(e){ return {}; } }
@@ -4020,6 +4028,7 @@ document.getElementById("helpdlg").addEventListener("click", e => { if(e.target.
 /* 新しくなったこと: 公開した変更の短いお知らせ（新しい順）。公開のたびに先頭へ足す（d = 公開した日、k = 文言のキー）。
    only = その言語の画面だけに出す。前に見たとき（初めてなら前回開いたとき）より新しいものがあると ✨ に赤い印が付く */
 const NEWS = [
+  { d:"2026-11-18", k:"news1117b" },
   { d:"2026-11-17", k:"news1117" },
   { d:"2026-11-16", k:"news1116" },
   { d:"2026-11-16", k:"news1116b" },
