@@ -49,7 +49,7 @@
   transitLabel:"Tránsito", transitPopup:desc=>`<b>Tránsito</b><br>${desc}`,
   hazardSniper:"Zona de tiro del Scav francotirador", hazardMinefield:"Campo de minas", hazardOther:"Zona peligrosa",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">Esta zona es peligrosa</span>`,
-  lockedDoor:"Puerta cerrada", lockType:"Tipo", needsPower:"※ Necesita electricidad", lockGlyph:"P", routeLabel:"Ruta", floorLabel:"Planta:",
+  lockedDoor:"Puerta cerrada", lockType:"Tipo", needsPower:"※ Necesita electricidad", lockGlyph:"P", routeLabel:"Ruta", routeFloorGo:f=>`Ver ${f}`, routeNeed2:"Los números aparecen cuando hay 2 o más marcadores en este mapa (también cuentan los de otras plantas).", floorLabel:"Planta:",
   lockPopup:(type,power)=>`<b>Puerta cerrada</b><br>Tipo: ${type}${power?"<br>※ Necesita electricidad":""}`,
   switchLabel:"Interruptor", switchPopup:name=>`<b>Interruptor</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`Probabilidad de aparición ~${pct}%`,
@@ -104,7 +104,7 @@
   shareLoadedAlert:"Datos compartidos cargados.",
   shareLoadFailedAlert:msg=>`Error al cargar: ${msg}`,
   ttBtn:"Importar de TarkovTracker", ttTitle:"Importar progreso de TarkovTracker",
-  ttHow:"<ol><li>En los ajustes de TarkovTracker (tarkovtracker.org), guarda una <b>copia de seguridad (exportar)</b> de tu progreso como JSON</li><li>Elige el archivo abajo o pega su contenido</li></ol>Se pueden importar misiones completadas / fallidas, objetivos completados y tu nivel.",
+  ttHow:"<ol><li>Abre la <a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>página de copias de seguridad de TarkovTracker</a> y pulsa «<b>Exportar copia de seguridad</b>» para guardar el archivo</li><li>Elige el archivo abajo o pega su contenido</li></ol>Se pueden importar misiones completadas / fallidas, objetivos completados y tu nivel.",
   ttPrivacy:"🔒 El archivo se procesa solo en este navegador y no se envía a ningún sitio.",
   ttPasteLabel:"O pega el contenido JSON:",
   ttErrJson:"No se pudo leer como JSON. Comprueba que sea un archivo de copia de seguridad.",
@@ -151,7 +151,7 @@
 <li><b>Botón 📍</b> (en cada fila de misión): selecciona la misión, cambia de mapa y planta si hace falta y salta a sus pines (un anillo parpadea alrededor).</li>
 <li><b>Leyenda</b>: «Leyenda ▼» abajo a la izquierda explica los iconos y colores.</li>
 <li><b>Capas</b>: en «Capas / Compartir» activas o desactivas tránsitos, zonas peligrosas, puertas cerradas, interruptores, jefes y apariciones.</li>
-<li><b>Números de ruta</b>: al activarlos, los pines reciben ①②③… en el orden del camino más corto, unidos por una línea.</li>
+<li><b>Números de ruta</b>: al activarlos, los pines reciben ①②③… en el orden del camino más corto, unidos por una línea. Hacen falta 2 o más pines en el mapa; también entran los de otras plantas (semitransparentes, con una etiqueta como «2F»; haz clic para ver esa planta). El orden también aparece en la leyenda.</li>
 <li><b>Pines propios</b>: <b>clic derecho</b> en el mapa añade un pin con una nota (clic en el pin para editar/borrar).</li>
 <li><b>Brillo / Contraste</b>: controles arriba a la izquierda del mapa.</li>
 </ul></div></details>
@@ -195,7 +195,7 @@
 <details><summary>8. Importar de TarkovTracker</summary><div>
 <p>Para quienes ya llevan su progreso en TarkovTracker: importa de una vez las misiones completadas y fallidas, los objetivos completados y tu nivel.</p>
 <ol>
-<li>En los ajustes de TarkovTracker (tarkovtracker.org), guarda la copia de seguridad (exportar) como <b>.json</b>.</li>
+<li>Abre la <a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">página de copias de seguridad de TarkovTracker</a> y pulsa «<b>Exportar copia de seguridad</b>» para guardar el <b>.json</b>.</li>
 <li>Aquí, abre «Capas / Compartir», pulsa <b>Importar de TarkovTracker</b> y elige el archivo (o pégalo).</li>
 <li>Revisa el resumen y pulsa <b>Importar</b>. Puedes elegir «Solo añadir / Sobrescribir» y deshacerlo justo después.</li>
 </ol>
@@ -305,7 +305,7 @@
   newsTrNote:"Los idiomas distintos del japonés y el inglés se basan en traducción automática. Si algo suena raro, avísame con «🌐 Corregir traducción» en el formulario de comentarios.",
   newsNames:"Con su permiso:",
   newsThanksHow:"¿Quieres que tu nombre (o apodo) aparezca aquí? Escribe «Pueden poner mi nombre: ___» en el formulario de comentarios.",
-  pwLblPower:"Energía", pwLblGate:"Portón", pwLblDrain:"Drenaje", powerFor:n=>`Energía / panel de control: ${n}`, powerAt:(f,l)=>`Dónde activar: la etiqueta «⚡ ${l}» en el mapa${f ? " (" + f + ")" : ""}`, news1117b:"Corregido: en Shoreline, Customs y otros mapas, los marcadores de misiones al aire libre se trataban como «subterráneo» o «2F» y el mapa se abría en una planta oscura. Las plantas ahora siguen las mismas reglas que tarkov.dev, y las extracciones subterráneas (Old Gas Station en Customs, D-2 en Reserve, etc.) aparecen en la planta correcta.", news1117:"Las extracciones de The Lab ahora aparecen en la planta correcta (sótano / 2F), y los puntos de energía, portón y drenaje están marcados en el mapa con etiquetas «⚡ Energía», etc. (también D-2 y otras en Reserve).", news1116:"Corregido el mapa de The Lab, que se mostraba demasiado grande y desplazaba los marcadores (todas las plantas).", news1116b:"Las misiones «To the Light» de Mechanic (Trust but Verify, etc.) aún no se muestran porque todavía no están en la fuente de datos (tarkov.dev). Aparecerán automáticamente cuando se añadan.", news1115:"Añadido el coreano.", news1114:"Nuevo botón «Compartir en 𝕏» y overlay para stream (una vista transparente para OBS, etc.).",
+  pwLblPower:"Energía", pwLblGate:"Portón", pwLblDrain:"Drenaje", powerFor:n=>`Energía / panel de control: ${n}`, powerAt:(f,l)=>`Dónde activar: la etiqueta «⚡ ${l}» en el mapa${f ? " (" + f + ")" : ""}`, news1121:"Corregido: la ruta numerada se saltaba los marcadores de otras plantas (p. ej., Customs: The Courier → Golden Swag en los dormitorios). Ahora los marcadores de otras plantas también se numeran, semitransparentes y con una etiqueta como «2F»; haz clic para ver esa planta. La leyenda muestra el orden de la ruta. ¡Gracias por avisar!", news1117b:"Corregido: en Shoreline, Customs y otros mapas, los marcadores de misiones al aire libre se trataban como «subterráneo» o «2F» y el mapa se abría en una planta oscura. Las plantas ahora siguen las mismas reglas que tarkov.dev, y las extracciones subterráneas (Old Gas Station en Customs, D-2 en Reserve, etc.) aparecen en la planta correcta.", news1117:"Las extracciones de The Lab ahora aparecen en la planta correcta (sótano / 2F), y los puntos de energía, portón y drenaje están marcados en el mapa con etiquetas «⚡ Energía», etc. (también D-2 y otras en Reserve).", news1116:"Corregido el mapa de The Lab, que se mostraba demasiado grande y desplazaba los marcadores (todas las plantas).", news1116b:"Las misiones «To the Light» de Mechanic (Trust but Verify, etc.) aún no se muestran porque todavía no están en la fuente de datos (tarkov.dev). Aparecerán automáticamente cuando se añadan.", news1115:"Añadido el coreano.", news1114:"Nuevo botón «Compartir en 𝕏» y overlay para stream (una vista transparente para OBS, etc.).",
   news1112:"Añadidos el español y el turco, «📲 Instalar como app» y «🌐 Corregir traducción» en el formulario de comentarios.", news1104:"Añadido el alemán.",
   news1027:"Nuevas páginas con todas las misiones (objetivos, lugares y recompensas; en inglés), mejor vista en el móvil, y polaco y portugués.",
   news1016:"Añadida al mapa la extracción «Road to Military Base V-Ex» de Faro.",

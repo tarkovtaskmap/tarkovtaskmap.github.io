@@ -46,7 +46,7 @@ window.__STR_ZH__ = {
   transitLabel:"传送点", transitPopup:desc=>`<b>传送点</b><br>${desc}`,
   hazardSniper:"Scav 狙击手射界", hazardMinefield:"雷区", hazardOther:"危险区域",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">这片区域很危险</span>`,
-  lockedDoor:"上锁的门", lockType:"类型", needsPower:"※ 需要通电", lockGlyph:"锁", routeLabel:"路线", floorLabel:"楼层：",
+  lockedDoor:"上锁的门", lockType:"类型", needsPower:"※ 需要通电", lockGlyph:"锁", routeLabel:"路线", routeFloorGo:f=>`显示 ${f}`, routeNeed2:"本地图上有 2 个以上标记时，会按巡回顺序编号（也包括其他楼层的标记）。", floorLabel:"楼层：",
   lockPopup:(type,power)=>`<b>上锁的门</b><br>类型：${type}${power?"<br>※ 需要通电":""}`,
   switchLabel:"开关", switchPopup:name=>`<b>开关</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`刷新概率约 ${pct}%`,
@@ -101,7 +101,7 @@ window.__STR_ZH__ = {
   shareLoadedAlert:"已读取分享数据。",
   shareLoadFailedAlert:msg=>`读取失败：${msg}`,
   ttBtn:"导入 TarkovTracker", ttTitle:"导入 TarkovTracker 的进度",
-  ttHow:"<ol><li>在 TarkovTracker（tarkovtracker.org）的设置中，保存进度的<b>备份（导出）</b>JSON</li><li>在下方选择该文件，或粘贴其内容</li></ol>可以应用已完成/已失败的任务、已完成的目标和你的等级。",
+  ttHow:"<ol><li>打开<a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>TarkovTracker 的备份页面</a>，点击“<b>导出进度备份</b>”保存文件</li><li>在下方选择该文件，或粘贴其内容</li></ol>可以应用已完成/已失败的任务、已完成的目标和你的等级。",
   ttPrivacy:"🔒 文件只在此浏览器内处理，不会发送到任何地方。",
   ttPasteLabel:"或粘贴 JSON 内容：",
   ttErrJson:"无法作为 JSON 读取。请确认这是备份文件。",
@@ -148,7 +148,7 @@ window.__STR_ZH__ = {
 <li><b>📍 按钮</b>（每个任务行上）：选中该任务，必要时切换到对应的地图和楼层，并把地图移到它的标记处（标记周围会闪出一圈光环）。</li>
 <li><b>图例</b>：左下角的「图例 ▼」会说明各种符号和颜色。</li>
 <li><b>图层</b>：在「显示图层·分享」中，可开关传送点、危险区域、上锁的门、开关、Boss 和刷新点。</li>
-<li><b>路线编号</b>：开启后，标记会按最短路线顺序标上 ①②③…，并用线连起来。</li>
+<li><b>路线编号</b>：开启后，标记会按最短路线顺序标上 ①②③…，并用线连起来。本地图上有 2 个以上标记时才会编号；其他楼层的标记也会加入（半透明并带“2F”等标签，点击可切换到该楼层）。巡回顺序也会显示在图例中。</li>
 <li><b>自定义标记</b>：在地图上<b>右键</b>可添加带备注的标记（点击标记可编辑/删除）。</li>
 <li><b>亮度 / 对比度</b>：地图左上角的滑块。</li>
 </ul></div></details>
@@ -192,7 +192,7 @@ window.__STR_ZH__ = {
 <details><summary>8. 导入 TarkovTracker</summary><div>
 <p>适合已经在 TarkovTracker 上记录进度的人：一次性应用已完成任务、已失败任务、已完成目标和你的等级。</p>
 <ol>
-<li>在 TarkovTracker（tarkovtracker.org）的设置中，保存备份（导出）的 <b>.json</b> 文件。</li>
+<li>打开<a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">TarkovTracker 的备份页面</a>，点击“<b>导出进度备份</b>”保存 <b>.json</b> 文件。</li>
 <li>在这里打开「显示图层·分享」，点击<b>导入 TarkovTracker</b>并选择该文件（或粘贴其内容）。</li>
 <li>确认摘要后点击<b>导入</b>。可以选择「仅添加 / 覆盖」，导入后可立即撤销。</li>
 </ol>
@@ -294,6 +294,6 @@ window.__STR_ZH__ = {
   obsWindowNote:"在本浏览器中以单独窗口打开时，每次在工具中更换任务或地图都会自动更新。可以放在第二块显示器上，或用 OBS 的“窗口采集”捕获。", obsCount:n=>`${n} 个任务`, obsEmpty:"此地图上没有已选任务", obsHelpBar:"直播叠加层（在 OBS 中不会显示此提示；点 × 关闭）",
   // 新しくなったこと・お礼
   newsTip:"更新内容", newsThanksTitle:"感谢", newsThanksBody:"感谢所有发送反馈、错误报告和翻译修正的朋友。工具正是根据这些意见不断改进的。", newsTrNote:"除日语和英语外，其他语言的界面基于机器翻译。如有不自然的地方，请通过反馈表中的“🌐 翻译修正”告诉我。", newsNames:"经本人同意：",
-  newsThanksHow:"希望在这里列出你的名字（或昵称）吗？请在反馈表中写上“可以列出我的名字：___”。", pwLblPower:"电源", pwLblGate:"开门", pwLblDrain:"排水", powerFor:n=>`${n} 的电源/操作面板`, powerAt:(f,l)=>`操作位置：地图上的“⚡ ${l}”标签${f ? "（" + f + "）" : ""}`, news1117b:"修正了 Shoreline、Customs 等地图上户外任务标记被当作“地下”或“2F”、地图打开时停在昏暗楼层的问题。楼层判定改为与 tarkov.dev 相同，地下撤离点（Customs 的 Old Gas Station、Reserve 的 D-2 等）也显示在正确楼层。", news1117:"The Lab 的撤离点现在显示在正确的楼层（地下/2F），电源、开门、排水的操作位置也以“⚡ 电源”等标签标在地图上（Reserve 的 D-2 等也是）。", news1116:"修复了 The Lab 地图显示过大、标记位置错位的问题（所有楼层）。", news1116b:"Mechanic 的“To the Light”任务（Trust but Verify 等）尚未收录到数据源（tarkov.dev）中，因此暂时无法显示。收录后会自动显示。", news1115:"新增韩语。", news1114:"新增“分享到 𝕏”按钮和直播叠加层（可叠加到 OBS 等的透明画面）。", news1112:"新增西班牙语和土耳其语、“📲 安装为应用”，以及反馈表中的“🌐 翻译修正”。", news1104:"新增德语。",
+  newsThanksHow:"希望在这里列出你的名字（或昵称）吗？请在反馈表中写上“可以列出我的名字：___”。", pwLblPower:"电源", pwLblGate:"开门", pwLblDrain:"排水", powerFor:n=>`${n} 的电源/操作面板`, powerAt:(f,l)=>`操作位置：地图上的“⚡ ${l}”标签${f ? "（" + f + "）" : ""}`, news1121:"修正了巡回路线编号会跳过其他楼层标记的问题（例：Customs 的 The Courier → 宿舍里的 Golden Swag）。其他楼层的标记现在也会编号，以半透明加“2F”等标签显示，点击即可切换到该楼层。图例中会显示巡回顺序。感谢反馈！", news1117b:"修正了 Shoreline、Customs 等地图上户外任务标记被当作“地下”或“2F”、地图打开时停在昏暗楼层的问题。楼层判定改为与 tarkov.dev 相同，地下撤离点（Customs 的 Old Gas Station、Reserve 的 D-2 等）也显示在正确楼层。", news1117:"The Lab 的撤离点现在显示在正确的楼层（地下/2F），电源、开门、排水的操作位置也以“⚡ 电源”等标签标在地图上（Reserve 的 D-2 等也是）。", news1116:"修复了 The Lab 地图显示过大、标记位置错位的问题（所有楼层）。", news1116b:"Mechanic 的“To the Light”任务（Trust but Verify 等）尚未收录到数据源（tarkov.dev）中，因此暂时无法显示。收录后会自动显示。", news1115:"新增韩语。", news1114:"新增“分享到 𝕏”按钮和直播叠加层（可叠加到 OBS 等的透明画面）。", news1112:"新增西班牙语和土耳其语、“📲 安装为应用”，以及反馈表中的“🌐 翻译修正”。", news1104:"新增德语。",
   news1027:"新增全部任务的列表页面（目标、地点和奖励；英文），改进手机显示，并新增波兰语和葡萄牙语。", news1016:"在灯塔地图上新增撤离点“Road to Military Base V-Ex”。", news1013:"有条件的撤离点（攀爬装备、不能带背包、付费等）现在会显示标记，传送点也会显示目的地和条件。",
 };

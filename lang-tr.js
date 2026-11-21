@@ -48,7 +48,7 @@
   transitLabel:"Transit", transitPopup:desc=>`<b>Transit</b><br>${desc}`,
   hazardSniper:"Keskin nişancı Scav atış alanı", hazardMinefield:"Mayın tarlası", hazardOther:"Tehlikeli bölge",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">Bu bölge tehlikeli</span>`,
-  lockedDoor:"Kilitli kapı", lockType:"Tür", needsPower:"※ Elektrik gerekir", lockGlyph:"K", routeLabel:"Rota", floorLabel:"Kat:",
+  lockedDoor:"Kilitli kapı", lockType:"Tür", needsPower:"※ Elektrik gerekir", lockGlyph:"K", routeLabel:"Rota", routeFloorGo:f=>`Göster: ${f}`, routeNeed2:"Bu haritada 2 veya daha fazla işaret olduğunda ziyaret sırasına göre numaralanır (diğer katlardaki işaretler de dahil).", floorLabel:"Kat:",
   lockPopup:(type,power)=>`<b>Kilitli kapı</b><br>Tür: ${type}${power?"<br>※ Elektrik gerekir":""}`,
   switchLabel:"Şalter", switchPopup:name=>`<b>Şalter</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`Doğma şansı ~%${pct}`,
@@ -103,7 +103,7 @@
   shareLoadedAlert:"Paylaşılan veriler yüklendi.",
   shareLoadFailedAlert:msg=>`Yüklenemedi: ${msg}`,
   ttBtn:"TarkovTracker'dan içe aktar", ttTitle:"TarkovTracker'dan ilerlemeyi içe aktar",
-  ttHow:"<ol><li>TarkovTracker (tarkovtracker.org) ayarlarından ilerlemenin <b>yedeğini (dışa aktarma)</b> JSON olarak kaydet</li><li>Dosyayı aşağıdan seç ya da içeriğini yapıştır</li></ol>Tamamlanan / başarısız görevler, tamamlanan hedefler ve seviyen aktarılabilir.",
+  ttHow:"<ol><li><a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>TarkovTracker’ın yedekleme sayfasını</a> aç ve dosyayı kaydetmek için “<b>Export Progress Backup</b>” düğmesine bas</li><li>Dosyayı aşağıdan seç ya da içeriğini yapıştır</li></ol>Tamamlanan / başarısız görevler, tamamlanan hedefler ve seviyen aktarılabilir.",
   ttPrivacy:"🔒 Dosya yalnızca bu tarayıcıda işlenir, hiçbir yere gönderilmez.",
   ttPasteLabel:"Ya da JSON içeriğini yapıştır:",
   ttErrJson:"JSON olarak okunamadı. Bunun bir yedek dosyası olduğundan emin ol.",
@@ -150,7 +150,7 @@
 <li><b>📍 düğmesi</b> (her görev satırında): görevi seçer, gerekirse haritayı ve katı değiştirir ve işaretlerine gider (çevresinde bir halka yanıp söner).</li>
 <li><b>Lejant</b>: sol alttaki «Lejant ▼» simgeleri ve renkleri açıklar.</li>
 <li><b>Katmanlar</b>: «Katmanlar / Paylaş» bölümünden transitleri, tehlikeli bölgeleri, kilitli kapıları, şalterleri, bossları ve doğma noktalarını açıp kapatabilirsin.</li>
-<li><b>Rota numaraları</b>: açıkken işaretler en kısa yol sırasına göre ①②③… numarası alır ve bir çizgiyle bağlanır.</li>
+<li><b>Rota numaraları</b>: açıkken işaretler en kısa yol sırasına göre ①②③… numarası alır ve bir çizgiyle bağlanır. Haritada 2 veya daha fazla işaret gerekir; diğer katlardaki işaretler de dahil edilir (yarı saydam, “2F” gibi bir etiketle — tıklayınca o kat açılır). Sıra lejantta da gösterilir.</li>
 <li><b>Kendi işaretlerin</b>: haritaya <b>sağ tıklayınca</b> notlu bir işaret eklenir (düzenlemek/silmek için işarete tıkla).</li>
 <li><b>Parlaklık / Kontrast</b>: haritanın sol üstündeki kaydırıcılar.</li>
 </ul></div></details>
@@ -194,7 +194,7 @@
 <details><summary>8. TarkovTracker'dan içe aktarma</summary><div>
 <p>İlerlemesini zaten TarkovTracker'da tutanlar için: tamamlanan ve başarısız görevleri, tamamlanan hedefleri ve seviyeni tek seferde aktar.</p>
 <ol>
-<li>TarkovTracker (tarkovtracker.org) ayarlarından yedeği (dışa aktarma) <b>.json</b> olarak kaydet.</li>
+<li><a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">TarkovTracker’ın yedekleme sayfasını</a> aç ve <b>.json</b> dosyasını kaydetmek için “<b>Export Progress Backup</b>” düğmesine bas.</li>
 <li>Burada «Katmanlar / Paylaş» bölümünü aç, <b>TarkovTracker'dan içe aktar</b> düğmesine bas ve dosyayı seç (ya da yapıştır).</li>
 <li>Özeti kontrol et ve <b>İçe aktar</b> düğmesine bas. «Yalnızca ekle / Üzerine yaz» seçebilir ve hemen ardından geri alabilirsin.</li>
 </ol>
@@ -302,7 +302,7 @@
   newsTip:"Yenilikler", newsThanksTitle:"Teşekkürler", newsThanksBody:"Görüş, hata bildirimi ve çeviri düzeltmesi gönderen herkese teşekkürler. Araç bu mesajlarla gelişiyor.",
   newsTrNote:"Japonca ve İngilizce dışındaki diller makine çevirisine dayanır. Tuhaf bir ifade görürsen, görüş formundaki “🌐 Çeviri düzeltmesi” ile bildir.", newsNames:"İzinleriyle:",
   newsThanksHow:"Adının (veya takma adının) burada yer almasını ister misin? Görüş formuna “Adım yazılabilir: ___” yaz.",
-  pwLblPower:"Güç", pwLblGate:"Kapı", pwLblDrain:"Tahliye", powerFor:n=>`${n} için güç / kontrol paneli`, powerAt:(f,l)=>`Nereden çalıştırılır: haritadaki “⚡ ${l}” etiketi${f ? " (" + f + ")" : ""}`, news1117b:"Düzeltildi: Shoreline, Customs ve diğer haritalarda açık alandaki görev işaretleri “yer altı” veya “2F” sayılıyor ve harita karanlık bir katta açılıyordu. Katlar artık tarkov.dev ile aynı kurallarla belirleniyor; yer altı çıkışları (Customs’taki Old Gas Station, Reserve’deki D-2 vb.) doğru katta gösteriliyor.", news1117:"The Lab çıkışları artık doğru katta (bodrum / 2F) gösteriliyor; güç, kapı ve tahliye noktaları haritada “⚡ Güç” gibi etiketlerle işaretlendi (Reserve’deki D-2 vb. de).", news1116:"The Lab haritasının olduğundan büyük çizilmesi ve işaretlerin kayması düzeltildi (tüm katlar).", news1116b:"Mechanic’in “To the Light” görevleri (Trust but Verify vb.) veri kaynağında (tarkov.dev) henüz olmadığı için gösterilemiyor. Eklendiğinde otomatik olarak görünecek.", news1115:"Korece eklendi.", news1114:"“𝕏'te paylaş” düğmesi ve yayın kaplaması (OBS vb. için şeffaf görünüm) eklendi.",
+  pwLblPower:"Güç", pwLblGate:"Kapı", pwLblDrain:"Tahliye", powerFor:n=>`${n} için güç / kontrol paneli`, powerAt:(f,l)=>`Nereden çalıştırılır: haritadaki “⚡ ${l}” etiketi${f ? " (" + f + ")" : ""}`, news1121:"Düzeltildi: numaralı rota diğer katlardaki işaretleri atlıyordu (ör. Customs: The Courier → yurttaki Golden Swag). Diğer katlardaki işaretler de artık numaralanıyor; yarı saydam ve “2F” gibi bir etiketle gösteriliyor, tıklayınca o kat açılıyor. Lejantta rota sırası gösteriliyor. Bildirdiğiniz için teşekkürler!", news1117b:"Düzeltildi: Shoreline, Customs ve diğer haritalarda açık alandaki görev işaretleri “yer altı” veya “2F” sayılıyor ve harita karanlık bir katta açılıyordu. Katlar artık tarkov.dev ile aynı kurallarla belirleniyor; yer altı çıkışları (Customs’taki Old Gas Station, Reserve’deki D-2 vb.) doğru katta gösteriliyor.", news1117:"The Lab çıkışları artık doğru katta (bodrum / 2F) gösteriliyor; güç, kapı ve tahliye noktaları haritada “⚡ Güç” gibi etiketlerle işaretlendi (Reserve’deki D-2 vb. de).", news1116:"The Lab haritasının olduğundan büyük çizilmesi ve işaretlerin kayması düzeltildi (tüm katlar).", news1116b:"Mechanic’in “To the Light” görevleri (Trust but Verify vb.) veri kaynağında (tarkov.dev) henüz olmadığı için gösterilemiyor. Eklendiğinde otomatik olarak görünecek.", news1115:"Korece eklendi.", news1114:"“𝕏'te paylaş” düğmesi ve yayın kaplaması (OBS vb. için şeffaf görünüm) eklendi.",
   news1112:"İspanyolca ve Türkçe, “📲 Uygulama olarak yükle” ve görüş formuna “🌐 Çeviri düzeltmesi” eklendi.", news1104:"Almanca eklendi.",
   news1027:"Tüm görevlerin sayfaları (hedefler, yerler ve ödüller; İngilizce), telefonda daha iyi görünüm, Lehçe ve Portekizce eklendi.",
   news1016:"Deniz Feneri haritasına “Road to Military Base V-Ex” çıkışı eklendi.",

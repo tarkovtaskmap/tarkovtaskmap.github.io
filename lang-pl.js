@@ -50,7 +50,7 @@
   transitLabel:"Tranzyt", transitPopup:desc=>`<b>Tranzyt</b><br>${desc}`,
   hazardSniper:"Pole ostrzału snajpera-scava", hazardMinefield:"Pole minowe", hazardOther:"Strefa zagrożenia",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">Ten obszar jest niebezpieczny</span>`,
-  lockedDoor:"Zamknięte drzwi", lockType:"Typ", needsPower:"※ Wymaga zasilania", lockGlyph:"Z", routeLabel:"Trasa", floorLabel:"Piętro:",
+  lockedDoor:"Zamknięte drzwi", lockType:"Typ", needsPower:"※ Wymaga zasilania", lockGlyph:"Z", routeLabel:"Trasa", routeFloorGo:f=>`Pokaż: ${f}`, routeNeed2:"Numery pojawią się, gdy na tej mapie będą co najmniej 2 znaczniki (liczą się też znaczniki z innych pięter).", floorLabel:"Piętro:",
   lockPopup:(type,power)=>`<b>Zamknięte drzwi</b><br>Typ: ${type}${power?"<br>※ Wymaga zasilania":""}`,
   switchLabel:"Przełącznik", switchPopup:name=>`<b>Przełącznik</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`Szansa na spawn ~${pct}%`,
@@ -105,7 +105,7 @@
   shareLoadedAlert:"Wczytano udostępnione dane.",
   shareLoadFailedAlert:msg=>`Nie udało się wczytać: ${msg}`,
   ttBtn:"Import z TarkovTracker", ttTitle:"Import postępu z TarkovTracker",
-  ttHow:"<ol><li>W ustawieniach TarkovTracker (tarkovtracker.org) zapisz <b>kopię zapasową (eksport)</b> postępu w pliku JSON</li><li>Wybierz ten plik poniżej albo wklej jego zawartość</li></ol>Można przenieść ukończone / nieudane zadania, ukończone cele i twój poziom.",
+  ttHow:"<ol><li>Otwórz <a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>stronę kopii zapasowej w TarkovTracker</a> i kliknij „<b>Eksportuj kopię zapasową postępu</b>”, aby zapisać plik</li><li>Wybierz ten plik poniżej albo wklej jego zawartość</li></ol>Można przenieść ukończone / nieudane zadania, ukończone cele i twój poziom.",
   ttPrivacy:"🔒 Plik jest przetwarzany tylko w tej przeglądarce i nigdzie nie jest wysyłany.",
   ttPasteLabel:"Albo wklej zawartość JSON:",
   ttErrJson:"Nie da się tego odczytać jako JSON. Sprawdź, czy to plik kopii zapasowej.",
@@ -152,7 +152,7 @@
 <li><b>Przycisk 📍</b> (w wierszu zadania): zaznacza zadanie, w razie potrzeby przełącza mapę i piętro i przesuwa mapę do jego pinezek (wokół nich mignie pierścień).</li>
 <li><b>Legenda</b>: „Legenda ▼” w lewym dolnym rogu objaśnia symbole i kolory.</li>
 <li><b>Warstwy</b>: w „Warstwy / udostępnianie” włączysz tranzyty, strefy zagrożenia, zamknięte drzwi, przełączniki, bossów i spawny.</li>
-<li><b>Numeracja trasy</b>: po włączeniu pinezki dostają ①②③… w kolejności najkrótszej trasy, połączone linią.</li>
+<li><b>Numeracja trasy</b>: po włączeniu pinezki dostają ①②③… w kolejności najkrótszej trasy, połączone linią. Potrzeba co najmniej 2 pinezek na mapie; liczą się też te z innych pięter (półprzezroczyste, z oznaczeniem typu „2F” — kliknij, aby pokazać to piętro). Kolejność widać też w legendzie.</li>
 <li><b>Własne pinezki</b>: kliknij mapę <b>prawym przyciskiem</b>, aby dodać pinezkę z notatką (kliknij pinezkę, aby ją edytować/usunąć).</li>
 <li><b>Jasność / kontrast</b>: suwaki w lewym górnym rogu mapy.</li>
 </ul></div></details>
@@ -196,7 +196,7 @@
 <details><summary>8. Import z TarkovTracker</summary><div>
 <p>Dla osób, które już śledzą postęp w TarkovTracker: przenieś naraz ukończone i nieudane zadania, ukończone cele i swój poziom.</p>
 <ol>
-<li>W ustawieniach TarkovTracker (tarkovtracker.org) zapisz kopię zapasową (eksport) <b>.json</b>.</li>
+<li>Otwórz <a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">stronę kopii zapasowej w TarkovTracker</a> i kliknij „<b>Eksportuj kopię zapasową postępu</b>”, aby zapisać <b>.json</b>.</li>
 <li>Otwórz tutaj „Warstwy / udostępnianie”, naciśnij <b>Import z TarkovTracker</b> i wybierz plik (albo go wklej).</li>
 <li>Sprawdź podsumowanie, potem <b>Importuj</b>. Możesz wybrać „Tylko dodaj / Nadpisz” i od razu cofnąć.</li>
 </ol>
@@ -305,7 +305,7 @@
   newsThanksBody:"Dziękuję wszystkim, którzy przesłali opinie, zgłoszenia błędów i poprawki tłumaczeń. To dzięki nim narzędzie jest coraz lepsze.",
   newsTrNote:"Języki inne niż japoński i angielski są oparte na tłumaczeniu maszynowym. Jeśli coś brzmi dziwnie, daj znać przez „🌐 Poprawka tłumaczenia” w formularzu opinii.", newsNames:"Za ich zgodą:",
   newsThanksHow:"Chcesz, aby Twoje imię (lub nick) było tutaj? Napisz w formularzu opinii „Można podać moje imię: ___”.",
-  pwLblPower:"Zasilanie", pwLblGate:"Brama", pwLblDrain:"Spust", powerFor:n=>`Zasilanie / panel sterowania: ${n}`, powerAt:(f,l)=>`Gdzie uruchomić: etykieta „⚡ ${l}” na mapie${f ? " (" + f + ")" : ""}`, news1117b:"Naprawiono: na Shoreline, Customs i innych mapach znaczniki zadań na zewnątrz były traktowane jako „podziemie” lub „2F”, a mapa otwierała się na ciemnym piętrze. Piętra są teraz ustalane tak samo jak na tarkov.dev, a podziemne wyjścia (Old Gas Station na Customs, D-2 na Reserve itd.) są na właściwym piętrze.", news1117:"Wyjścia na The Lab są teraz na właściwym piętrze (podziemie / 2F), a miejsca włączenia zasilania, bramy i spustu oznaczono na mapie etykietami „⚡ Zasilanie” itp. (także D-2 i inne na Reserve).", news1116:"Naprawiono mapę The Lab, która była wyświetlana za duża, przez co znaczniki były przesunięte (wszystkie piętra).", news1116b:"Zadania „To the Light” od Mechanic (Trust but Verify itd.) nie są jeszcze wyświetlane, bo brakuje ich w źródle danych (tarkov.dev). Pojawią się automatycznie po dodaniu.", news1115:"Dodano koreański.", news1114:"Nowość: przycisk „Udostępnij na 𝕏” i nakładka na stream (przezroczysty widok do OBS itp.).",
+  pwLblPower:"Zasilanie", pwLblGate:"Brama", pwLblDrain:"Spust", powerFor:n=>`Zasilanie / panel sterowania: ${n}`, powerAt:(f,l)=>`Gdzie uruchomić: etykieta „⚡ ${l}” na mapie${f ? " (" + f + ")" : ""}`, news1121:"Naprawiono: numerowana trasa pomijała znaczniki na innych piętrach (np. Customs: The Courier → Golden Swag w akademiku). Znaczniki z innych pięter są teraz też numerowane — półprzezroczyste, z oznaczeniem typu „2F”; kliknij, aby pokazać to piętro. Legenda pokazuje kolejność trasy. Dziękujemy za zgłoszenie!", news1117b:"Naprawiono: na Shoreline, Customs i innych mapach znaczniki zadań na zewnątrz były traktowane jako „podziemie” lub „2F”, a mapa otwierała się na ciemnym piętrze. Piętra są teraz ustalane tak samo jak na tarkov.dev, a podziemne wyjścia (Old Gas Station na Customs, D-2 na Reserve itd.) są na właściwym piętrze.", news1117:"Wyjścia na The Lab są teraz na właściwym piętrze (podziemie / 2F), a miejsca włączenia zasilania, bramy i spustu oznaczono na mapie etykietami „⚡ Zasilanie” itp. (także D-2 i inne na Reserve).", news1116:"Naprawiono mapę The Lab, która była wyświetlana za duża, przez co znaczniki były przesunięte (wszystkie piętra).", news1116b:"Zadania „To the Light” od Mechanic (Trust but Verify itd.) nie są jeszcze wyświetlane, bo brakuje ich w źródle danych (tarkov.dev). Pojawią się automatycznie po dodaniu.", news1115:"Dodano koreański.", news1114:"Nowość: przycisk „Udostępnij na 𝕏” i nakładka na stream (przezroczysty widok do OBS itp.).",
   news1112:"Dodano hiszpański i turecki, „📲 Zainstaluj jako aplikację” oraz „🌐 Poprawka tłumaczenia” w formularzu opinii.", news1104:"Dodano niemiecki.",
   news1027:"Nowe strony ze wszystkimi zadaniami (cele, miejsca i nagrody; po angielsku), lepszy widok na telefonie oraz polski i portugalski.",
   news1016:"Dodano na mapę wyjście „Road to Military Base V-Ex” na mapie Latarnia morska.",

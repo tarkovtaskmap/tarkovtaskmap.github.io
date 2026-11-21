@@ -48,7 +48,7 @@
   transitLabel:"지역 이동", transitPopup:desc=>`<b>지역 이동</b><br>${desc}`,
   hazardSniper:"스나이퍼 Scav 사격 구역", hazardMinefield:"지뢰밭", hazardOther:"위험 지역",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">위험한 구역입니다</span>`,
-  lockedDoor:"잠긴 문", lockType:"종류", needsPower:"※ 전원이 필요합니다", lockGlyph:"잠", routeLabel:"경로", floorLabel:"층:",
+  lockedDoor:"잠긴 문", lockType:"종류", needsPower:"※ 전원이 필요합니다", lockGlyph:"잠", routeLabel:"경로", routeFloorGo:f=>`${f} 보기`, routeNeed2:"이 지도에 표시가 2개 이상 있으면 도는 순서대로 번호가 붙습니다(다른 층의 표시도 포함).", floorLabel:"층:",
   lockPopup:(type,power)=>`<b>잠긴 문</b><br>종류: ${type}${power?"<br>※ 전원이 필요합니다":""}`,
   switchLabel:"스위치", switchPopup:name=>`<b>스위치</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`스폰 확률 약 ${pct}%`,
@@ -103,7 +103,7 @@
   shareLoadedAlert:"공유 데이터를 불러왔습니다.",
   shareLoadFailedAlert:msg=>`불러오기 실패: ${msg}`,
   ttBtn:"TarkovTracker에서 가져오기", ttTitle:"TarkovTracker 진행 상황 가져오기",
-  ttHow:"<ol><li>TarkovTracker(tarkovtracker.org) 설정에서 진행 상황의 <b>백업(내보내기)</b>을 JSON으로 저장합니다</li><li>아래에서 그 파일을 고르거나 내용을 붙여 넣습니다</li></ol>완료 / 실패한 퀘스트, 달성한 목표, 레벨을 가져올 수 있습니다.",
+  ttHow:"<ol><li><a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>TarkovTracker의 백업 화면</a>을 열고 ‘<b>진행도 백업 내보내기</b>’를 눌러 파일을 저장합니다</li><li>아래에서 그 파일을 고르거나 내용을 붙여 넣습니다</li></ol>완료 / 실패한 퀘스트, 달성한 목표, 레벨을 가져올 수 있습니다.",
   ttPrivacy:"🔒 파일은 이 브라우저 안에서만 처리되며 어디에도 전송되지 않습니다.",
   ttPasteLabel:"또는 JSON 내용을 붙여 넣기:",
   ttErrJson:"JSON으로 읽을 수 없습니다. 백업 파일이 맞는지 확인해 주세요.",
@@ -150,7 +150,7 @@
 <li><b>📍 버튼</b> (각 퀘스트 줄): 퀘스트를 선택하고, 필요하면 맵과 층을 바꿔 그 핀으로 이동합니다 (주위에 고리가 반짝임).</li>
 <li><b>범례</b>: 왼쪽 아래의 「범례 ▼」에서 아이콘과 색을 설명합니다.</li>
 <li><b>레이어</b>: 「표시 레이어 / 공유」에서 지역 이동, 위험 지역, 잠긴 문, 스위치, 보스, 스폰을 켜고 끕니다.</li>
-<li><b>경로 번호</b>: 켜면 가장 짧은 경로 순서로 핀에 ①②③…이 붙고 선으로 이어집니다.</li>
+<li><b>경로 번호</b>: 켜면 가장 짧은 경로 순서로 핀에 ①②③…이 붙고 선으로 이어집니다. 지도에 핀이 2개 이상 있어야 하며, 다른 층의 핀도 반투명하게 '2F' 같은 표시와 함께 들어갑니다(누르면 그 층을 볼 수 있습니다). 순서는 범례에도 나옵니다.</li>
 <li><b>내 핀</b>: 지도를 <b>오른쪽 클릭</b>하면 메모가 달린 핀을 추가합니다 (핀을 클릭하면 수정/삭제).</li>
 <li><b>밝기 / 대비</b>: 지도 왼쪽 위의 슬라이더.</li>
 </ul></div></details>
@@ -194,7 +194,7 @@
 <details><summary>8. TarkovTracker에서 가져오기</summary><div>
 <p>이미 TarkovTracker로 진행 상황을 관리하는 분은 완료·실패한 퀘스트, 달성한 목표, 레벨을 한 번에 가져올 수 있습니다.</p>
 <ol>
-<li>TarkovTracker(tarkovtracker.org) 설정에서 백업(내보내기)을 <b>.json</b>으로 저장합니다.</li>
+<li><a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">TarkovTracker의 백업 화면</a>을 열고 ‘<b>진행도 백업 내보내기</b>’를 눌러 <b>.json</b>을 저장합니다.</li>
 <li>여기서 「표시 레이어 / 공유」를 열고 <b>TarkovTracker에서 가져오기</b>를 눌러 파일을 고릅니다 (또는 붙여 넣기).</li>
 <li>요약을 확인하고 <b>가져오기</b>를 누릅니다. 「추가만 / 덮어쓰기」를 고를 수 있고, 바로 되돌릴 수도 있습니다.</li>
 </ol>
@@ -304,7 +304,7 @@
   newsTrNote:"일본어와 영어 이외의 화면은 기계 번역을 바탕으로 합니다. 어색한 번역은 의견 양식의 「🌐 번역 수정」으로 알려 주세요.",
   newsNames:"본인의 동의를 받아 이름을 싣습니다:",
   newsThanksHow:"이름(닉네임)을 여기에 실어도 괜찮다면, 의견 양식에 「이름 게재 OK: ___」라고 적어 주세요.",
-  pwLblPower:"전원", pwLblGate:"게이트", pwLblDrain:"배수", powerFor:n=>`${n} 전원·조작 패널`, powerAt:(f,l)=>`조작 위치: 지도의 「⚡ ${l}」 표시${f ? " (" + f + ")" : ""}`, news1117b:"Shoreline, Customs 등에서 야외 퀘스트 표시가 '지하'나 '2F'로 취급되어 지도가 어두운 층으로 열리던 문제를 고쳤습니다. 층 판정을 tarkov.dev와 같게 바꾸고, 지하 탈출구(Customs의 Old Gas Station, Reserve의 D-2 등)도 올바른 층에 표시합니다.", news1117:"The Lab 탈출구를 올바른 층(지하/2F)에 표시하고, 전원·게이트·배수 조작 위치를 「⚡ 전원」 등의 표시로 지도에 나타냈습니다(Reserve의 D-2 등도).", news1116:"The Lab 지도가 실제보다 크게 그려져 표시 위치가 어긋나던 문제를 고쳤습니다(모든 층).", news1116b:"Mechanic의 「To the Light」 퀘스트(Trust but Verify 등)는 데이터 출처(tarkov.dev)에 아직 없어서 표시할 수 없습니다. 추가되면 자동으로 표시됩니다.", news1115:"한국어 화면을 추가했습니다.",
+  pwLblPower:"전원", pwLblGate:"게이트", pwLblDrain:"배수", powerFor:n=>`${n} 전원·조작 패널`, powerAt:(f,l)=>`조작 위치: 지도의 「⚡ ${l}」 표시${f ? " (" + f + ")" : ""}`, news1121:"순회 경로 번호가 다른 층의 표시를 건너뛰던 문제를 고쳤습니다(예: Customs의 The Courier → 기숙사의 Golden Swag). 다른 층의 표시도 반투명하게 '2F' 같은 표시와 함께 번호가 붙고, 누르면 그 층을 볼 수 있습니다. 범례에 도는 순서가 나옵니다. 제보 감사합니다!", news1117b:"Shoreline, Customs 등에서 야외 퀘스트 표시가 '지하'나 '2F'로 취급되어 지도가 어두운 층으로 열리던 문제를 고쳤습니다. 층 판정을 tarkov.dev와 같게 바꾸고, 지하 탈출구(Customs의 Old Gas Station, Reserve의 D-2 등)도 올바른 층에 표시합니다.", news1117:"The Lab 탈출구를 올바른 층(지하/2F)에 표시하고, 전원·게이트·배수 조작 위치를 「⚡ 전원」 등의 표시로 지도에 나타냈습니다(Reserve의 D-2 등도).", news1116:"The Lab 지도가 실제보다 크게 그려져 표시 위치가 어긋나던 문제를 고쳤습니다(모든 층).", news1116b:"Mechanic의 「To the Light」 퀘스트(Trust but Verify 등)는 데이터 출처(tarkov.dev)에 아직 없어서 표시할 수 없습니다. 추가되면 자동으로 표시됩니다.", news1115:"한국어 화면을 추가했습니다.",
   news1114:"「𝕏에 공유」 버튼과 방송용 오버레이(OBS 등에 겹칠 수 있는 투명한 화면)를 추가했습니다.",
   news1112:"스페인어·터키어 화면, 「📲 앱으로 설치」, 의견 양식의 「🌐 번역 수정」을 추가했습니다.", news1104:"독일어 화면을 추가했습니다.",
   news1027:"모든 퀘스트의 목록 페이지(목표·장소·보상; 영어)를 추가하고, 휴대폰 화면을 개선했으며, 폴란드어·포르투갈어를 추가했습니다.",

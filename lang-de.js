@@ -49,7 +49,7 @@
   transitLabel:"Transit", transitPopup:desc=>`<b>Transit</b><br>${desc}`,
   hazardSniper:"Schussfeld des Scharfschützen-Scavs", hazardMinefield:"Minenfeld", hazardOther:"Gefahrenzone",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">Dieser Bereich ist gefährlich</span>`,
-  lockedDoor:"Verschlossene Tür", lockType:"Typ", needsPower:"※ Braucht Strom", lockGlyph:"V", routeLabel:"Route", floorLabel:"Stockwerk:",
+  lockedDoor:"Verschlossene Tür", lockType:"Typ", needsPower:"※ Braucht Strom", lockGlyph:"V", routeLabel:"Route", routeFloorGo:f=>`${f} anzeigen`, routeNeed2:"Nummern erscheinen, sobald auf dieser Karte mindestens 2 Markierungen sind (auch auf anderen Etagen).", floorLabel:"Stockwerk:",
   lockPopup:(type,power)=>`<b>Verschlossene Tür</b><br>Typ: ${type}${power?"<br>※ Braucht Strom":""}`,
   switchLabel:"Schalter", switchPopup:name=>`<b>Schalter</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`Spawnchance ~${pct}%`,
@@ -104,7 +104,7 @@
   shareLoadedAlert:"Geteilte Daten geladen.",
   shareLoadFailedAlert:msg=>`Laden fehlgeschlagen: ${msg}`,
   ttBtn:"TarkovTracker importieren", ttTitle:"Fortschritt aus TarkovTracker importieren",
-  ttHow:"<ol><li>Speichere in den Einstellungen von TarkovTracker (tarkovtracker.org) ein <b>Backup (Export)</b> deines Fortschritts als JSON</li><li>Wähle die Datei unten aus oder füge den Inhalt ein</li></ol>Übernommen werden können erledigte / fehlgeschlagene Aufgaben, erledigte Ziele und dein Level.",
+  ttHow:"<ol><li>Öffne die <a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>Backup-Seite von TarkovTracker</a> und klicke auf „<b>Fortschrittssicherung exportieren</b>“, um die Datei zu speichern</li><li>Wähle die Datei unten aus oder füge den Inhalt ein</li></ol>Übernommen werden können erledigte / fehlgeschlagene Aufgaben, erledigte Ziele und dein Level.",
   ttPrivacy:"🔒 Die Datei wird nur in diesem Browser verarbeitet und nirgendwohin gesendet.",
   ttPasteLabel:"Oder den JSON-Inhalt einfügen:",
   ttErrJson:"Konnte nicht als JSON gelesen werden. Prüfe, ob es eine Backup-Datei ist.",
@@ -151,7 +151,7 @@
 <li><b>Button 📍</b> (in jeder Aufgabenzeile): wählt die Aufgabe aus, wechselt bei Bedarf Karte und Stockwerk und springt zu ihren Pins (ein Ring blinkt um sie herum).</li>
 <li><b>Legende</b>: „Legende ▼“ unten links erklärt Symbole und Farben.</li>
 <li><b>Ebenen</b>: unter „Ebenen / Teilen“ schaltest du Transits, Gefahrenzonen, verschlossene Türen, Schalter, Bosse und Spawns ein oder aus.</li>
-<li><b>Routennummern</b>: eingeschaltet bekommen die Pins ①②③… in der Reihenfolge des kürzesten Wegs, mit einer Linie verbunden.</li>
+<li><b>Routennummern</b>: eingeschaltet bekommen die Pins ①②③… in der Reihenfolge des kürzesten Wegs, mit einer Linie verbunden. Dafür braucht es mindestens 2 Pins auf der Karte; Pins auf anderen Etagen zählen mit (halbtransparent mit einem Etikett wie „2F“ – ein Klick zeigt diese Etage). Die Reihenfolge steht auch in der Legende.</li>
 <li><b>Eigene Pins</b>: <b>Rechtsklick</b> auf die Karte fügt einen Pin mit Notiz hinzu (Pin anklicken zum Bearbeiten/Löschen).</li>
 <li><b>Helligkeit / Kontrast</b>: Regler oben links auf der Karte.</li>
 </ul></div></details>
@@ -195,7 +195,7 @@
 <details><summary>8. TarkovTracker-Import</summary><div>
 <p>Für alle, die ihren Fortschritt schon in TarkovTracker führen: erledigte und fehlgeschlagene Aufgaben, erledigte Ziele und dein Level auf einmal übernehmen.</p>
 <ol>
-<li>Speichere in den Einstellungen von TarkovTracker (tarkovtracker.org) das Backup (Export) als <b>.json</b>.</li>
+<li>Öffne die <a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">Backup-Seite von TarkovTracker</a> und klicke auf „<b>Fortschrittssicherung exportieren</b>“, um die <b>.json</b> zu speichern.</li>
 <li>Öffne hier „Ebenen / Teilen“, drück <b>TarkovTracker importieren</b> und wähle die Datei (oder füge sie ein).</li>
 <li>Prüfe die Zusammenfassung und drück <b>Importieren</b>. Du kannst „Nur hinzufügen / Überschreiben“ wählen und direkt danach rückgängig machen.</li>
 </ol>
@@ -305,7 +305,7 @@
   newsTrNote:"Die Sprachen außer Japanisch und Englisch beruhen auf maschineller Übersetzung. Wenn etwas seltsam klingt, melde es bitte über „🌐 Übersetzung verbessern“ im Feedback-Formular.",
   newsNames:"Mit ihrer Erlaubnis genannt:",
   newsThanksHow:"Möchtest du hier mit Namen (oder Nickname) genannt werden? Schreib „Name darf genannt werden: ___“ ins Feedback-Formular.",
-  pwLblPower:"Strom", pwLblGate:"Tor", pwLblDrain:"Ablassen", powerFor:n=>`Strom / Bedienfeld: ${n}`, powerAt:(f,l)=>`Wo auslösen: die Markierung „⚡ ${l}“ auf der Karte${f ? " (" + f + ")" : ""}`, news1117b:"Behoben: Auf Shoreline, Customs und anderen Karten wurden Aufgabenmarkierungen im Freien als „Untergeschoss“ oder „2F“ behandelt, und die Karte öffnete sich auf einer dunklen Etage. Etagen werden jetzt wie bei tarkov.dev bestimmt, und unterirdische Ausgänge (Old Gas Station auf Customs, D-2 auf Reserve usw.) erscheinen auf der richtigen Etage.", news1117:"Die Ausgänge von The Lab werden jetzt auf der richtigen Etage angezeigt (Untergeschoss / 2F), und die Stellen für Strom, Tor und Ablassen sind mit Markierungen wie „⚡ Strom“ auf der Karte eingezeichnet (auch D-2 u. a. auf Reserve).", news1116:"Die Karte von The Lab wurde zu groß dargestellt, wodurch die Markierungen verschoben waren – behoben (alle Etagen).", news1116b:"Die „To the Light“-Aufgaben von Mechanic (Trust but Verify usw.) können noch nicht angezeigt werden, da sie in der Datenquelle (tarkov.dev) fehlen. Sie erscheinen automatisch, sobald sie ergänzt werden.", news1115:"Koreanisch hinzugefügt.", news1114:"Neu: „Auf 𝕏 teilen“ und ein Stream-Overlay (eine transparente Ansicht für OBS usw.).",
+  pwLblPower:"Strom", pwLblGate:"Tor", pwLblDrain:"Ablassen", powerFor:n=>`Strom / Bedienfeld: ${n}`, powerAt:(f,l)=>`Wo auslösen: die Markierung „⚡ ${l}“ auf der Karte${f ? " (" + f + ")" : ""}`, news1121:"Behoben: Die nummerierte Route übersprang Markierungen auf anderen Etagen (z. B. Customs: The Courier → Golden Swag im Wohnheim). Markierungen auf anderen Etagen werden jetzt mitnummeriert – halbtransparent mit einem Etikett wie „2F“; ein Klick zeigt diese Etage. Die Legende zeigt die Reihenfolge der Route. Danke für die Meldung!", news1117b:"Behoben: Auf Shoreline, Customs und anderen Karten wurden Aufgabenmarkierungen im Freien als „Untergeschoss“ oder „2F“ behandelt, und die Karte öffnete sich auf einer dunklen Etage. Etagen werden jetzt wie bei tarkov.dev bestimmt, und unterirdische Ausgänge (Old Gas Station auf Customs, D-2 auf Reserve usw.) erscheinen auf der richtigen Etage.", news1117:"Die Ausgänge von The Lab werden jetzt auf der richtigen Etage angezeigt (Untergeschoss / 2F), und die Stellen für Strom, Tor und Ablassen sind mit Markierungen wie „⚡ Strom“ auf der Karte eingezeichnet (auch D-2 u. a. auf Reserve).", news1116:"Die Karte von The Lab wurde zu groß dargestellt, wodurch die Markierungen verschoben waren – behoben (alle Etagen).", news1116b:"Die „To the Light“-Aufgaben von Mechanic (Trust but Verify usw.) können noch nicht angezeigt werden, da sie in der Datenquelle (tarkov.dev) fehlen. Sie erscheinen automatisch, sobald sie ergänzt werden.", news1115:"Koreanisch hinzugefügt.", news1114:"Neu: „Auf 𝕏 teilen“ und ein Stream-Overlay (eine transparente Ansicht für OBS usw.).",
   news1112:"Neu: Spanisch und Türkisch, „📲 Als App installieren“ und „🌐 Übersetzung verbessern“ im Feedback-Formular.", news1104:"Deutsch als Sprache hinzugefügt.",
   news1027:"Neu: Seiten mit allen Aufgaben (Ziele, Orte, Belohnungen; auf Englisch), eine bessere Handy-Ansicht sowie Polnisch und Portugiesisch.",
   news1016:"Lighthouse „Road to Military Base V-Ex“ zur Karte hinzugefügt.",

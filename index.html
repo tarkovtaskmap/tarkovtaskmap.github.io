@@ -375,6 +375,7 @@
   #ttdlg ol{margin:0;padding-left:20px}
   #ttdlg textarea{width:100%;height:84px;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:6px 8px;font-size:11px;font-family:monospace}
   #ttdlg .tt-box{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:#00000030;display:flex;flex-direction:column;gap:6px}
+  #ttdlg a,#helpdlg a{color:var(--accent);text-decoration:underline}   /* 暗い背景で読めるように（ブラウザ標準の濃い青は読みにくい） */
   #ttdlg .tt-err{color:#e6564e}
   #ttdlg .tt-ok{color:#6db36d}
   #ttdlg .tt-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
@@ -399,11 +400,16 @@
   #overlay .err{color:#e08a8a;max-width:520px;font-size:13px;line-height:1.6}
 
   /* Leaflet マーカー */
-  .qmark{border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;text-shadow:0 1px 2px #000}
+  .qmark{position:relative;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px;text-shadow:0 1px 2px #000}
   .xmark{position:relative;border:2px solid #fff;box-shadow:0 0 0 1px #000, 0 1px 4px #000a;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:11px}
   .pwmark{position:relative;display:inline-flex;align-items:center;gap:2px;height:18px;box-sizing:border-box;padding:0 6px 0 2px;border-radius:4px;background:#111;border:1.5px solid #f2c14e;box-shadow:0 0 0 1px #000,0 1px 4px #000a;color:#f2c14e;font-size:10px;font-weight:800;line-height:1;white-space:nowrap}
   .pwmark .pwg{display:inline-flex;width:14px;justify-content:center;font-size:11px}
-  .xmark .xfloor,.pwmark .xfloor{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:3px;background:#000d;color:#fff;border:1px solid #fff9;border-radius:3px;font-size:8px;line-height:1.3;padding:1px 3px;font-weight:700;white-space:nowrap}
+  #legend .routelist{flex-wrap:wrap;gap:3px;align-items:center;font-size:11px;line-height:1.6}
+  #legend .rstep{display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+  #legend .rnum{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;border-radius:50%;border:1px solid #fff;color:#fff;font-size:9px;font-weight:800;text-shadow:0 1px 2px #000}
+  #legend .rfl{font-size:9px;border:1px solid var(--line);border-radius:3px;padding:0 2px;color:var(--dim)}
+  #legend .rarr{color:#c7b083}
+  .xmark .xfloor,.pwmark .xfloor,.qmark .xfloor{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:3px;background:#000d;color:#fff;border:1px solid #fff9;border-radius:3px;font-size:8px;line-height:1.3;padding:1px 3px;font-weight:700;white-space:nowrap}
   /* 条件付きの脱出: マークの左上に種類の印 */
   .xmark .xcond{position:absolute;right:100%;bottom:100%;margin:0 -8px -8px 0;width:18px;height:18px;border-radius:50%;background:#151515;border:1.5px solid #f0a030;box-shadow:0 0 0 1px #000;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;font-weight:400;color:#fff;overflow:hidden}
   .xmark .xcond.nobag::after{content:"";position:absolute;left:1px;right:1px;top:50%;height:2px;margin-top:-1px;background:#ff2020;box-shadow:0 0 0 1px #000;transform:rotate(-45deg)}
@@ -867,7 +873,7 @@ const STR = {
     transitLabel:"トランジット", transitPopup:desc=>`<b>トランジット</b><br>${desc}`,
     hazardSniper:"スナイパースカフの射線内", hazardMinefield:"地雷原", hazardOther:"危険地帯",
     dangerousAreaPopup:jp=>`<b>${jp}</b><br><span style="color:#888">この範囲は危険</span>`,
-    lockedDoor:"施錠ドア", lockType:"種類", needsPower:"※要 電源", lockGlyph:"鍵", routeLabel:"ルート", floorLabel:"階:",
+    lockedDoor:"施錠ドア", lockType:"種類", needsPower:"※要 電源", lockGlyph:"鍵", routeLabel:"ルート", routeFloorGo:f=>`${f} を表示`, routeNeed2:"このマップに印が 2 つ以上あると、回る順に番号が付きます（別の階の印も入ります）。", floorLabel:"階:",
     lockPopup:(type,power)=>`<b>施錠ドア</b><br>種類: ${type}${power?"<br>※要 電源":""}`,
     switchLabel:"スイッチ", switchPopup:name=>`<b>スイッチ</b><br><span style="color:#555">${name}</span>`,
     spawnChanceApprox:pct=>`出現率 約${pct}%`,
@@ -922,7 +928,7 @@ const STR = {
     shareLoadedAlert:"共有データを読み込みました。",
     shareLoadFailedAlert:msg=>`読み込み失敗: ${msg}`,
     ttBtn:"TarkovTracker取込", ttTitle:"TarkovTracker の進捗を取り込む",
-    ttHow:"<ol><li>TarkovTracker（tarkovtracker.org）の設定画面で、進捗の<b>バックアップ（エクスポート）</b>JSONを保存</li><li>そのファイルを下で選ぶか、中身を貼り付け</li></ol>タスクの完了・失敗・達成済みの目標と、レベルを反映できます。",
+    ttHow:"<ol><li><a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>TarkovTracker のバックアップの画面</a>を開き、「<b>進捗バックアップをエクスポート</b>」を押してファイルを保存</li><li>そのファイルを下で選ぶか、中身を貼り付け</li></ol>タスクの完了・失敗・達成済みの目標と、レベルを反映できます。",
     ttPrivacy:"🔒 ファイルはこの端末のブラウザ内だけで処理され、どこにも送信されません。",
     ttPasteLabel:"または JSON の中身を貼り付け:",
     ttErrJson:"JSONとして読めませんでした。バックアップファイルか確認してください。",
@@ -969,7 +975,7 @@ const STR = {
 <li><b>📍ボタン</b>（タスク一覧の各行）: 押すと、そのタスクを選択して、必要ならマップと階を切り替え、ピンが見える位置へ地図を移動する（ピンの周りに輪が一瞬出る）。</li>
 <li><b>凡例</b>: 地図の左下の「凡例 ▼」で、記号や色の意味が見られる。</li>
 <li><b>表示レイヤー</b>: 左の「表示レイヤー・共有」で、トランジット・危険地帯・施錠ドア・スイッチ・ボス・スポーンの表示を切り替える。</li>
-<li><b>巡回ルート番号</b>: チェックすると、ピンに①②③…と回る順番の番号が付き、最短順に線でつながる。</li>
+<li><b>巡回ルート番号</b>: チェックすると、ピンに①②③…と回る順番の番号が付き、最短順に線でつながる。このマップに印が 2 つ以上あるときに付き、別の階の印も薄く「2F」などの札付きで入る（押すとその階を表示）。回る順番は凡例にも出る。</li>
 <li><b>カスタムピン</b>: 地図を<b>右クリック</b>してメモ付きのピンを追加できる（ピンをクリックで編集・削除）。</li>
 <li><b>明るさ・コントラスト</b>: 地図の左上のスライダーで調整。</li>
 </ul></div></details>
@@ -1013,7 +1019,7 @@ const STR = {
 <details><summary>8. TarkovTracker取込</summary><div>
 <p>すでに TarkovTracker に進行状況を記録している人向け。完了タスク・失敗タスク・達成済みの目標・レベルを、まとめて反映できます。</p>
 <ol>
-<li>TarkovTracker（tarkovtracker.org）の設定画面で、バックアップ（エクスポート）の <b>.json</b> を保存する。</li>
+<li><a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">TarkovTracker のバックアップの画面</a>を開き、「<b>進捗バックアップをエクスポート</b>」を押して <b>.json</b> を保存する。</li>
 <li>このツールの「表示レイヤー・共有」を開き、<b>TarkovTracker取込</b> を押してファイルを選ぶ（貼り付けでも可）。</li>
 <li>内容を確認して<b>取り込む</b>。「追加のみ／上書き」を選べて、直後なら「元に戻す」もできる。</li>
 </ol>
@@ -1116,7 +1122,7 @@ const STR = {
     obsHelpBar:"配信用の表示です（OBS の中では、この案内は出ません。× で消せます）",
     // 新しくなったこと・お礼
     newsTip:"新しくなったこと", newsThanksTitle:"ありがとうございます", newsThanksBody:"ご意見・不具合の報告・翻訳の直しを送ってくださった皆さま、ありがとうございます。いただいた声をもとに直しています。", newsTrNote:"日本語と英語以外の画面は、機械翻訳をもとにしています。不自然な訳は、ご意見箱の「🌐 翻訳の直し」で教えてください。",
-    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", pwLblPower:"電源", pwLblGate:"開閉", pwLblDrain:"排水", powerFor:n=>`${n} の電源・操作パネル`, powerAt:(f,l)=>`操作する場所：地図の「⚡ ${l}」の札${f ? "（" + f + "）" : ""}`, news1117b:"Shoreline・Customs などで、屋外のタスクの印が「地下」や「2F」として扱われ、地図が暗い階で開いていたのを直しました。階の決め方を tarkov.dev と同じにし、地下の脱出口（Customs の Old Gas Station、Reserve の D-2 など）も正しい階に出します。", news1117:"The Lab の脱出口を正しい階（地下・2F）に表示し、電源・開閉・排水の操作場所を「⚡ 電源」などの札で地図に出しました（Reserve の D-2 なども）。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
+    newsNames:"お名前の掲載をご了承いただいた方：", newsThanksHow:"お名前（ハンドルネーム）を載せてもよい方は、ご意見箱に「名前を載せてよい：○○」とお書きください。", pwLblPower:"電源", pwLblGate:"開閉", pwLblDrain:"排水", powerFor:n=>`${n} の電源・操作パネル`, powerAt:(f,l)=>`操作する場所：地図の「⚡ ${l}」の札${f ? "（" + f + "）" : ""}`, news1121:"巡回ルート番号が、別の階にある印を飛ばしていたのを直しました（例: Customs の The Courier → 寮の Golden Swag）。別の階の印も薄く「2F」などの札付きで番号に入り、押すとその階を表示できます。凡例には回る順番が出ます。ご報告ありがとうございました。", news1117b:"Shoreline・Customs などで、屋外のタスクの印が「地下」や「2F」として扱われ、地図が暗い階で開いていたのを直しました。階の決め方を tarkov.dev と同じにし、地下の脱出口（Customs の Old Gas Station、Reserve の D-2 など）も正しい階に出します。", news1117:"The Lab の脱出口を正しい階（地下・2F）に表示し、電源・開閉・排水の操作場所を「⚡ 電源」などの札で地図に出しました（Reserve の D-2 なども）。", news1116:"The Lab の地図が実際より大きく表示され、印の位置とずれていたのを直しました（全フロア）。", news1116b:"Mechanic の「To the Light」のタスク（Trust but Verify など）は、元のデータ（tarkov.dev）にまだ入っていないため表示できません。入りしだい自動で表示されます。", news1115:"韓国語の画面を追加しました。", news1114:"「𝕏 で共有」ボタンと、配信用の表示（OBS などに重ねられる、背景が透明な画面）を追加しました。",
     news1112:"スペイン語・トルコ語の画面、「📲 アプリとして使う」、ご意見箱の「🌐 翻訳の直し」を追加しました。", news1107:"日本語のタスクページ（📋 全タスク一覧）を追加しました。各タスクの目標・場所・報酬を日本語で確認できます。", news1104:"ドイツ語の画面を追加しました。",
     news1027:"スマホで使いやすくし、ポーランド語・ポルトガル語の画面を追加しました。", news1016:"Lighthouse の「Road to Military Base V-Ex」を地図に追加しました。", news1013:"条件のある脱出地点（登るための道具・バッグ不可・有料など）に印を付け、トランジットの行き先と条件を出すようにしました。",
   },
@@ -1167,7 +1173,7 @@ const STR = {
     transitLabel:"Transit", transitPopup:desc=>`<b>Transit</b><br>${desc}`,
     hazardSniper:"Sniper scav line of fire", hazardMinefield:"Minefield", hazardOther:"Hazard area",
     dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">This area is dangerous</span>`,
-    lockedDoor:"Locked door", lockType:"Type", needsPower:"※ Needs power", lockGlyph:"L", routeLabel:"Route", floorLabel:"Floor:",
+    lockedDoor:"Locked door", lockType:"Type", needsPower:"※ Needs power", lockGlyph:"L", routeLabel:"Route", routeFloorGo:f=>`Show ${f}`, routeNeed2:"Numbers appear once there are 2 or more pins on this map (pins on other floors count too).", floorLabel:"Floor:",
     lockPopup:(type,power)=>`<b>Locked door</b><br>Type: ${type}${power?"<br>※ Needs power":""}`,
     switchLabel:"Switch", switchPopup:name=>`<b>Switch</b><br><span style="color:#555">${name}</span>`,
     spawnChanceApprox:pct=>`Spawn chance ~${pct}%`,
@@ -1222,7 +1228,7 @@ const STR = {
     shareLoadedAlert:"Share data loaded.",
     shareLoadFailedAlert:msg=>`Load failed: ${msg}`,
     ttBtn:"Import TarkovTracker", ttTitle:"Import TarkovTracker progress",
-    ttHow:"<ol><li>In TarkovTracker (tarkovtracker.org) settings, save your progress <b>backup (export)</b> JSON</li><li>Choose that file below, or paste its contents</li></ol>Completed / failed tasks, completed objectives and your level can be applied.",
+    ttHow:"<ol><li>Open <a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>TarkovTracker’s backup page</a> and press “<b>Export Progress Backup</b>” to save the file</li><li>Choose that file below, or paste its contents</li></ol>Completed / failed tasks, completed objectives and your level can be applied.",
     ttPrivacy:"🔒 The file is processed only inside this browser and is never sent anywhere.",
     ttPasteLabel:"Or paste the JSON contents:",
     ttErrJson:"Could not read this as JSON. Please check it is a backup file.",
@@ -1269,7 +1275,7 @@ const STR = {
 <li><b>📍 button</b> (on each task row): selects the task, switches to the right map and floor if needed, and moves the map to its pins (a ring flashes around them).</li>
 <li><b>Legend</b>: "Legend ▼" at the bottom-left explains the symbols and colors.</li>
 <li><b>Layers</b>: in "Display layers / Share", toggle transits, hazards, locked doors, switches, bosses and spawns.</li>
-<li><b>Route numbers</b>: when enabled, pins get ①②③… in a shortest-path order joined by a line.</li>
+<li><b>Route numbers</b>: when enabled, pins get ①②③… in a shortest-path order joined by a line. Needs 2 or more pins on the map; pins on other floors are included too (faded, with a “2F”-style tag — click to show that floor). The order is also listed in the legend.</li>
 <li><b>Custom pins</b>: <b>right-click</b> the map to add a pin with a note (click a pin to edit/delete).</li>
 <li><b>Brightness / contrast</b>: sliders at the top-left of the map.</li>
 </ul></div></details>
@@ -1313,7 +1319,7 @@ const STR = {
 <details><summary>8. TarkovTracker import</summary><div>
 <p>For people who already track progress on TarkovTracker: apply completed tasks, failed tasks, completed objectives and your level in one go.</p>
 <ol>
-<li>In TarkovTracker (tarkovtracker.org) settings, save the backup (export) <b>.json</b>.</li>
+<li>Open <a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">TarkovTracker’s backup page</a> and press “<b>Export Progress Backup</b>” to save the <b>.json</b>.</li>
 <li>Open "Display layers / Share" here, press <b>Import TarkovTracker</b> and choose the file (or paste it).</li>
 <li>Check the summary, then <b>Import</b>. You can choose "Add only / Overwrite", and undo right after.</li>
 </ol>
@@ -1422,7 +1428,7 @@ const STR = {
     newsThanksBody:"Thank you to everyone who has sent feedback, bug reports and translation fixes. Your messages are how this tool gets better.",
     newsTrNote:"Languages other than Japanese and English are based on machine translation. If something reads oddly, please let me know with “🌐 Translation fix” in the feedback form.",
     newsNames:"Listed with their permission:", newsThanksHow:"Want your name (or handle) listed here? Write “OK to list my name: ___” in the feedback form.",
-    pwLblPower:"Power", pwLblGate:"Gate", pwLblDrain:"Drain", powerFor:n=>`Power / control panel for ${n}`, powerAt:(f,l)=>`Where to activate: the “⚡ ${l}” tag on the map${f ? " (" + f + ")" : ""}`, news1117b:"Fixed outdoor task pins on Shoreline, Customs and other maps being treated as “Underground” or “2F” (the map opened on a dark floor). Floors now follow the same rules as tarkov.dev, and underground extracts (Customs’ Old Gas Station, Reserve’s D-2, etc.) show on the right floor.", news1117:"The Lab extracts now show on the right floor (basement / 2F), and the power, gate and drain controls are marked on the map with “⚡ Power”-style tags (also Reserve’s D-2 and more).", news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
+    pwLblPower:"Power", pwLblGate:"Gate", pwLblDrain:"Drain", powerFor:n=>`Power / control panel for ${n}`, powerAt:(f,l)=>`Where to activate: the “⚡ ${l}” tag on the map${f ? " (" + f + ")" : ""}`, news1121:"Fixed the numbered route skipping pins on other floors (e.g. Customs: The Courier → Golden Swag in the dorms). Pins on other floors are now numbered too, faded with a “2F”-style tag, and you can click one to show that floor. The legend now lists the visiting order. Thanks for the report!", news1117b:"Fixed outdoor task pins on Shoreline, Customs and other maps being treated as “Underground” or “2F” (the map opened on a dark floor). Floors now follow the same rules as tarkov.dev, and underground extracts (Customs’ Old Gas Station, Reserve’s D-2, etc.) show on the right floor.", news1117:"The Lab extracts now show on the right floor (basement / 2F), and the power, gate and drain controls are marked on the map with “⚡ Power”-style tags (also Reserve’s D-2 and more).", news1116:"Fixed The Lab map being drawn too large, which put pins in the wrong place (all floors).", news1116b:"Mechanic’s “To the Light” tasks (Trust but Verify, etc.) can’t be shown yet because they’re still missing from the data source (tarkov.dev). They’ll appear automatically once added.", news1115:"Added Korean.", news1114:"Added a “Share on 𝕏” button and a stream overlay (a transparent view you can put on top of your stream in OBS etc.).",
     news1112:"Added Spanish and Turkish, “📲 Install as app”, and “🌐 Translation fix” in the feedback form.", news1104:"Added German.",
     news1027:"Added task list pages (objectives, locations and rewards for every task), a better phone layout, and Polish and Portuguese.",
     news1016:"Added Lighthouse “Road to Military Base V-Ex” to the map.",
@@ -2739,10 +2745,21 @@ function renderProgress(){
 }
 
 const TIP_OPT = { direction:"top", offset:[0, -10], opacity:0.95 };   // ピンにマウスを乗せたときのタスク名
-function iconQuest(color, label){
-  return L.divIcon({ className:"", html:`<div class="qmark" style="width:17px;height:17px;background:${color}">${label||""}</div>`,
+// opt.dim / opt.floorTag: 別の階にある目標（巡回ルートをオンにしたときだけ出す。脱出口と同じく薄く＋階の札）
+function iconQuest(color, label, opt){
+  opt = opt || {};
+  const badge = opt.floorTag ? `<span class="xfloor">${opt.floorTag}</span>` : "";
+  return L.divIcon({ className:"", html:`<div class="qmark" style="width:17px;height:17px;background:${color};${opt.dim ? "opacity:.55;" : ""}">${label||""}${badge}</div>`,
     iconSize:[17,17], iconAnchor:[8.5,8.5] });
 }
+// 巡回ルートの別の階の印の吹き出しから、その階に切り替える
+function gotoFloor(i){
+  const md = MAPBY[curMap];
+  if(!map || !md || !md.floors || !md.floors[i]) return;
+  map.closePopup();
+  showFloor(md, i);
+}
+let routeSteps = [];   // 巡回ルートの順番（凡例に出す）: [{ n, label, color, floor }]。ルートを描かなかったときは空
 function iconExtract(color, letter, opt){
   opt = opt || {};
   const op = opt.dim ? "opacity:.5;" : "";
@@ -2923,16 +2940,26 @@ function renderMarkers(){
     const label = selLabel(idx);
     for(const m of (t.byMap[curMap] || [])){
       if(objHidden(m.obj)) continue;   // 達成済みの目標は隠す（「完了も表示」で再表示）
-      if(!onFloor(m.pos)) continue;
+      // 別の階の目標: ふだんは出さない。巡回ルートをオンにしたときだけ、薄く・階の札つきでルートに入れる
+      // （11/21 のご報告: Customs の The Courier（1F）→ Golden Swag（寮の上の階）のように、階をまたぐとルートが描かれなかった）
+      let fi = -1;
+      if(!onFloor(m.pos)){
+        if(!opts.route) continue;
+        fi = floorIndexOf(m.pos ? m.pos.y : null, md.floors, m.pos);
+        if(fi < 0) continue;
+      }
       const ll = spreadPos(gpos(m.pos), seen);
+      const fName = fi >= 0 ? floorDisp(md.floors[fi].jp) : "";
       const popup =
-        `<b>[${label}] ${t.name}</b><br>` +
+        `<b>[${label}] ${t.name}</b>` + (fName ? ` <span class="muted">(${escH(fName)})</span>` : "") + `<br>` +
         `<span style="color:#555">${t.trader} ・ ${objTypeJa(m.obj.type)}${m.obj.optional?T("optionalTag"):""}</span><br>` +
         `${objDescN(m.obj)}` +
         ((m.obj.conditions && m.obj.conditions.length) ? `<br><span style="color:#a06">${T("conditionsLabel")}${m.obj.conditions.join(" / ")}</span>` : "") +
         chainHtml(t) +
-        (t.wiki ? `<a href="${t.wiki}" target="_blank" rel="noopener">Wiki ↗</a>` : "");
-      questPts.push({ ll, color, label, popup, tip:`[${label}] ${t.name}` });
+        (t.wiki ? `<a href="${t.wiki}" target="_blank" rel="noopener">Wiki ↗</a>` : "") +
+        (fi >= 0 ? `<div><button onclick="gotoFloor(${fi})" style="margin-top:6px">${escH(T("routeFloorGo", fName))}</button></div>` : "");
+      questPts.push({ ll, color, label, popup, tip:`[${label}] ${t.name}` + (fName ? ` (${fName})` : ""),
+        fi, floorTag: fi >= 0 ? floorShort(md.floors[fi].jp) : null });
     }
     for(const line of (t.noCoord[curMap] || [])){
       noCoordLines.push(`<div>• <span style="color:${color}">[${label}] ${t.name}:</span> ${line}</div>`);
@@ -2953,13 +2980,18 @@ function renderMarkers(){
     }
     L.polyline(ordered.map(p => p.ll), { color:"#c7b083", weight:2, opacity:0.8, dashArray:"6 4" }).addTo(markerLayer);
     ordered.forEach((p, i) => {
-      L.marker(p.ll, { icon:iconQuest(p.color, String(i + 1)) }).bindPopup(`<b>${T("routeLabel")} ${i+1}</b><br>` + p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
+      L.marker(p.ll, { icon:iconQuest(p.color, String(i + 1), { dim: p.fi >= 0, floorTag: p.floorTag }), zIndexOffset: p.fi >= 0 ? -100 : 0 })
+        .bindPopup(`<b>${T("routeLabel")} ${i+1}</b><br>` + p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
     });
+    routeSteps = ordered.map((p, i) => ({ n: i + 1, label: p.label, color: p.color, floor: p.floorTag }));
   }else{
     for(const p of questPts){
-      L.marker(p.ll, { icon:iconQuest(p.color, p.label) }).bindPopup(p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
+      L.marker(p.ll, { icon:iconQuest(p.color, p.label, { dim: p.fi >= 0, floorTag: p.floorTag }), zIndexOffset: p.fi >= 0 ? -100 : 0 })
+        .bindPopup(p.popup).bindTooltip(p.tip, TIP_OPT).addTo(markerLayer);
     }
+    routeSteps = [];
   }
+  renderRouteList();
 
   // --- 座標データなしパネル ---
   const nc = document.getElementById("nocoord");
@@ -2996,6 +3028,8 @@ function renderLegend(){
   if(opts.spawn){ active.push(`<span class="dot" style="background:#e0894a"></span>${T("legendPmcSpawn")}`); active.push(`<span class="dot" style="background:#7d8aa0"></span>${T("legendScavSpawn")}`); }
   if(opts.route)  active.push(`<span style="color:#c7b083">${T("legendRoute")}</span>`);
   if(active.length) rows.push('<div class="li" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px;gap:10px;flex-wrap:wrap">' + active.join("") + '</div>');
+  // 巡回ルートの回る順番（中身は renderMarkers が決めて renderRouteList で入れる）
+  if(opts.route) rows.push('<div class="li routelist" id="routelist"></div>');
 
   // 凡例トグル
   rows.push(`<div class="li" style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><a href="#" id="legtoggle" style="color:var(--accent2)">${T("legendToggle", legendOpen)}</a></div>`);
@@ -3038,6 +3072,16 @@ function renderLegend(){
   if(lt) lt.onclick = (e) => { e.preventDefault(); legendOpen = !legendOpen; renderLegend(); };
   const lp = document.getElementById("legpick");
   if(lp) lp.onclick = () => { track("use/legend-pick"); openPicker(); };
+  renderRouteList();
+}
+// 凡例の「巡回ルート」の下に、回る順番（1 A → 2 B (2F) → …）を出す。2 つ未満なら、番号が付く条件を説明する
+function renderRouteList(){
+  const el = document.getElementById("routelist");
+  if(!el) return;
+  if(!opts.route){ el.innerHTML = ""; return; }
+  el.innerHTML = routeSteps.length
+    ? routeSteps.map(s => `<span class="rstep"><span class="rnum" style="background:${s.color}">${s.n}</span>${s.label}${s.floor ? ` <span class="rfl">${escH(s.floor)}</span>` : ""}</span>`).join(`<span class="rarr">→</span>`)
+    : `<span class="muted">${escH(T("routeNeed2"))}</span>`;
 }
 
 /* ---------- 共有コード（選択・ピン・完了・レベルをURL/コード化。バックエンド不要） ---------- */
@@ -3278,7 +3322,9 @@ function ttLoadText(text){
       : "";
     mb.querySelectorAll("input").forEach(r => r.onchange = ttRenderPreview);
     ttRenderPreview();
+    trackOnce("use/tt-import-read");    // ファイルを読めた（中身は送らない。開いた人がどこで止まるかを見るため）
   }catch(e){
+    trackOnce("use/tt-import-error");   // 読めなかった
     ttParsed = null; ttRenderPreview();
     msg.className = "tt-err"; msg.textContent = e.message;
   }
@@ -4017,6 +4063,8 @@ if(SHOW_TIP) document.querySelectorAll("[data-tip]").forEach(el => el.classList.
  ["refresh","use/refresh-data"], ["raidstart","use/raid-timer"], ["helpBtn","use/help-open"], ["fbLink","use/feedback-open"], ["taskListLink","use/task-list-open"]
 ].forEach(([id, ev]) => { const el = document.getElementById(id); if(el) el.addEventListener("click", () => track(ev)); });
 document.getElementById("opt_route").addEventListener("change", e => { if(e.target.checked) track("use/route-on"); });
+// TarkovTracker の読み込み画面から、TarkovTracker のバックアップの画面へのリンクを押した
+document.getElementById("ttdlg").addEventListener("click", e => { if(e.target.closest && e.target.closest("a[href*='tarkovtracker.org']")) trackOnce("use/tt-import-link"); });
 // 使い方ダイアログ
 document.getElementById("helpBtn").onclick = () => {
   const dlg = document.getElementById("helpdlg");
@@ -4028,6 +4076,7 @@ document.getElementById("helpdlg").addEventListener("click", e => { if(e.target.
 /* 新しくなったこと: 公開した変更の短いお知らせ（新しい順）。公開のたびに先頭へ足す（d = 公開した日、k = 文言のキー）。
    only = その言語の画面だけに出す。前に見たとき（初めてなら前回開いたとき）より新しいものがあると ✨ に赤い印が付く */
 const NEWS = [
+  { d:"2026-11-21", k:"news1121" },
   { d:"2026-11-18", k:"news1117b" },
   { d:"2026-11-17", k:"news1117" },
   { d:"2026-11-16", k:"news1116" },

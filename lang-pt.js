@@ -49,7 +49,7 @@
   transitLabel:"Trânsito", transitPopup:desc=>`<b>Trânsito</b><br>${desc}`,
   hazardSniper:"Linha de tiro do scav sniper", hazardMinefield:"Campo minado", hazardOther:"Área de perigo",
   dangerousAreaPopup:label=>`<b>${label}</b><br><span style="color:#888">Esta área é perigosa</span>`,
-  lockedDoor:"Porta trancada", lockType:"Tipo", needsPower:"※ Precisa de energia", lockGlyph:"T", routeLabel:"Rota", floorLabel:"Andar:",
+  lockedDoor:"Porta trancada", lockType:"Tipo", needsPower:"※ Precisa de energia", lockGlyph:"T", routeLabel:"Rota", routeFloorGo:f=>`Mostrar ${f}`, routeNeed2:"Os números aparecem quando houver 2 ou mais marcadores neste mapa (os de outros andares também contam).", floorLabel:"Andar:",
   lockPopup:(type,power)=>`<b>Porta trancada</b><br>Tipo: ${type}${power?"<br>※ Precisa de energia":""}`,
   switchLabel:"Interruptor", switchPopup:name=>`<b>Interruptor</b><br><span style="color:#555">${name}</span>`,
   spawnChanceApprox:pct=>`Chance de spawn ~${pct}%`,
@@ -104,7 +104,7 @@
   shareLoadedAlert:"Dados compartilhados carregados.",
   shareLoadFailedAlert:msg=>`Falha ao carregar: ${msg}`,
   ttBtn:"Importar do TarkovTracker", ttTitle:"Importar progresso do TarkovTracker",
-  ttHow:"<ol><li>Nas configurações do TarkovTracker (tarkovtracker.org), salve o <b>backup (exportação)</b> do progresso em JSON</li><li>Escolha esse arquivo abaixo ou cole o conteúdo</li></ol>Dá para aplicar tarefas concluídas / falhadas, objetivos concluídos e o seu nível.",
+  ttHow:"<ol><li>Abra a <a href='https://tarkovtracker.org/settings#backup-restore' target='_blank' rel='noopener'>página de backup do TarkovTracker</a> e clique em “<b>Exportar backup de progresso</b>” para salvar o arquivo</li><li>Escolha esse arquivo abaixo ou cole o conteúdo</li></ol>Dá para aplicar tarefas concluídas / falhadas, objetivos concluídos e o seu nível.",
   ttPrivacy:"🔒 O arquivo é processado só neste navegador e nunca é enviado para lugar nenhum.",
   ttPasteLabel:"Ou cole o conteúdo do JSON:",
   ttErrJson:"Não foi possível ler como JSON. Confira se é um arquivo de backup.",
@@ -151,7 +151,7 @@
 <li><b>Botão 📍</b> (em cada linha de tarefa): seleciona a tarefa, troca para o mapa e o andar certos se preciso e leva o mapa até os pinos (um anel pisca em volta deles).</li>
 <li><b>Legenda</b>: “Legenda ▼” no canto inferior esquerdo explica os símbolos e as cores.</li>
 <li><b>Camadas</b>: em “Camadas / compartilhar”, ligue ou desligue trânsitos, áreas de perigo, portas trancadas, interruptores, chefes e spawns.</li>
-<li><b>Numeração da rota</b>: ligada, os pinos ganham ①②③… na ordem do caminho mais curto, ligados por uma linha.</li>
+<li><b>Numeração da rota</b>: ligada, os pinos ganham ①②③… na ordem do caminho mais curto, ligados por uma linha. Precisa de 2 ou mais pinos no mapa; os de outros andares também entram (semitransparentes, com uma etiqueta como “2F” — clique para mostrar esse andar). A ordem também aparece na legenda.</li>
 <li><b>Pinos próprios</b>: clique com o <b>botão direito</b> no mapa para adicionar um pino com anotação (clique no pino para editar/apagar).</li>
 <li><b>Brilho / contraste</b>: controles no canto superior esquerdo do mapa.</li>
 </ul></div></details>
@@ -195,7 +195,7 @@
 <details><summary>8. Importar do TarkovTracker</summary><div>
 <p>Para quem já acompanha o progresso no TarkovTracker: aplique de uma vez as tarefas concluídas e falhadas, os objetivos concluídos e o seu nível.</p>
 <ol>
-<li>Nas configurações do TarkovTracker (tarkovtracker.org), salve o backup (exportação) <b>.json</b>.</li>
+<li>Abra a <a href="https://tarkovtracker.org/settings#backup-restore" target="_blank" rel="noopener">página de backup do TarkovTracker</a> e clique em “<b>Exportar backup de progresso</b>” para salvar o <b>.json</b>.</li>
 <li>Abra “Camadas / compartilhar” aqui, aperte <b>Importar do TarkovTracker</b> e escolha o arquivo (ou cole).</li>
 <li>Confira o resumo e aperte <b>Importar</b>. Dá para escolher “Só adicionar / Sobrescrever” e desfazer logo em seguida.</li>
 </ol>
@@ -304,7 +304,7 @@
   newsThanksBody:"Obrigado a todos que enviaram feedback, relatos de bugs e correções de tradução. É com essas mensagens que a ferramenta melhora.",
   newsTrNote:"Os idiomas além do japonês e do inglês são baseados em tradução automática. Se algo soar estranho, avise pelo “🌐 Correção de tradução” no formulário de feedback.",
   newsNames:"Com a permissão deles:", newsThanksHow:"Quer seu nome (ou apelido) aqui? Escreva “Pode colocar meu nome: ___” no formulário de feedback.",
-  pwLblPower:"Energia", pwLblGate:"Portão", pwLblDrain:"Drenar", powerFor:n=>`Energia / painel de controle: ${n}`, powerAt:(f,l)=>`Onde ativar: a etiqueta “⚡ ${l}” no mapa${f ? " (" + f + ")" : ""}`, news1117b:"Corrigido: no Shoreline, Customs e outros mapas, os marcadores de tarefas ao ar livre eram tratados como “subsolo” ou “2F”, e o mapa abria num andar escuro. Os andares agora seguem as mesmas regras do tarkov.dev, e as extrações subterrâneas (Old Gas Station no Customs, D-2 no Reserve etc.) aparecem no andar certo.", news1117:"As extrações do The Lab agora aparecem no andar certo (subsolo / 2F), e os locais de energia, portão e drenagem estão marcados no mapa com etiquetas “⚡ Energia” etc. (também o D-2 e outros no Reserve).", news1116:"Corrigido o mapa do The Lab, que aparecia grande demais e deixava os marcadores fora do lugar (todos os andares).", news1116b:"As tarefas “To the Light” do Mechanic (Trust but Verify etc.) ainda não aparecem porque ainda não estão na fonte de dados (tarkov.dev). Elas aparecerão automaticamente quando forem adicionadas.", news1115:"Adicionado o coreano.", news1114:"Novo botão “Compartilhar no 𝕏” e overlay para live (uma visualização transparente para o OBS etc.).",
+  pwLblPower:"Energia", pwLblGate:"Portão", pwLblDrain:"Drenar", powerFor:n=>`Energia / painel de controle: ${n}`, powerAt:(f,l)=>`Onde ativar: a etiqueta “⚡ ${l}” no mapa${f ? " (" + f + ")" : ""}`, news1121:"Corrigido: a rota numerada pulava marcadores em outros andares (ex.: Customs: The Courier → Golden Swag no dormitório). Agora os marcadores de outros andares também são numerados, semitransparentes e com uma etiqueta como “2F”; clique para mostrar esse andar. A legenda mostra a ordem da rota. Obrigado pelo aviso!", news1117b:"Corrigido: no Shoreline, Customs e outros mapas, os marcadores de tarefas ao ar livre eram tratados como “subsolo” ou “2F”, e o mapa abria num andar escuro. Os andares agora seguem as mesmas regras do tarkov.dev, e as extrações subterrâneas (Old Gas Station no Customs, D-2 no Reserve etc.) aparecem no andar certo.", news1117:"As extrações do The Lab agora aparecem no andar certo (subsolo / 2F), e os locais de energia, portão e drenagem estão marcados no mapa com etiquetas “⚡ Energia” etc. (também o D-2 e outros no Reserve).", news1116:"Corrigido o mapa do The Lab, que aparecia grande demais e deixava os marcadores fora do lugar (todos os andares).", news1116b:"As tarefas “To the Light” do Mechanic (Trust but Verify etc.) ainda não aparecem porque ainda não estão na fonte de dados (tarkov.dev). Elas aparecerão automaticamente quando forem adicionadas.", news1115:"Adicionado o coreano.", news1114:"Novo botão “Compartilhar no 𝕏” e overlay para live (uma visualização transparente para o OBS etc.).",
   news1112:"Adicionados espanhol e turco, “📲 Instalar como app” e “🌐 Correção de tradução” no formulário de feedback.", news1104:"Adicionado o alemão.",
   news1027:"Novas páginas com todas as tarefas (objetivos, locais e recompensas; em inglês), layout melhor no celular, e polonês e português.",
   news1016:"Adicionada ao mapa a extração “Road to Military Base V-Ex” de Lighthouse.",
