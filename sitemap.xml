@@ -165,6 +165,174 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/customs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/customs/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/customs/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/customs/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/customs/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/customs/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/customs/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/customs/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/woods/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/woods/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/woods/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/woods/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/woods/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/woods/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/woods/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/woods/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/shoreline/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/shoreline/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/shoreline/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/shoreline/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/shoreline/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/shoreline/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/shoreline/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/shoreline/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/interchange/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/interchange/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/interchange/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/interchange/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/interchange/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/interchange/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/interchange/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/interchange/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/reserve/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/reserve/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/reserve/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/reserve/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/reserve/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/reserve/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/reserve/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/reserve/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/lighthouse/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/lighthouse/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/lighthouse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/lighthouse/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/lighthouse/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/lighthouse/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/lighthouse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/lighthouse/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/streets-of-tarkov/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/streets-of-tarkov/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/streets-of-tarkov/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/streets-of-tarkov/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/streets-of-tarkov/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/streets-of-tarkov/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/streets-of-tarkov/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/streets-of-tarkov/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/factory/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/factory/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/factory/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/factory/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/factory/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/factory/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/factory/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/factory/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/ground-zero/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/ground-zero/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/ground-zero/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/ground-zero/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/ground-zero/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/ground-zero/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/ground-zero/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/ground-zero/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/the-lab/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/the-lab/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/the-lab/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/the-lab/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/the-lab/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/the-lab/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/the-lab/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/the-lab/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/the-labyrinth/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/the-labyrinth/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/the-labyrinth/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/the-labyrinth/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/the-labyrinth/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/the-labyrinth/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/the-labyrinth/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/the-labyrinth/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/tasks/map/icebreaker/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/icebreaker/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/icebreaker/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/icebreaker/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tarkovtaskmap.github.io/ja/tasks/map/icebreaker/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/map/icebreaker/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/map/icebreaker/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tarkovtaskmap.github.io/tasks/map/icebreaker/" />
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://tarkovtaskmap.github.io/tasks/a-big-loss-usec/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://tarkovtaskmap.github.io/tasks/a-big-loss-usec/" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://tarkovtaskmap.github.io/ja/tasks/a-big-loss-usec/" />

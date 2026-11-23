@@ -48,6 +48,11 @@ const num = n => Number(n).toLocaleString("en-US");
 const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const slugOf = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
 
+// マップ名のカタカナ（日本語のページの題名・見出しに添える。検索でよく使われる呼び方）
+const KANA = { customs:"カスタム", woods:"ウッズ", shoreline:"ショアライン", interchange:"インターチェンジ", reserve:"リザーブ", lighthouse:"ライトハウス",
+  "streets-of-tarkov":"ストリート", factory:"ファクトリー", "ground-zero":"グラウンドゼロ", "the-lab":"ラボ", "the-labyrinth":"ラビリンス", icebreaker:"アイスブレイカー", terminal:"ターミナル" };
+const MAP_ORDER = ["customs", "woods", "shoreline", "interchange", "reserve", "lighthouse", "streets-of-tarkov", "factory", "ground-zero", "the-lab", "the-labyrinth", "icebreaker", "terminal"];
+
 // --- 言語ごとの文言 ---
 const LANGS = {
   en: {
@@ -68,6 +73,13 @@ const LANGS = {
     idxDesc: n => `All ${n} Escape from Tarkov tasks by trader, with objectives, maps, keys and rewards. Open any task on the interactive map with its objective pins and extracts.`,
     idxH1: "All Escape from Tarkov tasks", idxLead: n => `${n} tasks by trader, with objectives, maps, keys and rewards. Pick one to see its objectives, or open it on the map.`,
     idxCta: "🗺️ Open the map tool", search: "Search tasks or maps…", kappaNote: "★ = required for the Kappa container.", lv: "Lv", any: "Any",
+    // マップ別の一覧（11/23）
+    mName: nn => mapNameByNN[nn],
+    mTitle: nn => `${mapNameByNN[nn]} tasks in Escape from Tarkov: objectives & locations | Tarkov Task Map`,
+    mDesc: (nn, n) => `All ${n} Escape from Tarkov tasks with objectives on ${mapNameByNN[nn]}, by trader — what to do on the map, keys and level. Open any of them on the interactive map with objective pins and extracts.`,
+    mH1: nn => `${mapNameByNN[nn]} tasks`,
+    mLead: (nn, n) => `${n} tasks with objectives on ${esc(mapNameByNN[nn])}, by trader. Each one lists what to do on this map; open it on the map to see the exact spots.`,
+    hMaps: "Tasks by map", keysHere: "Keys", moreObjs: n => `+${n} more`,
   },
   ja: {
     dir: "ja/tasks", base: "/ja/tasks/", html: "ja", objText: o => tJA(o.description),
@@ -87,6 +99,13 @@ const LANGS = {
     idxDesc: n => `Escape from Tarkov（タルコフ）の全 ${n} タスクをトレーダー別に一覧。目標・マップ・必要な鍵・報酬を確認でき、どのタスクも目標のピンと脱出地点つきで地図に表示できます。`,
     idxH1: "タルコフ 全タスク一覧", idxLead: n => `全 ${n} タスクをトレーダー別に並べています。タスクを選ぶと目標や報酬が見られ、そのまま地図でも開けます。`,
     idxCta: "🗺️ ツールを開く", search: "タスク名・マップ名で検索…", kappaNote: "★ = Kappa コンテナに必要なタスク", lv: "Lv", any: "どのマップでも",
+    // マップ別の一覧（11/23）。ゲームの日本語版もマップ名は英語なので英語のまま。検索はカタカナが多いので（）で添える
+    mName: nn => mapNameByNN[nn] + (KANA[nn] ? `（${KANA[nn]}）` : ""),
+    mTitle: nn => `タルコフ ${mapNameByNN[nn]}${KANA[nn] ? `（${KANA[nn]}）` : ""}のタスク一覧：目標と場所｜タルコフ タスクマップ`,
+    mDesc: (nn, n) => `Escape from Tarkov（タルコフ）の ${mapNameByNN[nn]}${KANA[nn] ? `（${KANA[nn]}）` : ""}で目標があるタスク ${n} 件をトレーダー別に一覧。このマップでやること・必要な鍵・レベルがわかり、どのタスクも地図で目標の場所を表示できます。`,
+    mH1: nn => `タルコフ ${mapNameByNN[nn]}${KANA[nn] ? `（${KANA[nn]}）` : ""}のタスク一覧`,
+    mLead: (nn, n) => `${esc(mapNameByNN[nn])} で目標があるタスク ${n} 件を、トレーダー別に並べています。このマップでやることがわかり、地図を開けば正確な場所も見られます。`,
+    hMaps: "マップ別のタスク一覧", keysHere: "鍵", moreObjs: n => `ほか ${n} 件`,
   },
 };
 
@@ -113,7 +132,24 @@ function taskMaps(t){
   for(const o of t.raw.objectives || []) for(const m of (o.maps || [])) if(mapName(m)) s.add(mapName(m));
   return [...s];
 }
-const itemList = (L, ids, max = 8) => { const n = ids.map(itemName); return n.length > max ? n.slice(0, max).join(", ") + L.more(n.length - max) : n.join(", "); };
+// マップ別: そのマップに目標があるタスクと、そのマップの目標（タスク自体のマップ指定も含む）
+const mapTasks = {};
+for(const t of tasks){
+  const per = {};
+  if(t.raw.map && mapNN[t.raw.map]) per[mapNN[t.raw.map]] = per[mapNN[t.raw.map]] || [];
+  for(const o of t.raw.objectives || []) for(const mid of (o.maps || [])){
+    const nn = mapNN[mid]; if(!nn) continue;
+    const a = per[nn] = per[nn] || [];
+    if(!a.includes(o)) a.push(o);
+  }
+  for(const [nn, objs] of Object.entries(per)) (mapTasks[nn] = mapTasks[nn] || []).push({ t, objs });
+}
+const mapList = MAP_ORDER.filter(nn => mapTasks[nn] && mapTasks[nn].length && mapNameByNN[nn]);
+const nnByName = Object.fromEntries(mapList.map(nn => [mapNameByNN[nn], nn]));
+const mapHref = (L, nn) => `${L.base}map/${nn}/`;
+// マップ名の並びを、マップ別ページへのリンクに（無いマップは文字のまま）
+const mapLinks = (L, names) => names.map(n => nnByName[n] ? `<a href="${mapHref(L, nnByName[n])}">${esc(n)}</a>` : esc(n)).join(", ");
+const itemList = (L, ids, max = 8) =>{ const n = ids.map(itemName); return n.length > max ? n.slice(0, max).join(", ") + L.more(n.length - max) : n.join(", "); };
 
 function objDetail(L, o){
   const d = [];
@@ -191,7 +227,7 @@ const urlOf = (lang, slug) => SITE + LANGS[lang].base.slice(1) + (slug ? slug + 
 function cleanDir(dir){
   let removed = 0;
   for(const d of fs.readdirSync(dir, { withFileTypes:true })){
-    if(!d.isDirectory() || used.has(d.name)) continue;
+    if(!d.isDirectory() || used.has(d.name) || d.name === "map") continue;   // map/ はマップ別の一覧（下で別に片付ける）
     const f = path.join(dir, d.name, "index.html");
     if(fs.existsSync(f) && fs.readFileSync(f, "utf8").includes(MARK)){ fs.rmSync(path.join(dir, d.name), { recursive:true }); removed++; }
   }
@@ -222,7 +258,7 @@ for(const [lang, L] of Object.entries(LANGS)){
     let desc = L.desc(t, mapTxt, firstObjs);
     if(desc.length > 300) desc = desc.slice(0, 297).replace(/\s+\S*$/, "") + "…";
     const url = urlOf(lang, t.slug), alt = { en: urlOf("en", t.slug), ja: urlOf("ja", t.slug) };
-    const facts = L.facts(t).map(f => f[1] === null ? [f[0], esc(mapTxt)] : f);
+    const facts = L.facts(t).map(f => f[1] === null ? [f[0], maps.length ? mapLinks(L, maps) : esc(L.anyMap)] : f);
     const html = head(L, {
       title: L.title(t), desc, url, alt,
       jsonld: crumbs([[L.crumbAll, urlOf(lang)], [t.trader, urlOf(lang) + "#" + slugOf(t.trader)], [t.name, url]]),
@@ -264,6 +300,8 @@ ${t.raw.wikiLink ? `<p class="muted small">${L.moreDetails} <a href="${esc(t.raw
 <h1>${L.idxH1}</h1>
 <p class="lead">${L.idxLead(tasks.length)}</p>
 <p><a class="cta" href="${L.toolHref}">${L.idxCta}</a></p>
+<h2>${L.hMaps}</h2>
+<nav class="jump maps">${mapList.map(nn => `<a href="${mapHref(L, nn)}">${esc(L.mName(nn))} <span class="muted">(${mapTasks[nn].length})</span></a>`).join("")}</nav>
 <input id="q" type="search" placeholder="${L.search}" aria-label="${L.search}" />
 <nav class="jump">${traders.map(tr => `<a href="#${slugOf(tr)}">${esc(tr)}</a>`).join("")}</nav>
 ${traders.map(tr => `<section id="${slugOf(tr)}"><h2>${esc(tr)} <span class="muted">(${groups[tr].length})</span></h2>
@@ -278,7 +316,46 @@ document.getElementById("q").addEventListener("input", function(){
 </script>
 ` + foot(L);
   fs.writeFileSync(path.join(outDir, "index.html"), indexHtml);
-  report.push(`${lang}: ${written} ページ（削除 ${removed}）`);
+
+  // --- マップ別の一覧（/tasks/map/<マップ>/）: そのマップでやること（目標）と鍵を、トレーダー別に ---
+  const mapRoot = path.join(outDir, "map");
+  fs.mkdirSync(mapRoot, { recursive:true });
+  for(const nn of mapList){
+    const list = mapTasks[nn], name = mapNameByNN[nn], url = urlOf(lang, "map/" + nn);
+    const g = {};
+    for(const x of list) (g[x.t.trader] = g[x.t.trader] || []).push(x);
+    const trs = Object.keys(g).sort((a, b) => trRank(a) - trRank(b) || a.localeCompare(b, "en"));
+    const item = ({ t, objs }) => {
+      const texts = objs.map(o => L.objText(o)).filter(Boolean).map(s => s.replace(/\s+/g, " "));
+      const keys = keysOf(t).filter(k => !k.map || k.map === name).map(k => k.name);
+      return `<li data-s="${esc(t.name.toLowerCase())}">${link(L, t)} <span class="muted">${L.lv} ${t.lvl || 1}${t.kappa ? " · ★" : ""}</span>` +
+        (texts.length ? `<ul class="mobjs">${texts.slice(0, 4).map(s => `<li>${esc(s)}</li>`).join("")}${texts.length > 4 ? `<li class="muted">${L.moreObjs(texts.length - 4)}</li>` : ""}</ul>` : "") +
+        (keys.length ? `<div class="mkeys">🔑 ${L.keysHere}: ${esc(keys.join(", "))}</div>` : "") + `</li>`;
+    };
+    const html = head(L, {
+      title: L.mTitle(nn), desc: L.mDesc(nn, list.length), url, alt: { en: urlOf("en", "map/" + nn), ja: urlOf("ja", "map/" + nn) },
+      jsonld: crumbs([[L.crumbAll, urlOf(lang)], [L.mName(nn), url]]),
+    }) + `
+<p class="crumb"><a href="${L.base}">${L.crumbAll}</a> › ${L.hMaps}</p>
+<h1>${esc(L.mH1(nn))}</h1>
+<p class="lead">${L.mLead(nn, list.length)}</p>
+<p><a class="cta" href="${L.toolHref}">${L.idxCta}</a></p>
+<nav class="jump">${trs.map(tr => `<a href="#${slugOf(tr)}">${esc(tr)}</a>`).join("")}</nav>
+${trs.map(tr => `<section id="${slugOf(tr)}"><h2>${esc(tr)} <span class="muted">(${g[tr].length})</span></h2>
+<ul class="tlist mlist">${g[tr].slice().sort((a, b) => byLvlName(a.t, b.t)).map(item).join("\n")}</ul></section>`).join("\n")}
+<h2>${L.hMaps}</h2>
+<nav class="jump maps">${mapList.map(m => m === nn ? `<b>${esc(L.mName(m))}</b>` : `<a href="${mapHref(L, m)}">${esc(L.mName(m))}</a>`).join("")}</nav>
+<p class="muted small">${L.kappaNote}</p>
+` + foot(L);
+    fs.mkdirSync(path.join(mapRoot, nn), { recursive:true });
+    fs.writeFileSync(path.join(mapRoot, nn, "index.html"), html);
+  }
+  // 無くなったマップのページを片付ける（このスクリプトが作ったものだけ）
+  for(const d of fs.readdirSync(mapRoot, { withFileTypes:true })){
+    const f = path.join(mapRoot, d.name, "index.html");
+    if(d.isDirectory() && !mapList.includes(d.name) && fs.existsSync(f) && fs.readFileSync(f, "utf8").includes(MARK)) fs.rmSync(path.join(mapRoot, d.name), { recursive:true });
+  }
+  report.push(`${lang}: ${written} ページ（削除 ${removed}）・マップ別 ${mapList.length}`);
 }
 
 fs.writeFileSync(path.join(root, "tasks", "style.css"), `/* generated by tools/gen-tasks.mjs */
@@ -308,6 +385,10 @@ h2{font-size:18px;margin:26px 0 8px;border-bottom:1px solid var(--line);padding-
 .jump{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;margin-bottom:6px}
 .tlist{list-style:none;padding:0;margin:0}
 .tlist li{padding:4px 0;border-bottom:1px solid #2a261e}
+.mobjs{margin:2px 0 2px 18px;padding:0;font-size:13px;color:var(--dim)}
+.mobjs li{padding:1px 0;border:0}
+.mkeys{font-size:12px;color:#e0b060;margin-left:2px}
+.jump.maps a{white-space:nowrap}
 footer{max-width:820px;margin:0 auto;padding:16px;border-top:1px solid var(--line);font-size:12px;color:var(--dim)}
 `);
 
@@ -321,6 +402,7 @@ const entry = (loc, alt, pri) => `  <url>\n    <loc>${loc}</loc>\n${alt}\n    <p
 const urls = [
   ...PAGE_LANGS.map(L => entry(pageUrl(L), altTool, L.code === "ja" ? "1.0" : "0.9")),
   entry(urlOf("en"), altPair(""), "0.8"), entry(urlOf("ja"), altPair(""), "0.8"),
+  ...mapList.flatMap(nn => [entry(urlOf("en", "map/" + nn), altPair("map/" + nn), "0.7"), entry(urlOf("ja", "map/" + nn), altPair("map/" + nn), "0.7")]),
 ];
 for(const t of tasks.slice().sort((a, b) => a.slug.localeCompare(b.slug))){
   urls.push(entry(urlOf("en", t.slug), altPair(t.slug), "0.6"), entry(urlOf("ja", t.slug), altPair(t.slug), "0.6"));
